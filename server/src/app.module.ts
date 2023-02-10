@@ -1,10 +1,13 @@
+import { TrackModule } from './track/track.module';
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    TrackModule,
+    MongooseModule.forRoot(
+      'mongodb+srv://admin:admin@cluster0.jktggcn.mongodb.net/?retryWrites=true&w=majority',
+    ),
+  ],
 })
 export class AppModule {}
