@@ -1,9 +1,9 @@
-import { Comment } from './comment.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { Document } from 'mongoose';
 import * as mongoose from 'mongoose';
+import { Comment } from './comment.schema';
 
-export type TrackDocument = HydratedDocument<Track>;
+export type TrackDocument = Track & Document;
 
 @Schema()
 export class Track {
