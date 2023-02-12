@@ -66,4 +66,10 @@ export class TrackService {
     await track.save();
     return comment;
   }
+
+  async listen(trackId: ObjectId) {
+    const track = await this.trackModel.findById(trackId);
+    track.listens += 1;
+    track.save();
+  }
 }

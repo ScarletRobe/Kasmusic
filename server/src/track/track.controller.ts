@@ -9,6 +9,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
@@ -49,7 +50,6 @@ export class TrackController {
   getOne(@Param('id') id: ObjectId) {
     return this.trackService.getOne(id);
   }
-
   @Delete(':id')
   delete(@Param('id') id: ObjectId) {
     return this.trackService.delete(id);
@@ -63,5 +63,11 @@ export class TrackController {
   @Post('/comment')
   addComment(@Body() dto: AddCommentDto) {
     return this.trackService.addComment(dto);
+  }
+
+  @Post('/listen/:id')
+  listen(@Param('id') id: ObjectId) {
+    console.log(id);
+    return this.trackService.listen(id);
   }
 }
