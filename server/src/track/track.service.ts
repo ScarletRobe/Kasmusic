@@ -47,6 +47,8 @@ export class TrackService {
 
   async delete(id: ObjectId): Promise<mongoose.Types.ObjectId> {
     const track = await this.trackModel.findByIdAndDelete(id);
+    this.fileService.removeFile(track.audio);
+    this.fileService.removeFile(track.picture);
     return track._id;
   }
 

@@ -25,5 +25,10 @@ export class FileService {
     }
   }
 
-  // removeFile(fileName: string) {}
+  removeFile(fileName: string) {
+    const filePath = path.resolve(__dirname, '../..', 'static', fileName);
+    if (fs.existsSync(filePath)) {
+      fs.rmSync(filePath);
+    }
+  }
 }
