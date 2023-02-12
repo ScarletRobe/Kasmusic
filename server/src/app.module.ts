@@ -7,7 +7,9 @@ import * as path from 'path';
 @Module({
   imports: [
     TrackModule,
-    ServeStaticModule.forRoot({ rootPath: path.resolve(__dirname, 'static') }),
+    ServeStaticModule.forRoot({
+      rootPath: path.resolve(__dirname, '..', 'static'),
+    }),
     MongooseModule.forRoot(
       'mongodb+srv://admin:admin@cluster0.jktggcn.mongodb.net/?retryWrites=true&w=majority',
     ),
