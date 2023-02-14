@@ -1,0 +1,25 @@
+.track {
+  margin: 20px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.trackCover {
+  width: 70px;
+  height: 70px;
+}
+
+.trackContainer {
+  width: 200px;
+  margin: 0 auto 0 20px;
+}
+
+.trackArtist {
+  font-size: 12;
+  color: 'gray';
+}
+
+.trackDeleteBtn {
+  margin-left: 'auto';
+}
