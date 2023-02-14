@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
 import { Button, Grid, TextField } from '@mui/material';
 import Image from 'next/image';
+import styles from '../../styles/trackPage.module.css';
 
 type TrackPageProps = {
   serverTrack: Track;
@@ -23,14 +24,15 @@ const TrackPage: React.FC<TrackPageProps> = ({
         <Button variant={'outlined'} onClick={() => router.push('/tracks')}>
           К списку
         </Button>
-        <Grid container style={{ margin: '20px 0' }}>
+        <Grid container className={styles.trackInfoContainer}>
           <Image
+            className={styles.trackImg}
             src=""
             width={200}
             height={200}
             alt="Track cover"
           />
-          <div style={{ marginLeft: 30 }}>
+          <div className={styles.trackInfo}>
             <h1>{track.name}</h1>
             <h1>Исполнитель: {track.artist}</h1>
             <h1>Прослушиваний: {track.listens}</h1>
@@ -50,6 +52,7 @@ const TrackPage: React.FC<TrackPageProps> = ({
             inputProps={{ maxLength: 250 }}
           />
           <Button
+            variant="outlined"
           >
             Отправить
           </Button>

@@ -1,0 +1,12 @@
+.trackInfoContainer {
+  margin: 20px 0;
+}
+
+.trackImg {
+  width: 200px;
+  height: 200px;
+}
+
+.trackInfo {
+  margin-left: 30px;
+}
