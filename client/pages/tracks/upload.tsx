@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import MainLayout from '../../layouts/MainLayout';
 import { useRouter } from 'next/router';
-import { FileUpload } from '@mui/icons-material';
-import { Grid, TextField, Button } from '@mui/material';
-import UploadStepsWrapper from '@/components/UploadStepsWrapper/UploadStepsWrapper';
+import { Grid, TextField, Button, Paper } from '@mui/material';
+import UploadStepsWrapper from '@/components/uploadStepsWrapper/UploadStepsWrapper';
+import FileUpload from '../../components/FileUpload';
+import { AcceptableFiles } from '@/types/track';
 
-const Create = () => {
+const Upload = () => {
   const [activeStep, setActiveStep] = useState(0);
+  const [picture, setPicture] = useState<File | null>(null);
+  const [audio, setAudio] = useState<File | null>(null);
   const router = useRouter();
 
   const next = () => {
@@ -21,9 +24,12 @@ const Create = () => {
     <MainLayout>
       <>
         <UploadStepsWrapper activeStep={activeStep}>
-          <>
+          <Paper
+            elevation={3}
+            sx={activeStep === 3 ? { filter: 'blur(1px)', p: 3 } : { p: 3 }}
+          >
             {activeStep === 0 && (
-              <Grid container direction={'column'} style={{ padding: 20 }}>
+              <Grid container direction={'column'} rowGap={2}>
                 <TextField
                   margin="normal"
                   label={'Название'}
@@ -34,7 +40,17 @@ const Create = () => {
               </Grid>
             )}
 
-          </>
+            {activeStep === 1 && (
+              <FileUpload setFile={setPicture} accept={AcceptableFiles.IMAGE}>
+                <Button>Загрузить изображение</Button>
+              </FileUpload>
+            )}
+            {activeStep === 2 && (
+              <FileUpload setFile={setAudio} accept={AcceptableFiles.AUDIO}>
+                <Button>Загрузить аудио</Button>
+              </FileUpload>
+            )}
+          </Paper>
         </UploadStepsWrapper>
         <Grid container justifyContent="space-between">
           <Button
@@ -52,4 +68,4 @@ const Create = () => {
   );
 };
 
-export default Create;
+export default Upload;
