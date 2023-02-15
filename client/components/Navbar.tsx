@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
@@ -13,18 +14,23 @@ import { useRouter } from 'next/router';
 import AppBar from '@mui/material/AppBar';
 import ListItem from '@mui/material/ListItem';
 import { ListItemButton } from '@mui/material';
+
 import AudiotrackRoundedIcon from '@mui/icons-material/AudiotrackRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import LibraryMusicRoundedIcon from '@mui/icons-material/LibraryMusicRounded';
+import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
+import FileDownloadRoundedIcon from '@mui/icons-material/FileDownloadRounded';
 
 const menuItems = [
   { text: 'Главная', href: '/', icon: <HomeRoundedIcon /> },
   { text: 'Список треков', href: '/tracks', icon: <AudiotrackRoundedIcon /> },
   {
     text: 'Список плейлистов',
-    href: '/albums',
+    href: '/',
     icon: <LibraryMusicRoundedIcon />,
   },
+  { text: 'Любимые', href: '/', icon: <FavoriteRoundedIcon /> },
+  { text: 'Загруженные вами', href: '/', icon: <FileDownloadRoundedIcon /> },
 ];
 
 export default function Navbar() {
