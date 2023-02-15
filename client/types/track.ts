@@ -14,3 +14,8 @@ export type Track = {
   audio: string;
   comments: Comment[];
 };
+
+export enum AcceptableFiles {
+  AUDIO = 'audio/*',
+  IMAGE = 'image/*',
+}
