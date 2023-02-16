@@ -12,11 +12,12 @@
 .trackInfo {
   width: 200px;
   margin: 0 20px;
+  gap: 10px;
 }
 
 .artist {
   font-size: 12;
-  color: 'gray';
+  color: gray;
 }
 
 .progressionValue {

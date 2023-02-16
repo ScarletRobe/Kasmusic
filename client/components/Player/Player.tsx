@@ -3,6 +3,7 @@ import { PlayArrow, Pause, VolumeUp, VolumeDown } from '@mui/icons-material';
 import { IconButton, Grid, Slider, Box, Stack } from '@mui/material';
 import TrackProgress from './TrackProgress';
 import { useDispatch } from 'react-redux';
+import Image from 'next/image';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import {
   setCurrentTime,
@@ -79,17 +80,29 @@ const Player = () => {
       <IconButton onClick={play}>
         {pause ? <PlayArrow /> : <Pause />}
       </IconButton>
-      <Grid container direction="column" className={styles.trackInfo}>
+      <Stack direction="row" className={styles.trackInfo} spacing="2">
+        <Image
+          width="50"
+          height="50"
+          src={`http://localhost:5000/${activeTrack.picture}`}
+          alt="Track cover"
+        ></Image>
+        <Grid
+          container
+          direction="column"
+          sx={{ flex: '1', overflow: 'hidden' }}
+        >
         <div>{activeTrack?.name}</div>
         <div className={styles.artist}>{activeTrack?.artist}</div>
       </Grid>
+      </Stack>
       <TrackProgress
         left={currentTime}
         right={duration}
         onChange={changeCurrentTime}
       />
       <Box ml="auto" sx={{ width: 200 }}>
-        <Stack direction="row" spacing={2} alignItems="center">
+        <Stack direction="row" alignItems="center">
           <VolumeDown />
           <Slider
             aria-label="Volume"
