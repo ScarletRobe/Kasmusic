@@ -45,6 +45,9 @@ const Player = () => {
       audio.ontimeupdate = () => {
         dispatch(setCurrentTime(Math.ceil(audio.currentTime)));
       };
+      audio.onended = () => {
+        dispatch(setPause());
+      };
     }
   };
 
