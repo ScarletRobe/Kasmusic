@@ -5,24 +5,46 @@ import { useRouter } from 'next/router';
 import { PlayArrow, Pause, Delete } from '@mui/icons-material';
 import { Card, IconButton, Grid } from '@mui/material';
 import Image from 'next/image';
+import {
+  setActiveTrack,
+  setPause,
+  setPlay,
+} from '@/store/playerSlice/playerSlice';
+import { useDispatch } from 'react-redux';
+import { useTypedSelector } from '@/hooks/useTypedSelector';
 
 interface TrackItemProps {
   track: Track;
-  active?: boolean;
 }
 
-const TrackItem: React.FC<TrackItemProps> = ({ track, active = false }) => {
+const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
   const router = useRouter();
+  const dispatch = useDispatch();
+  const { activeTrack, pause } = useTypedSelector((state) => state.player);
+
+  const play = (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    if (activeTrack?._id === track._id) {
+      pause ? dispatch(setPlay()) : dispatch(setPause());
+    } else {
+      dispatch(setActiveTrack(track));
+    }
+  };
 
   return (
     <Card
       className={styles.track}
       onClick={() => router.push('/tracks/' + track._id)}
     >
-      <IconButton>{active ? <Pause /> : <PlayArrow />}</IconButton>
+      <IconButton onClick={play}>
+        {activeTrack?._id === track._id && !pause ? <Pause /> : <PlayArrow />}
+      </IconButton>
       <Image
         className={styles.trackCover}
-        src=""
+        src={'http://localhost:5000/' + track.picture}
+        width={70}
+        height={70}
         alt="Track cover"
       />
       <Grid container direction="column" className={styles.trackContainer}>
