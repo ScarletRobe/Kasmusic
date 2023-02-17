@@ -25,10 +25,6 @@ const Player = () => {
   useEffect(() => {
     if (!audio) {
       audio = new Audio();
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [volume, setVolume] = useState(50);
-  const [currentTime, setCurrentTime] = useState(0);
-  const active = { name: 'Название', artist: 'Исполнитель' };
     } else {
       setAudio();
       play();
@@ -69,6 +65,7 @@ const Player = () => {
     audio.volume = Number(value) / 100;
     dispatch(setVolume(Number(value)));
   };
+
   const changeCurrentTime = (_, value: number | number[]) => {
     audio.currentTime = Number(value);
     dispatch(setCurrentTime(Number(value)));
@@ -95,9 +92,9 @@ const Player = () => {
           direction="column"
           sx={{ flex: '1', overflow: 'hidden' }}
         >
-        <div>{activeTrack?.name}</div>
-        <div className={styles.artist}>{activeTrack?.artist}</div>
-      </Grid>
+          <div>{activeTrack?.name}</div>
+          <div className={styles.artist}>{activeTrack?.artist}</div>
+        </Grid>
       </Stack>
       <TrackProgress
         left={currentTime}
@@ -121,4 +118,4 @@ const Player = () => {
   );
 };
 
-export default Player;
+export default React.memo(Player);
