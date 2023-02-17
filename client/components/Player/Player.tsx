@@ -28,10 +28,16 @@ const Player = () => {
     } else {
       setAudio();
       audio.onloadeddata = () => {
-      play();
+        play();
       };
     }
   }, [activeTrack]);
+
+  useEffect(() => {
+    if (audio.src) {
+      !pause ? audio?.play() : audio?.pause();
+    }
+  }, [pause]);
 
   const setAudio = () => {
     if (activeTrack && audio) {
@@ -56,10 +62,8 @@ const Player = () => {
 
     if (pause) {
       dispatch(setPlay());
-      audio.play();
     } else {
       dispatch(setPause());
-      audio.pause();
     }
   };
 
