@@ -1,3 +1,4 @@
+import MainLayout from '@/layouts/MainLayout';
 import { Provider } from 'react-redux';
 import { wrapper } from '../store/store';
 
@@ -8,7 +9,9 @@ function MyApp({ Component, ...rest }) {
   const { pageProps } = props;
   return (
     <Provider store={store}>
-      <Component {...pageProps} />
+      <MainLayout>
+        <Component {...pageProps} />
+      </MainLayout>
     </Provider>
   );
 }
