@@ -28,6 +28,7 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
     if (activeTrack?._id === track._id) {
       pause ? dispatch(setPlay()) : dispatch(setPause());
     } else {
+      dispatch(setPause());
       dispatch(setActiveTrack(track));
     }
   };
