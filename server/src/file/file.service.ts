@@ -26,6 +26,9 @@ export class FileService {
   }
 
   removeFile(fileName: string) {
+    if (!fileName) {
+      return;
+    }
     const filePath = path.resolve(__dirname, '../..', 'static', fileName);
     if (fs.existsSync(filePath)) {
       fs.rmSync(filePath);
