@@ -27,7 +27,9 @@ const Player = () => {
       audio = new Audio();
     } else {
       setAudio();
+      audio.onloadeddata = () => {
       play();
+      };
     }
   }, [activeTrack]);
 
