@@ -12,6 +12,7 @@ import {
 } from '@/store/playerSlice/playerSlice';
 import { useDispatch } from 'react-redux';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
+import { useDeleteTrackMutation } from '@/services/tracksService';
 
 interface TrackItemProps {
   track: Track;
@@ -20,6 +21,8 @@ interface TrackItemProps {
 const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const [deleteTrack, { isLoading, isError }] = useDeleteTrackMutation();
+
 
   // Player destructuring causes rerender when any state property is changed even unused ones
   const activeTrack = useTypedSelector((state) => state.player.activeTrack);
@@ -34,6 +37,11 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
       dispatch(setPause());
       dispatch(setActiveTrack(track));
     }
+  };
+
+  const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    deleteTrack(track._id);
   };
 
   return (
@@ -55,9 +63,9 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
         <div>{track.name}</div>
         <div className={styles.trackArtist}>{track.artist}</div>
       </Grid>
-      {active && <div>02:42 / 03:22</div>}
+      {/* {active && <div>02:42 / 03:22</div>} */}
       <IconButton
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => handleDelete(e)}
         className={styles.trackDeleteBtn}
       >
         <Delete />
