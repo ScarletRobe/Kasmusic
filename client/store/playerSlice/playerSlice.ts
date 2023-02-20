@@ -13,7 +13,7 @@ type PlayerInitialState = {
 const initialState: PlayerInitialState = {
   currentTime: 0,
   duration: 0,
-  volume: 0,
+  volume: 50,
   pause: true,
   activeTrack: null,
 };
@@ -23,7 +23,6 @@ export const playerSlice = createSlice({
   initialState,
   reducers: {
     setPlay: (state) => {
-      console.log('working');
       state.pause = false;
     },
     setPause: (state) => {
