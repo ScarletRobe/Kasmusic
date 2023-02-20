@@ -21,7 +21,6 @@ const Upload = () => {
   };
 
   return (
-    <MainLayout>
       <>
         <UploadStepsWrapper activeStep={activeStep}>
           <Paper
@@ -64,7 +63,6 @@ const Upload = () => {
           </Button>
         </Grid>
       </>
-    </MainLayout>
   );
 };
 
