@@ -19,8 +19,11 @@ let audio: HTMLAudioElement | null = null;
 
 const Player = () => {
   const dispatch = useDispatch();
-  const { pause, activeTrack, duration, currentTime, volume } =
-    useTypedSelector((state) => state.player);
+
+  // Player destructuring causes rerender when any state property is changed even unused ones
+  const pause = useTypedSelector((state) => state.player.pause);
+  const activeTrack = useTypedSelector((state) => state.player.activeTrack);
+  const volume = useTypedSelector((state) => state.player.volume);
 
   useEffect(() => {
     if (!audio) {
@@ -102,11 +105,7 @@ const Player = () => {
           <div className={styles.artist}>{activeTrack?.artist}</div>
         </Grid>
       </Stack>
-      <TrackProgress
-        left={currentTime}
-        right={duration}
-        onChange={changeCurrentTime}
-      />
+      <TrackProgress onChange={changeCurrentTime} />
       <Box ml="auto" sx={{ width: 200 }}>
         <Stack direction="row" alignItems="center">
           <VolumeDown />
@@ -124,4 +123,4 @@ const Player = () => {
   );
 };
 
-export default React.memo(Player);
+export default Player;

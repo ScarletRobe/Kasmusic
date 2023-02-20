@@ -20,7 +20,10 @@ interface TrackItemProps {
 const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { activeTrack, pause } = useTypedSelector((state) => state.player);
+
+  // Player destructuring causes rerender when any state property is changed even unused ones
+  const activeTrack = useTypedSelector((state) => state.player.activeTrack);
+  const pause = useTypedSelector((state) => state.player.pause);
 
   const play = (e: React.MouseEvent) => {
     e.stopPropagation();
