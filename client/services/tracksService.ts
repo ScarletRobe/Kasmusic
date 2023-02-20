@@ -10,6 +10,7 @@ export const tracksApi = createApi({
       return action.payload[reducerPath];
     }
   },
+  tagTypes: ['track'],
   endpoints: (builder) => ({
     getAllTracks: builder.query<Track[], GetTracksParams>({
       query: ({ count = '25', offset = '0' }) => ({
@@ -19,14 +20,22 @@ export const tracksApi = createApi({
           offset,
         },
       }),
+      providesTags: ['track'],
     }),
+    createTrack: builder.mutation<Track, Track>({
+      query: (body: Track) => ({
+        url: '/tracks',
+        method: 'POST',
+        body,
+      }),
+    }),
+  }),
 });
 
 export const {
   useGetAllTracksQuery,
+  useCreateTrackMutation,
   util: { getRunningQueriesThunk },
 } = tracksApi;
 
-export const {
-  getAllTracks,
-} = tracksApi.endpoints;
+export const { getAllTracks, createTrack } = tracksApi.endpoints;
