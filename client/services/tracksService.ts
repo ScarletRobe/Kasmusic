@@ -28,6 +28,14 @@ export const tracksApi = createApi({
         method: 'POST',
         body,
       }),
+      invalidatesTags: ['track'],
+    }),
+    deleteTrack: builder.mutation<string, string>({
+      query: (id: string) => ({
+        url: `/tracks/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['track'],
     }),
   }),
 });
@@ -35,6 +43,7 @@ export const tracksApi = createApi({
 export const {
   useGetAllTracksQuery,
   useCreateTrackMutation,
+  useDeleteTrackMutation,
   util: { getRunningQueriesThunk },
 } = tracksApi;
 
