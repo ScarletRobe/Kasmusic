@@ -1,6 +1,6 @@
 import { tracksApi } from './../services/tracksService';
 import { reducer } from './rootReducer';
-import { configureStore, Store } from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import { Context, createWrapper } from 'next-redux-wrapper';
 
 const makeStore = (context: Context) =>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Track } from '../../types/track';
 import styles from './TrackItem.module.css';
 import { useRouter } from 'next/router';
