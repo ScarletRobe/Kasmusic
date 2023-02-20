@@ -4,20 +4,20 @@ import TrackItem from './TrackItem/TrackItem';
 import { Track } from '@/types/track';
 
 import { Grid, Box } from '@mui/material';
+import { useGetAllTracksQuery } from '@/services/tracksService';
 
-type TrackListProps = {
-  tracks: Track[];
-};
+const TrackList: React.FC = () => {
+  const { data, isLoading } = useGetAllTracksQuery({
+    count: '50',
+    offset: '0',
+  });
 
-const TrackList: React.FC<TrackListProps> = ({ tracks }) => {
-  if (!tracks) {
-    return <div>Ошибка</div>;
-  }
+  if (isLoading) return <div>Loading</div>;
 
   return (
     <Grid container direction="column">
       <Box p={2}>
-        {tracks.map((track) => (
+        {data.map((track) => (
           <TrackItem key={track._id} track={track} />
         ))}
       </Box>
