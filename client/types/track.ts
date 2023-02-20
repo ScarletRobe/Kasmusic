@@ -19,3 +19,8 @@ export enum AcceptableFiles {
   AUDIO = 'audio/*',
   IMAGE = 'image/*',
 }
+
+export type GetTracksParams = {
+  count: string;
+  offset: string;
+};
