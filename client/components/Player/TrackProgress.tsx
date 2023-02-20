@@ -25,7 +25,7 @@ const TrackProgress: React.FC<TrackProgressProps> = ({
           onChange={onChange}
         />
         <div className={styles.progressionValue}>
-          {left} / {right}
+          {getFormattedTime(currentTime)} / {getFormattedTime(duration)}
         </div>
       </Stack>
     </Box>
