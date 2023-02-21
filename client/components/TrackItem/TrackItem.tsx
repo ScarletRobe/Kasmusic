@@ -23,7 +23,6 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
   const dispatch = useDispatch();
   const [deleteTrack, { isLoading, isError }] = useDeleteTrackMutation();
 
-
   // Player destructuring causes rerender when any state property is changed even unused ones
   const activeTrack = useTypedSelector((state) => state.player.activeTrack);
   const pause = useTypedSelector((state) => state.player.pause);

@@ -22,8 +22,8 @@ export const tracksApi = createApi({
       }),
       providesTags: ['track'],
     }),
-    createTrack: builder.mutation<Track, Track>({
-      query: (body: Track) => ({
+    createTrack: builder.mutation<Track, FormData>({
+      query: (body: FormData) => ({
         url: '/tracks',
         method: 'POST',
         body,

@@ -37,6 +37,9 @@ const Player = () => {
   }, [activeTrack]);
 
   useEffect(() => {
+    if (!audio) {
+      return;
+    }
     if (audio.src) {
       !pause ? audio?.play() : audio?.pause();
     }
@@ -47,9 +50,15 @@ const Player = () => {
       audio.src = 'http://localhost:5000/' + activeTrack.audio;
       audio.volume = volume / 100;
       audio.onloadedmetadata = () => {
+        if (!audio) {
+          return;
+        }
         dispatch(setDuration(Math.ceil(audio.duration)));
       };
       audio.ontimeupdate = () => {
+        if (!audio) {
+          return;
+        }
         dispatch(setCurrentTime(Math.ceil(audio.currentTime)));
       };
       audio.onended = () => {
@@ -70,12 +79,20 @@ const Player = () => {
     }
   };
 
-  const changeVolume = (_, value: number | number[]) => {
+  const changeVolume = (_: any, value: number | number[]) => {
+    if (!audio) {
+      dispatch(setVolume(0));
+      return;
+    }
     audio.volume = Number(value) / 100;
     dispatch(setVolume(Number(value)));
   };
 
-  const changeCurrentTime = (_, value: number | number[]) => {
+  const changeCurrentTime = (_: any, value: number | number[]) => {
+    if (!audio) {
+      dispatch(setCurrentTime(0));
+      return;
+    }
     audio.currentTime = Number(value);
     dispatch(setCurrentTime(Number(value)));
   };

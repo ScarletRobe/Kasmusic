@@ -29,8 +29,8 @@ const Upload = () => {
       const formData = new FormData();
       formData.append('name', name.value);
       formData.append('artist', artist.value);
-      formData.append('picture', picture);
-      formData.append('audio', audio);
+      formData.append('picture', picture as Blob);
+      formData.append('audio', audio as Blob);
       createPost(formData);
     }
   };

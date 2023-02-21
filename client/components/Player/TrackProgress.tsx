@@ -6,11 +6,10 @@ import { useTypedSelector } from '@/hooks/useTypedSelector';
 import { getFormattedTime } from '@/utils';
 
 interface TrackProgressProps {
-  onChange: (_, value: number | number[]) => void;
+  onChange: (_: any, value: number | number[]) => void;
 }
 
 const TrackProgress: React.FC<TrackProgressProps> = ({ onChange }) => {
-
   // Player destructuring causes rerender when any state property is changed even unused ones
   const duration = useTypedSelector((state) => state.player.duration);
   const currentTime = useTypedSelector((state) => state.player.currentTime);
