@@ -107,12 +107,12 @@ const Player = () => {
         {pause ? <PlayArrow /> : <Pause />}
       </IconButton>
       <Stack direction="row" className={styles.trackInfo} spacing="2">
-        <Image
+        <img
           width="50"
           height="50"
           src={`http://localhost:5000/${activeTrack.picture}`}
           alt="Track cover"
-        ></Image>
+        ></img>
         <Grid
           container
           direction="column"
