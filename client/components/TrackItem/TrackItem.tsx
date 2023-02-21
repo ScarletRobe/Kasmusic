@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Track } from '../../types/track';
 import styles from './TrackItem.module.css';
 import { useRouter } from 'next/router';
 import { PlayArrow, Pause, Delete } from '@mui/icons-material';
 import { Card, IconButton, Grid } from '@mui/material';
-import Image from 'next/image';
 import {
   setActiveTrack,
   setPause,
@@ -51,7 +50,7 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
       <IconButton onClick={play}>
         {activeTrack?._id === track._id && !pause ? <Pause /> : <PlayArrow />}
       </IconButton>
-      <Image
+      <img
         className={styles.trackCover}
         src={'http://localhost:5000/' + track.picture}
         width={70}

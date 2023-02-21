@@ -31,7 +31,7 @@ const TrackPage: React.FC<TrackPageProps> = ({
         К списку
       </Button>
       <Grid container className={styles.trackInfoContainer}>
-        <Image
+        <img
           className={styles.trackImg}
           src=""
           width={200}
