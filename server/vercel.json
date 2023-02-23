@@ -1,5 +1,8 @@
 {
   "version": 2,
+  "env": {
+    "YANDEX_AUTH_TOKEN": "@yandex_auth_token"
+  },
   "builds": [
       {
           "src": "src/main.ts",
