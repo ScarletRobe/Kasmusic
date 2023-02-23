@@ -17,13 +17,13 @@ export class TrackService {
   ) {}
 
   async create(dto: CreateTrackDto, picture, audio): Promise<Track> {
-    const picturePath = this.fileService.createFile(FileType.IMAGE, picture);
-    const audioPath = this.fileService.createFile(FileType.AUDIO, audio);
+    const pictureInfo = await this.fileService.createFile(FileType.IMAGE, picture);
+    const audioInfo = await this.fileService.createFile(FileType.AUDIO, audio);
     const track = await this.trackModel.create({
       ...dto,
       listens: 0,
-      audio: audioPath,
-      picture: picturePath,
+      audio: audioInfo,
+      picture: pictureInfo,
     });
     return track;
   }
@@ -47,8 +47,9 @@ export class TrackService {
 
   async delete(id: ObjectId): Promise<mongoose.Types.ObjectId> {
     const track = await this.trackModel.findByIdAndDelete(id);
-    this.fileService.removeFile(track.audio);
-    this.fileService.removeFile(track.picture);
+    const audioRemove = this.fileService.removeFile(FileType.AUDIO, track.audio.name);
+    const pictureRemove = this.fileService.removeFile(FileType.IMAGE, track.picture.name);
+    await Promise.all([audioRemove, pictureRemove]);
     return track._id;
   }
 
