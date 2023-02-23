@@ -6,6 +6,7 @@ import {
   Controller,
   Delete,
   Get,
+  Options,
   Param,
   Patch,
   Post,
@@ -20,6 +21,11 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express/multer';
 @Controller('/tracks')
 export class TrackController {
   constructor(private trackService: TrackService) {}
+  @Options(':id')
+  getOptions() {
+    return;
+  }
+
   @Post()
   @UseInterceptors(
     FileFieldsInterceptor([
