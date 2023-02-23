@@ -4,14 +4,19 @@ export type Comment = {
   text: string;
 };
 
+type Media = {
+  url: string;
+  name: string;
+};
+
 export type Track = {
   _id: string;
   name: string;
   artist: string;
   text: string;
   listens: number;
-  picture: string;
-  audio: string;
+  picture: Media;
+  audio: Media;
   comments: Comment[];
 };
 
