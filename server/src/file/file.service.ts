@@ -1,7 +1,7 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import * as path from 'path';
-import * as fs from 'fs';
+import { Inject, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import * as uuid from 'uuid';
+import { YaDisk } from './yandex-disk-api';
 
 export enum FileType {
   AUDIO = 'audio',
@@ -10,28 +10,37 @@ export enum FileType {
 
 @Injectable()
 export class FileService {
-  createFile(type: FileType, file): string {
-    try {
-      const fileExtension = file.originalname.split('.').pop();
-      const fileName = uuid.v4() + '.' + fileExtension;
-      const filePath = path.resolve(__dirname, '../..', 'static', type);
-      if (!fs.existsSync(filePath)) {
-        fs.mkdirSync(filePath, { recursive: true });
-      }
-      fs.writeFileSync(path.resolve(filePath, fileName), file.buffer);
-      return type + '/' + fileName;
-    } catch (e) {
-      throw new HttpException(e.message, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+  @Inject(ConfigService)
+  public config: ConfigService;
+  private disk;
+
+  initDisk() {
+    this.disk = new YaDisk(process.env.YANDEX_AUTH_TOKEN);
   }
 
-  removeFile(fileName: string) {
+  async createFile(type: FileType, file) {
+    if (!this.disk) {
+      this.initDisk();
+    }
+    const fileExtension = file.originalname.split('.').pop();
+    const fileName = uuid.v4() + '.' + fileExtension;
+    const path = `music-platform%2F${type}%2F${fileName}`;
+
+    await this.disk.upload({ path, file: file });
+    const fileUrl = await this.disk.getDownloadUrl({ path });
+    return { url: fileUrl.href, name: fileName };
+  }
+
+  async removeFile(type: FileType, fileName: string) {
+    if (!this.disk) {
+      this.initDisk();
+    }
     if (!fileName) {
       return;
     }
-    const filePath = path.resolve(__dirname, '../..', 'static', fileName);
-    if (fs.existsSync(filePath)) {
-      fs.rmSync(filePath);
-    }
+    await this.disk.remove({
+      path: `music-platform%2F${type}%2F${fileName}`,
+      permanently: true,
+    });
   }
 }
