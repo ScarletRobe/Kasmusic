@@ -52,7 +52,7 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
       </IconButton>
       <img
         className={styles.trackCover}
-        src={'http://localhost:5000/' + track.picture}
+        src={track.picture.url}
         width={70}
         height={70}
         alt="Track cover"

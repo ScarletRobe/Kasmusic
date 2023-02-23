@@ -3,7 +3,6 @@ import { PlayArrow, Pause, VolumeUp, VolumeDown } from '@mui/icons-material';
 import { IconButton, Grid, Slider, Box, Stack } from '@mui/material';
 import TrackProgress from './TrackProgress';
 import { useDispatch } from 'react-redux';
-import Image from 'next/image';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import {
   setCurrentTime,
@@ -47,7 +46,7 @@ const Player = () => {
 
   const setAudio = () => {
     if (activeTrack && audio) {
-      audio.src = 'http://localhost:5000/' + activeTrack.audio;
+      audio.src = activeTrack.audio.url;
       audio.volume = volume / 100;
       audio.onloadedmetadata = () => {
         if (!audio) {
@@ -110,7 +109,7 @@ const Player = () => {
         <img
           width="50"
           height="50"
-          src={`http://localhost:5000/${activeTrack.picture}`}
+          src={activeTrack.picture.url}
           alt="Track cover"
         ></img>
         <Grid

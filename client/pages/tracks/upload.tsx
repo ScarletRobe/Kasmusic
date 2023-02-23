@@ -52,12 +52,24 @@ const Upload = () => {
 
           {activeStep === 1 && (
             <FileUpload setFile={setPicture} accept={AcceptableFiles.IMAGE}>
-              <Button>Загрузить изображение</Button>
+              <>
+                {picture && (
+                  <img
+                    width={70}
+                    height={70}
+                    src={URL.createObjectURL(picture)}
+                  ></img>
+                )}
+                <Button>Загрузить изображение</Button>
+              </>
             </FileUpload>
           )}
           {activeStep === 2 && (
             <FileUpload setFile={setAudio} accept={AcceptableFiles.AUDIO}>
-              <Button>Загрузить аудио</Button>
+              <>
+                {audio && <audio src={URL.createObjectURL(audio)}></audio>}
+                <Button>Загрузить аудио</Button>
+              </>
             </FileUpload>
           )}
           {activeStep === 3 && getUploadStatusElement(isLoading, isError)}
