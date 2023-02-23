@@ -11,6 +11,7 @@ import {
   Patch,
   Post,
   Query,
+  Res,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
@@ -34,12 +35,17 @@ export class TrackController {
     ]),
   )
   create(
+    @Res() res,
     @UploadedFiles()
     files,
     @Body() dto: CreateTrackDto,
   ) {
     const { picture, audio } = files;
-    return this.trackService.create(dto, picture[0], audio[0]);
+    return res
+      .set({
+        'access-control-allow-origin': '*',
+      })
+      .json(this.trackService.create(dto, picture[0], audio[0]));
   }
 
   @Get()
