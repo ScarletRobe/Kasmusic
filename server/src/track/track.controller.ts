@@ -34,18 +34,19 @@ export class TrackController {
       { name: 'audio', maxCount: 1 },
     ]),
   )
-  create(
+  async create(
     @Res() res,
     @UploadedFiles()
     files,
     @Body() dto: CreateTrackDto,
   ) {
     const { picture, audio } = files;
+    const track = await this.trackService.create(dto, picture[0], audio[0]);
     return res
       .set({
         'access-control-allow-origin': '*',
       })
-      .json(this.trackService.create(dto, picture[0], audio[0]));
+      .json(track);
   }
 
   @Get()
