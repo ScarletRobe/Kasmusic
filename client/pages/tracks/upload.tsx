@@ -7,6 +7,7 @@ import { AcceptableFiles } from '@/types/track';
 import Image from 'next/image';
 import { useInput } from '@/hooks/useInput';
 import { useCreateTrackMutation } from '@/services/tracksService';
+import Head from 'next/head';
 
 const getUploadStatusElement = (isLoading: boolean, isError: boolean) => {
   if (isLoading) return <div>Loading...</div>;
@@ -41,6 +42,9 @@ const Upload = () => {
 
   return (
     <>
+      <Head>
+        <meta name="referrer" content="always"></meta>
+      </Head>
       <UploadStepsWrapper activeStep={activeStep}>
         <Paper elevation={3} sx={{ p: 3 }}>
           {activeStep === 0 && (

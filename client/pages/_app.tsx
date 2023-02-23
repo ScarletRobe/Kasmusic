@@ -11,10 +11,6 @@ function MyApp({ Component, ...rest }: AppProps) {
   const { pageProps } = props;
   return (
     <>
-      <Head>
-        <title>Тестик</title>
-        <meta name="referrer" content="no-referrer"></meta>
-      </Head>
       <Provider store={store}>
         <MainLayout>
           <Component {...pageProps} />
