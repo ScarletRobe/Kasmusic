@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import * as mongoose from 'mongoose';
 import { Comment } from './comment.schema';
+import { Media } from './media.schema';
 
 export type TrackDocument = Track & Document;
 
@@ -20,10 +21,10 @@ export class Track {
   listens: number;
 
   @Prop()
-  picture: string;
+  picture: Media;
 
   @Prop()
-  audio: string;
+  audio: Media;
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }] })
   comments: Comment[];
