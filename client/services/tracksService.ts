@@ -23,6 +23,11 @@ export const tracksApi = createApi({
       }),
       providesTags: ['track'],
     }),
+    getTrackById: builder.query<Track, string>({
+      query: (id) => ({
+        url: `/tracks/${id}`,
+      }),
+    }),
     createTrack: builder.mutation<Track, FormData>({
       query: (body: FormData) => ({
         url: '/tracks',
@@ -45,7 +50,8 @@ export const {
   useGetAllTracksQuery,
   useCreateTrackMutation,
   useDeleteTrackMutation,
+  useGetTrackByIdQuery,
   util: { getRunningQueriesThunk },
 } = tracksApi;
 
-export const { getAllTracks, createTrack } = tracksApi.endpoints;
+export const { getAllTracks, createTrack, getTrackById } = tracksApi.endpoints;
