@@ -29,3 +29,8 @@ export type GetTracksParams = {
   count: string;
   offset: string;
 };
+
+export type AddCommentsParams = {
+  trackId: string;
+  comment: Omit<Comment, '_id'>;
+};

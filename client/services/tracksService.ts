@@ -1,5 +1,10 @@
 import { BASE_SERVER_URL } from './../consts';
-import { GetTracksParams, Track } from '../types/track';
+import {
+  AddCommentsParams,
+  Comment,
+  GetTracksParams,
+  Track,
+} from '../types/track';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { HYDRATE } from 'next-redux-wrapper';
 
@@ -11,7 +16,7 @@ export const tracksApi = createApi({
       return action.payload[reducerPath];
     }
   },
-  tagTypes: ['track'],
+  tagTypes: ['trackList', 'track'],
   endpoints: (builder) => ({
     getAllTracks: builder.query<Track[], GetTracksParams>({
       query: ({ count = '25', offset = '0' }) => ({
@@ -21,11 +26,21 @@ export const tracksApi = createApi({
           offset,
         },
       }),
-      providesTags: ['track'],
+      providesTags: ['trackList'],
     }),
     getTrackById: builder.query<Track, string>({
       query: (id) => ({
         url: `/tracks/${id}`,
+      }),
+    }),
+    createComment: builder.mutation<Comment, AddCommentsParams>({
+      query: ({ comment, trackId }) => ({
+        url: `/tracks/comment`,
+        method: 'POST',
+        body: {
+          ...comment,
+          trackId,
+        },
       }),
     }),
     createTrack: builder.mutation<Track, FormData>({
@@ -34,14 +49,14 @@ export const tracksApi = createApi({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['track'],
+      invalidatesTags: ['trackList'],
     }),
     deleteTrack: builder.mutation<string, string>({
       query: (id: string) => ({
         url: `/tracks/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['track'],
+      invalidatesTags: ['trackList'],
     }),
   }),
 });
@@ -51,6 +66,7 @@ export const {
   useCreateTrackMutation,
   useDeleteTrackMutation,
   useGetTrackByIdQuery,
+  useCreateCommentMutation,
   util: { getRunningQueriesThunk },
 } = tracksApi;
 
