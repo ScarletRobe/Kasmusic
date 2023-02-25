@@ -49,7 +49,11 @@ export class TrackService {
   }
 
   async delete(id: ObjectId): Promise<mongoose.Types.ObjectId> {
-    const track = await this.trackModel.findByIdAndDelete(id);
+    const track = await this.trackModel.findById(id);
+    track.comments.forEach(async (commentId) => {
+      await this.commentModel.findByIdAndDelete(commentId);
+    });
+    const trackRemove = track.delete();
     const audioRemove = this.fileService.removeFile(
       FileType.AUDIO,
       track.audio.name,
@@ -58,7 +62,7 @@ export class TrackService {
       FileType.IMAGE,
       track.picture.name,
     );
-    await Promise.all([audioRemove, pictureRemove]);
+    await Promise.all([audioRemove, pictureRemove, trackRemove]);
     return track._id;
   }
 
