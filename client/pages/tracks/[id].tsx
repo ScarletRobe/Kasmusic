@@ -1,18 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Track } from '../../types/track';
 import { useRouter } from 'next/router';
 import { Button, Grid, TextField } from '@mui/material';
 import styles from '../../styles/trackPage.module.css';
-import { getRunningQueriesThunk, getTrackById } from '@/services/tracksService';
+import {
+  getRunningQueriesThunk,
+  getTrackById,
+  useCreateCommentMutation,
+} from '@/services/tracksService';
 import { wrapper } from '@/store/store';
+import { useInput } from '@/hooks/useInput';
 
 type TrackPageProps = {
-  track: Track;
+  serverTrack: Track;
 };
 
-const TrackPage: React.FC<TrackPageProps> = ({ track }) => {
+const TrackPage: React.FC<TrackPageProps> = ({ serverTrack }) => {
+  const [track, setTrack] = useState<Track>(serverTrack);
+  const [prevReqId, setPrevReqId] = useState<null | string>(null);
   const router = useRouter();
+  const username = useInput('');
+  const text = useInput('');
 
+  const [createComment, result] = useCreateCommentMutation();
+
+  if (result.status === 'fulfilled' && result.requestId !== prevReqId) {
+    setTrack({ ...track, comments: [...track.comments, result.data] });
+    setPrevReqId(result.requestId);
+  }
+
+  const addComment = () => {
+    createComment({
+      comment: {
+        text: text.value,
+        username: username.value,
+      },
+      trackId: track._id,
+    });
+  };
   return (
     <>
       <Button variant={'outlined'} onClick={() => router.push('/tracks')}>
@@ -34,8 +59,14 @@ const TrackPage: React.FC<TrackPageProps> = ({ track }) => {
       </Grid>
       <h2>Добавить комментарий</h2>
       <Grid container>
-        <TextField label="Ваше имя" fullWidth inputProps={{ maxLength: 100 }} />
         <TextField
+          {...username}
+          label="Ваше имя"
+          fullWidth
+          inputProps={{ maxLength: 100 }}
+        />
+        <TextField
+          {...text}
           margin="normal"
           label="Комментарий"
           multiline
@@ -44,7 +75,9 @@ const TrackPage: React.FC<TrackPageProps> = ({ track }) => {
           inputProps={{ maxLength: 250 }}
         />
       </Grid>
-      <Button variant="outlined">Отправить</Button>
+      <Button variant="outlined" onClick={addComment}>
+        Отправить
+      </Button>
       <h2>Комментарии</h2>
       <div>
         {track.comments.map((comment) => (
@@ -65,15 +98,15 @@ export const getServerSideProps = wrapper.getServerSideProps(
     async ({ params }) => {
       if (!params || !params.id) {
         return {
-          props: { track: {} },
+          props: { serverTrack: {} },
         };
       }
       store.dispatch(getTrackById.initiate(params.id as string));
-      const track = (
+      const serverTrack = (
         await Promise.all(store.dispatch(getRunningQueriesThunk()))
       )[0].data;
       return {
-        props: { track },
+        props: { serverTrack },
       };
     },
 );
