@@ -1,28 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Track } from '../../types/track';
-import MainLayout from '../../layouts/MainLayout';
 import { useRouter } from 'next/router';
-import { GetServerSideProps } from 'next';
 import { Button, Grid, TextField } from '@mui/material';
-import Image from 'next/image';
 import styles from '../../styles/trackPage.module.css';
+import { getRunningQueriesThunk, getTrackById } from '@/services/tracksService';
+import { wrapper } from '@/store/store';
 
 type TrackPageProps = {
   track: Track;
 };
 
-const TrackPage: React.FC<TrackPageProps> = ({
-  track = {
-    name: 'Имя',
-    artist: 'Исполнитель',
-    listens: 1,
-    _id: '1',
-    text: 'Текст',
-    picture: '',
-    audio: '',
-    comments: [],
-  },
-}) => {
+const TrackPage: React.FC<TrackPageProps> = ({ track }) => {
   const router = useRouter();
 
   return (
@@ -33,7 +21,7 @@ const TrackPage: React.FC<TrackPageProps> = ({
       <Grid container className={styles.trackInfoContainer}>
         <img
           className={styles.trackImg}
-          src=""
+          src={track.picture.url}
           width={200}
           height={200}
           alt="Track cover"
@@ -51,11 +39,12 @@ const TrackPage: React.FC<TrackPageProps> = ({
           margin="normal"
           label="Комментарий"
           multiline
+          fullWidth
           rows={4}
           inputProps={{ maxLength: 250 }}
         />
-        <Button variant="outlined">Отправить</Button>
       </Grid>
+      <Button variant="outlined">Отправить</Button>
       <h2>Комментарии</h2>
       <div>
         {track.comments.map((comment) => (
@@ -70,3 +59,21 @@ const TrackPage: React.FC<TrackPageProps> = ({
 };
 
 export default TrackPage;
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) =>
+    async ({ params }) => {
+      if (!params || !params.id) {
+        return {
+          props: { track: {} },
+        };
+      }
+      store.dispatch(getTrackById.initiate(params.id as string));
+      const track = (
+        await Promise.all(store.dispatch(getRunningQueriesThunk()))
+      )[0].data;
+      return {
+        props: { track },
+      };
+    },
+);
