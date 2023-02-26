@@ -32,6 +32,7 @@ export const tracksApi = createApi({
       query: (id) => ({
         url: `/tracks/${id}`,
       }),
+      providesTags: ['track'],
     }),
     createComment: builder.mutation<Comment, AddCommentsParams>({
       query: ({ comment, trackId }) => ({
@@ -42,6 +43,7 @@ export const tracksApi = createApi({
           trackId,
         },
       }),
+      invalidatesTags: ['track'],
     }),
     createTrack: builder.mutation<Track, FormData>({
       query: (body: FormData) => ({
