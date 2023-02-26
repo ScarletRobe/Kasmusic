@@ -7,37 +7,41 @@ import {
   getRunningQueriesThunk,
   getTrackById,
   useCreateCommentMutation,
+  useGetTrackByIdQuery,
 } from '@/services/tracksService';
 import { wrapper } from '@/store/store';
 import { useInput } from '@/hooks/useInput';
 
-type TrackPageProps = {
-  serverTrack: Track;
-};
-
-const TrackPage: React.FC<TrackPageProps> = ({ serverTrack }) => {
-  const [track, setTrack] = useState<Track>(serverTrack);
-  const [prevReqId, setPrevReqId] = useState<null | string>(null);
+const TrackPage: React.FC = () => {
   const router = useRouter();
+  const { id } = router.query;
+
+  const { data, isLoading, isError } = useGetTrackByIdQuery(id as string);
+  const [createComment] = useCreateCommentMutation();
+  const track = data;
+
   const username = useInput('');
   const text = useInput('');
 
-  const [createComment, result] = useCreateCommentMutation();
+  const addComment = () => {
+    if (track) {
+      createComment({
+        comment: {
+          text: text.value,
+          username: username.value,
+        },
+        trackId: track._id,
+      });
+    }
+  };
 
-  if (result.status === 'fulfilled' && result.requestId !== prevReqId) {
-    setTrack({ ...track, comments: [...track.comments, result.data] });
-    setPrevReqId(result.requestId);
+  if (isLoading) {
+    return <div>Loading</div>;
+  }
+  if (isError || !track) {
+    return <div>Error</div>;
   }
 
-  const addComment = () => {
-    createComment({
-      comment: {
-        text: text.value,
-        username: username.value,
-      },
-      trackId: track._id,
-    });
-  };
   return (
     <>
       <Button variant={'outlined'} onClick={() => router.push('/tracks')}>
@@ -93,20 +97,21 @@ const TrackPage: React.FC<TrackPageProps> = ({ serverTrack }) => {
 
 export default TrackPage;
 
-export const getServerSideProps = wrapper.getServerSideProps(
-  (store) =>
-    async ({ params }) => {
-      if (!params || !params.id) {
-        return {
-          props: { serverTrack: {} },
-        };
-      }
-      store.dispatch(getTrackById.initiate(params.id as string));
-      const serverTrack = (
-        await Promise.all(store.dispatch(getRunningQueriesThunk()))
-      )[0].data;
-      return {
-        props: { serverTrack },
-      };
-    },
-);
+// Unable to use server side props due to restrictions imposed by the free version of vercel
+// export const getServerSideProps = wrapper.getServerSideProps(
+//   (store) =>
+//     async ({ params }) => {
+//       if (!params || !params.id) {
+//         return {
+//           props: { serverTrack: {} },
+//         };
+//       }
+//       store.dispatch(getTrackById.initiate(params.id as string));
+//       const serverTrack = (
+//         await Promise.all(store.dispatch(getRunningQueriesThunk()))
+//       )[0].data;
+//       return {
+//         props: { serverTrack },
+//       };
+//     },
+// );
