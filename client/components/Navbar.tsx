@@ -13,7 +13,7 @@ import ListItemText from '@mui/material/ListItemText';
 import { useRouter } from 'next/router';
 import AppBar from '@mui/material/AppBar';
 import ListItem from '@mui/material/ListItem';
-import { ListItemButton } from '@mui/material';
+import { ClickAwayListener, ListItemButton } from '@mui/material';
 
 import AudiotrackRoundedIcon from '@mui/icons-material/AudiotrackRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
@@ -26,11 +26,15 @@ const menuItems = [
   { text: 'Список треков', href: '/tracks', icon: <AudiotrackRoundedIcon /> },
   {
     text: 'Список плейлистов',
-    href: '/',
+    href: '/playlists',
     icon: <LibraryMusicRoundedIcon />,
   },
-  { text: 'Любимые', href: '/', icon: <FavoriteRoundedIcon /> },
-  { text: 'Загруженные вами', href: '/', icon: <FileDownloadRoundedIcon /> },
+  { text: 'Любимые', href: '/favorite', icon: <FavoriteRoundedIcon /> },
+  {
+    text: 'Загруженные вами',
+    href: '/uploaded',
+    icon: <FileDownloadRoundedIcon />,
+  },
 ];
 
 export default function Navbar() {
@@ -46,7 +50,7 @@ export default function Navbar() {
   };
 
   return (
-    <div>
+    <>
       <CssBaseline />
       <AppBar position="fixed">
         <Toolbar>
@@ -63,23 +67,42 @@ export default function Navbar() {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Drawer variant="persistent" anchor="left" open={open}>
-        <div>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </div>
-        <List>
-          {menuItems.map(({ text, href, icon }) => (
-            <ListItem key={href} disablePadding>
-              <ListItemButton onClick={() => router.push(href)}>
-                <ListItemIcon>{icon}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-    </div>
+      <ClickAwayListener
+        mouseEvent="onMouseDown"
+        touchEvent="onTouchStart"
+        open={open}
+        onClickAway={() => open && setOpen(false)}
+      >
+        <Drawer
+          variant="persistent"
+          anchor="left"
+          open={open}
+          onClose={() => {
+            console.log('close');
+          }}
+        >
+          <div>
+            <IconButton onClick={handleDrawerClose}>
+              <ChevronLeftIcon />
+            </IconButton>
+          </div>
+          <List>
+            {menuItems.map(({ text, href, icon }) => (
+              <ListItem key={href} disablePadding>
+                <ListItemButton
+                  onClick={() => {
+                    handleDrawerClose();
+                    router.push(href);
+                  }}
+                >
+                  <ListItemIcon>{icon}</ListItemIcon>
+                  <ListItemText primary={text} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </Drawer>
+      </ClickAwayListener>
+    </>
   );
 }
