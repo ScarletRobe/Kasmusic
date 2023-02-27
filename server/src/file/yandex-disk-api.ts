@@ -183,6 +183,20 @@ class YaDisk {
       file: params.file,
     });
   }
+  async getMetaInfo(url) {
+    const res = await this._http.request({
+      url,
+      method: 'GET',
+    });
+    return res;
+  }
+  async publish(params) {
+    const res = await this._http.request({
+      url: `${YA_DISK_RESOURCES_URL}/publish?path=${params.path}`,
+      method: 'PUT',
+    });
+    return res.data;
+  }
   async getDownloadUrl(params) {
     const res = await this._http.request({
       method: 'GET',

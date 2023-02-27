@@ -27,8 +27,10 @@ export class FileService {
     const path = `music-platform%2F${type}%2F${fileName}`;
 
     await this.disk.upload({ path, file: file });
-    const fileUrl = await this.disk.getDownloadUrl({ path });
-    return { url: fileUrl.href, name: fileName };
+    const publishUrl = (await this.disk.publish({ path })).href;
+    const metaInfo = (await this.disk.getMetaInfo(publishUrl)).data;
+    const fileUrl = metaInfo.file;
+    return { url: fileUrl, name: fileName };
   }
 
   async removeFile(type: FileType, fileName: string) {
