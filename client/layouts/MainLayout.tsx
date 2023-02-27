@@ -2,6 +2,8 @@ import React from 'react';
 import Navbar from '../components/Navbar';
 import Container from '@mui/material/Container';
 import Player from '@/components/Player/Player';
+import { ThemeProvider } from '@mui/material';
+import { theme } from '@/styles/MUITheme';
 
 interface MainLayoutProps {
   children: JSX.Element;
@@ -10,9 +12,11 @@ interface MainLayoutProps {
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   return (
     <>
-      <Navbar />
-      <Container style={{ marginTop: '90px' }}>{children}</Container>
-      <Player />
+      <ThemeProvider theme={theme}>
+        <Navbar />
+        <Container style={{ marginTop: '90px' }}>{children}</Container>
+        <Player />
+      </ThemeProvider>
     </>
   );
 };
