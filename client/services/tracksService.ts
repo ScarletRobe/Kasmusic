@@ -34,6 +34,15 @@ export const tracksApi = createApi({
       }),
       providesTags: ['track'],
     }),
+    searchTrack: builder.query<Track[], string>({
+      query: (searchQuery) => ({
+        url: `/tracks/search`,
+        params: {
+          query: searchQuery,
+        },
+      }),
+      providesTags: ['track'],
+    }),
     createComment: builder.mutation<Comment, AddCommentsParams>({
       query: ({ comment, trackId }) => ({
         url: `/tracks/comment`,
@@ -69,6 +78,7 @@ export const {
   useDeleteTrackMutation,
   useGetTrackByIdQuery,
   useCreateCommentMutation,
+  useSearchTrackQuery,
   util: { getRunningQueriesThunk },
 } = tracksApi;
 
