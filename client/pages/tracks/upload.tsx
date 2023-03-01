@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Grid, TextField, Button, Paper } from '@mui/material';
 import UploadStepsWrapper from '@/components/uploadStepsWrapper/UploadStepsWrapper';
@@ -8,6 +8,7 @@ import Image from 'next/image';
 import { useInput } from '@/hooks/useInput';
 import { useCreateTrackMutation } from '@/services/tracksService';
 import Head from 'next/head';
+import { uploadFile, YaDisk } from '../../services/yandexDiskApi';
 
 const getUploadStatusElement = (isLoading: boolean, isError: boolean) => {
   if (isLoading) return <div>Loading...</div>;
@@ -15,7 +16,16 @@ const getUploadStatusElement = (isLoading: boolean, isError: boolean) => {
   if (!isLoading && !isError) return <div>Success</div>;
 };
 
+let disk: null | YaDisk = null;
 const Upload = () => {
+  useEffect(() => {
+    if (!disk) {
+      disk = new YaDisk(
+        'y0_AgAAAAAsPKQhAADLWwAAAADc0R33ojNQVVkHQeKJd60HnYCKSrV6O68',
+      );
+    }
+  });
+
   const [createPost, { isLoading, isError }] = useCreateTrackMutation();
   const [activeStep, setActiveStep] = useState(0);
   const [picture, setPicture] = useState<File | null>(null);
@@ -24,14 +34,20 @@ const Upload = () => {
   const artist = useInput('');
   const router = useRouter();
 
-  const next = () => {
+  const next = async () => {
     setActiveStep((prev) => prev + 1);
     if (activeStep === 2) {
       const formData = new FormData();
       formData.append('name', name.value);
       formData.append('artist', artist.value);
-      formData.append('picture', picture as Blob);
-      formData.append('audio', audio as Blob);
+      const pictureUpload = uploadFile(disk, picture, 'image');
+      const audioUpload = uploadFile(disk, audio, 'audio');
+      const [pictureInfo, audioInfo] = await Promise.all([
+        pictureUpload,
+        audioUpload,
+      ]);
+      formData.append('picture', JSON.stringify(pictureInfo));
+      formData.append('audio', JSON.stringify(audioInfo));
       createPost(formData);
     }
   };
