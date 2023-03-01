@@ -147,7 +147,7 @@ export const uploadFile = async (disk, file, type) => {
   const fileName = uuid.v4() + '.' + fileExtension;
   const path = `music-platform%2F${type}%2F${fileName}`;
   await disk.upload({ path, file });
-  const fileUrl = await disk.getDownloadUrl({ path });
+  const fileUrl = await disk.getDownloadUrl(fileName, type);
   return { url: fileUrl.href, name: fileName };
 };
 
