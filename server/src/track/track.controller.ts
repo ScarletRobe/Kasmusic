@@ -34,14 +34,8 @@ export class TrackController {
       { name: 'audio', maxCount: 1 },
     ]),
   )
-  async create(
-    @Res() res,
-    @UploadedFiles()
-    files,
-    @Body() dto: CreateTrackDto,
-  ) {
-    const { picture, audio } = files;
-    const track = await this.trackService.create(dto, picture[0], audio[0]);
+  async create(@Res() res, @Body() dto: CreateTrackDto) {
+    const track = await this.trackService.create(dto);
     return res
       .set({
         'access-control-allow-origin': '*',
@@ -63,6 +57,7 @@ export class TrackController {
   getOne(@Param('id') id: ObjectId) {
     return this.trackService.getOne(id);
   }
+
   @Delete(':id')
   delete(@Param('id') id: ObjectId) {
     return this.trackService.delete(id);

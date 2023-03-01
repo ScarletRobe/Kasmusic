@@ -16,17 +16,12 @@ export class TrackService {
     private fileService: FileService,
   ) {}
 
-  async create(dto: CreateTrackDto, picture, audio): Promise<Track> {
-    const pictureInfo = await this.fileService.createFile(
-      FileType.IMAGE,
-      picture,
-    );
-    const audioInfo = await this.fileService.createFile(FileType.AUDIO, audio);
+  async create(dto: CreateTrackDto): Promise<Track> {
     const track = await this.trackModel.create({
       ...dto,
+      picture: JSON.parse(dto.picture),
+      audio: JSON.parse(dto.audio),
       listens: 0,
-      audio: audioInfo,
-      picture: pictureInfo,
     });
     return track;
   }
