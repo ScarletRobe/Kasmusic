@@ -118,8 +118,10 @@ const Player = () => {
           direction="column"
           sx={{ flex: '1', overflow: 'hidden' }}
         >
-          <div>{activeTrack?.name}</div>
-          <div className={styles.artist}>{activeTrack?.artist}</div>
+          <div className={styles.trackInfoItem}>{activeTrack?.name}</div>
+          <div className={[styles.trackInfoItem, styles.artist].join(' ')}>
+            {activeTrack?.artist}
+          </div>
         </Grid>
       </Stack>
       <TrackProgress onChange={changeCurrentTime} />
