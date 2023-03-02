@@ -14,7 +14,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     <>
       <ThemeProvider theme={theme}>
         <Navbar />
-        <Container style={{ marginTop: '90px' }}>{children}</Container>
+        <Container style={{ marginTop: '90px', paddingBottom: '65px' }}>
+          {children}
+        </Container>
         <Player />
       </ThemeProvider>
     </>
