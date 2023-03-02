@@ -110,7 +110,7 @@ const Player = () => {
         <img
           width="50"
           height="50"
-          src={GET_MEDIA_BASE_URL+ activeTrack.picture.url}
+          src={GET_MEDIA_BASE_URL + activeTrack.picture.url}
           alt="Track cover"
         ></img>
         <Grid
