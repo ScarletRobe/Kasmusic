@@ -137,6 +137,26 @@ class YaDisk {
     });
     return res.data;
   }
+  async publish(params) {
+    const res = await this._http.request({
+      url: `${YA_DISK_RESOURCES_URL}/publish?path=${params.path}`,
+      method: 'PUT',
+      headers: {
+        Authorization: this.token,
+      },
+    });
+    return res.data;
+  }
+  async getMetaInfo(url) {
+    const res = await this._http.request({
+      url,
+      method: 'GET',
+      headers: {
+        Authorization: this.token,
+      },
+    });
+    return res;
+  }
   isHttpError(e) {
     return this._http.isHttpError(e);
   }
@@ -147,8 +167,9 @@ export const uploadFile = async (disk, file, type) => {
   const fileName = uuid.v4() + '.' + fileExtension;
   const path = `music-platform%2F${type}%2F${fileName}`;
   await disk.upload({ path, file });
-  const fileUrl = await disk.getDownloadUrl(fileName, type);
-  return { url: fileUrl.href, name: fileName };
+  const publishUrl = (await disk.publish({ path })).href;
+  const metaInfo = (await disk.getMetaInfo(publishUrl)).data;
+  return { url: metaInfo.public_url, name: fileName };
 };
 
 export { HttpError, YaDisk };
