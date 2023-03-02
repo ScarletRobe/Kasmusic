@@ -12,6 +12,8 @@ import {
 import { useDispatch } from 'react-redux';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
 import { useDeleteTrackMutation } from '@/services/tracksService';
+import { YaDisk } from '@/services/yandexDiskApi';
+import { GET_MEDIA_BASE_URL } from '@/consts';
 
 interface TrackItemProps {
   track: Track;
@@ -52,7 +54,7 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
       </IconButton>
       <img
         className={styles.trackCover}
-        src={track.picture.url}
+        src={GET_MEDIA_BASE_URL + track.picture.url}
         width={70}
         height={70}
         alt="Track cover"

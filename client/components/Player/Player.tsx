@@ -13,6 +13,7 @@ import {
 } from '@/store/playerSlice/playerSlice';
 
 import styles from './Player.module.css';
+import { GET_MEDIA_BASE_URL } from '@/consts';
 
 let audio: HTMLAudioElement | null = null;
 
@@ -46,7 +47,7 @@ const Player = () => {
 
   const setAudio = () => {
     if (activeTrack && audio) {
-      audio.src = activeTrack.audio.url;
+      audio.src = GET_MEDIA_BASE_URL + activeTrack.audio.url;
       audio.volume = volume / 100;
       audio.onloadedmetadata = () => {
         if (!audio) {
@@ -109,7 +110,7 @@ const Player = () => {
         <img
           width="50"
           height="50"
-          src={activeTrack.picture.url}
+          src={GET_MEDIA_BASE_URL+ activeTrack.picture.url}
           alt="Track cover"
         ></img>
         <Grid

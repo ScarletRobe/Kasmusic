@@ -11,6 +11,7 @@ import {
 } from '@/services/tracksService';
 import { wrapper } from '@/store/store';
 import { useInput } from '@/hooks/useInput';
+import { GET_MEDIA_BASE_URL } from '@/consts';
 
 const TrackPage: React.FC = () => {
   const router = useRouter();
@@ -50,7 +51,7 @@ const TrackPage: React.FC = () => {
       <Grid container className={styles.trackInfoContainer}>
         <img
           className={styles.trackImg}
-          src={track.picture.url}
+          src={GET_MEDIA_BASE_URL + track.picture.url}
           width={200}
           height={200}
           alt="Track cover"
