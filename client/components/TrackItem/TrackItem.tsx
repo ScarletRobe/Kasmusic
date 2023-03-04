@@ -11,8 +11,10 @@ import {
 } from '@/store/playerSlice/playerSlice';
 import { useDispatch } from 'react-redux';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
-import { useDeleteTrackMutation } from '@/services/tracksService';
-import { YaDisk } from '@/services/yandexDiskApi';
+import {
+  useDeleteTrackMutation,
+  useIncrementListensMutation,
+} from '@/services/tracksService';
 import { GET_MEDIA_BASE_URL } from '@/consts';
 
 interface TrackItemProps {
@@ -23,6 +25,7 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
   const router = useRouter();
   const dispatch = useDispatch();
   const [deleteTrack, { isLoading, isError }] = useDeleteTrackMutation();
+  const [incListens] = useIncrementListensMutation();
 
   // Player destructuring causes rerender when any state property is changed even unused ones
   const activeTrack = useTypedSelector((state) => state.player.activeTrack);
@@ -36,6 +39,7 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
     } else {
       dispatch(setPause());
       dispatch(setActiveTrack(track));
+      incListens(track._id);
     }
   };
 
