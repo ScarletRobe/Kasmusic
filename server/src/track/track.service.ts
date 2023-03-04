@@ -27,7 +27,11 @@ export class TrackService {
   }
 
   async getAll(count = 25, offset = 0): Promise<Track[]> {
-    const tracks = await this.trackModel.find().skip(offset).limit(count);
+    const tracks = await this.trackModel
+      .find()
+      .sort({ _id: -1 })
+      .skip(offset)
+      .limit(count);
     return tracks;
   }
 
