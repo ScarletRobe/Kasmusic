@@ -4,6 +4,7 @@ import styles from './TrackItem.module.css';
 import { useRouter } from 'next/router';
 import { PlayArrow, Pause, Delete } from '@mui/icons-material';
 import { Card, IconButton, Grid } from '@mui/material';
+import RemoveRedEyeRoundedIcon from '@mui/icons-material/RemoveRedEyeRounded';
 import {
   setActiveTrack,
   setPause,
@@ -67,6 +68,8 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
         <div>{track.name}</div>
         <div className={styles.trackArtist}>{track.artist}</div>
       </Grid>
+      <RemoveRedEyeRoundedIcon sx={{ mr: '5px' }} />
+      <div>{track.listens}</div>
       {/* {active && <div>02:42 / 03:22</div>} */}
       <IconButton
         onClick={(e) => handleDelete(e)}
