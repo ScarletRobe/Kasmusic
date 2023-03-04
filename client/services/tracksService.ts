@@ -69,6 +69,12 @@ export const tracksApi = createApi({
       }),
       invalidatesTags: ['trackList'],
     }),
+    incrementListens: builder.mutation<Track, string>({
+      query: (id: string) => ({
+        url: `/tracks/listen/${id}`,
+        method: 'POST',
+      }),
+    }),
   }),
 });
 
@@ -79,6 +85,7 @@ export const {
   useGetTrackByIdQuery,
   useCreateCommentMutation,
   useSearchTrackQuery,
+  useIncrementListensMutation,
   util: { getRunningQueriesThunk },
 } = tracksApi;
 
