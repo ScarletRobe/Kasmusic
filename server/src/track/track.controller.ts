@@ -12,12 +12,12 @@ import {
   Post,
   Query,
   Res,
-  UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { AddCommentDto } from './dto/add-comment.dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express/multer';
+import { SortTypes } from 'src/consts';
 
 @Controller('/tracks')
 export class TrackController {
@@ -44,8 +44,12 @@ export class TrackController {
   }
 
   @Get()
-  getAll(@Query('count') count: number, @Query('offset') offset: number) {
-    return this.trackService.getAll(count, offset);
+  getAll(
+    @Query('count') count: number,
+    @Query('offset') offset: number,
+    @Query('sort') sort: SortTypes,
+  ) {
+    return this.trackService.getAll(count, offset, sort);
   }
 
   @Get('/search')

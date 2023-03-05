@@ -7,6 +7,7 @@ import { Comment, CommentDocument } from './schemas/comment.schema';
 import { Track, TrackDocument } from './schemas/track.schema';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { AddCommentDto } from './dto/add-comment.dto';
+import { SortTypes } from 'src/consts';
 
 @Injectable()
 export class TrackService {
@@ -26,12 +27,36 @@ export class TrackService {
     return track;
   }
 
-  async getAll(count = 25, offset = 0): Promise<Track[]> {
-    const tracks = await this.trackModel
-      .find()
-      .sort({ _id: -1 })
-      .skip(offset)
-      .limit(count);
+  async getAll(count = 25, offset = 0, sort: SortTypes): Promise<Track[]> {
+    let tracks;
+    switch (sort) {
+      case SortTypes.NEWEST:
+        tracks = await this.trackModel
+          .find()
+          .sort({ _id: -1 })
+          .skip(offset)
+          .limit(count);
+        break;
+      case SortTypes.LATEST:
+        tracks = await this.trackModel.find().skip(offset).limit(count);
+        break;
+      case SortTypes.MOST_LISTENED:
+        tracks = await this.trackModel
+          .find()
+          .sort({ listens: -1 })
+          .skip(offset)
+          .limit(count);
+        break;
+      case SortTypes.LEAST_LISTENED:
+        tracks = await this.trackModel
+          .find()
+          .sort({ listens: 1 })
+          .skip(offset)
+          .limit(count);
+        break;
+    }
+    console.log(tracks);
+
     return tracks;
   }
 
