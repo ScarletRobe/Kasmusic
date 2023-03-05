@@ -7,7 +7,7 @@ import { Comment, CommentDocument } from './schemas/comment.schema';
 import { Track, TrackDocument } from './schemas/track.schema';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { AddCommentDto } from './dto/add-comment.dto';
-import { SortTypes } from 'src/consts';
+import { SortTypes } from '../consts';
 
 @Injectable()
 export class TrackService {

@@ -17,7 +17,7 @@ import {
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { AddCommentDto } from './dto/add-comment.dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express/multer';
-import { SortTypes } from 'src/consts';
+import { SortTypes } from '../consts';
 
 @Controller('/tracks')
 export class TrackController {
