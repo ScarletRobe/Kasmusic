@@ -1,3 +1,5 @@
+import { SortTypes } from '@/consts';
+
 export type Comment = {
   _id: string;
   username: string;
@@ -28,6 +30,7 @@ export enum AcceptableFiles {
 export type GetTracksParams = {
   count: string;
   offset: string;
+  sort: SortTypes;
 };
 
 export type AddCommentsParams = {

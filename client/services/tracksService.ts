@@ -1,4 +1,4 @@
-import { BASE_SERVER_URL } from './../consts';
+import { BASE_SERVER_URL, SortTypes } from './../consts';
 import {
   AddCommentsParams,
   Comment,
@@ -19,11 +19,12 @@ export const tracksApi = createApi({
   tagTypes: ['trackList', 'track'],
   endpoints: (builder) => ({
     getAllTracks: builder.query<Track[], GetTracksParams>({
-      query: ({ count = '25', offset = '0' }) => ({
+      query: ({ count = '25', offset = '0', sort }) => ({
         url: '/tracks',
         params: {
           count,
           offset,
+          sort,
         },
       }),
       providesTags: (result) =>
@@ -96,7 +97,7 @@ export const tracksApi = createApi({
         const patchResult = dispatch(
           tracksApi.util.updateQueryData(
             'getAllTracks',
-            { count: '50', offset: '0' },
+            { count: '50', offset: '0', sort: SortTypes.LATEST },
             (draft) => {
               const track = draft.find((track) => track._id === id);
               if (track) {
