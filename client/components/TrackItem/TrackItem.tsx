@@ -32,6 +32,8 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
   const activeTrack = useTypedSelector((state) => state.player.activeTrack);
   const pause = useTypedSelector((state) => state.player.pause);
 
+  const currentSort = useTypedSelector((state) => state.app.currentSort);
+
   const play = (e: React.MouseEvent) => {
     e.stopPropagation();
 
@@ -39,8 +41,8 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
       pause ? dispatch(setPlay()) : dispatch(setPause());
     } else {
       dispatch(setPause());
-      dispatch(setActiveTrack(track));
-      incListens(track._id);
+      dispatch(setActiveTrack({ ...track }));
+      incListens({ id: track._id, sort: currentSort });
     }
   };
 

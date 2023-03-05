@@ -88,16 +88,16 @@ export const tracksApi = createApi({
       }),
       invalidatesTags: ['trackList'],
     }),
-    incrementListens: builder.mutation<Track, string>({
-      query: (id: string) => ({
+    incrementListens: builder.mutation<Track, { id: string; sort: SortTypes }>({
+      query: ({ id }) => ({
         url: `/tracks/listen/${id}`,
         method: 'POST',
       }),
-      async onQueryStarted(id, { dispatch, queryFulfilled }) {
+      async onQueryStarted({ id, sort }, { dispatch, queryFulfilled }) {
         const patchResult = dispatch(
           tracksApi.util.updateQueryData(
             'getAllTracks',
-            { count: '50', offset: '0', sort: SortTypes.LATEST },
+            { count: '50', offset: '0', sort },
             (draft) => {
               const track = draft.find((track) => track._id === id);
               if (track) {
