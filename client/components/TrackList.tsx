@@ -15,17 +15,22 @@ import {
 import { useGetAllTracksQuery } from '@/services/tracksService';
 import { SortTypes } from '@/consts';
 import { Stack } from '@mui/system';
+import { setCurrentSort } from '@/store/appSlice/appSlice';
+import { useDispatch } from 'react-redux';
+import { useTypedSelector } from '@/hooks/useTypedSelector';
 
 const TrackList: React.FC = () => {
-  const [sort, setSort] = useState<SortTypes>(SortTypes.NEWEST);
+  const dispatch = useDispatch();
+  const currentSort = useTypedSelector((state) => state.app.currentSort);
+
   const { data, isLoading, isError } = useGetAllTracksQuery({
     count: '50',
     offset: '0',
-    sort,
+    sort: currentSort,
   });
 
   const handleSortChange = (e: SelectChangeEvent<HTMLInputElement>) => {
-    setSort(e.target.value as SortTypes);
+    dispatch(setCurrentSort(e.target.value as SortTypes));
   };
 
   if (isLoading) return <div>Loading</div>;
@@ -40,7 +45,7 @@ const TrackList: React.FC = () => {
             <Select
               labelId="tracksSort"
               id="sort"
-              value={sort as any}
+              value={currentSort as any}
               label="Sort"
               onChange={handleSortChange}
             >
