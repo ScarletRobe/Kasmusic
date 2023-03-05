@@ -26,13 +26,29 @@ export const tracksApi = createApi({
           offset,
         },
       }),
-      providesTags: ['trackList'],
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map((res) => ({
+                type: 'trackList' as const,
+                id: Number(res._id),
+              })),
+              { type: 'trackList', id: 'partial-trackList' },
+              { type: 'trackList' },
+            ]
+          : [
+              { type: 'trackList', id: 'partial-trackList' },
+              { type: 'trackList' },
+            ],
     }),
     getTrackById: builder.query<Track, string>({
       query: (id) => ({
         url: `/tracks/${id}`,
       }),
-      providesTags: ['track'],
+      providesTags: (result, error, arg) => [
+        { type: 'trackList', id: Number(arg) },
+        'track',
+      ],
     }),
     searchTrack: builder.query<Track[], string>({
       query: (searchQuery) => ({
@@ -41,7 +57,6 @@ export const tracksApi = createApi({
           query: searchQuery,
         },
       }),
-      providesTags: ['track'],
     }),
     createComment: builder.mutation<Comment, AddCommentsParams>({
       query: ({ comment, trackId }) => ({
@@ -52,7 +67,10 @@ export const tracksApi = createApi({
           trackId,
         },
       }),
-      invalidatesTags: ['track'],
+      invalidatesTags: (result, error, arg) => [
+        { type: 'trackList', id: arg.trackId },
+        'track',
+      ],
     }),
     createTrack: builder.mutation<Track, FormData>({
       query: (body: FormData) => ({
@@ -74,6 +92,25 @@ export const tracksApi = createApi({
         url: `/tracks/listen/${id}`,
         method: 'POST',
       }),
+      async onQueryStarted(id, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          tracksApi.util.updateQueryData(
+            'getAllTracks',
+            { count: '50', offset: '0' },
+            (draft) => {
+              const track = draft.find((track) => track._id === id);
+              if (track) {
+                track.listens++;
+              }
+            },
+          ),
+        );
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
     }),
   }),
 });
