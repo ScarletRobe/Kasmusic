@@ -21,10 +21,10 @@ const TrackList: React.FC = () => {
   const { data, isLoading, isError } = useGetAllTracksQuery({
     count: '50',
     offset: '0',
+    sort,
   });
 
   const handleSortChange = (e: SelectChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
     setSort(e.target.value as SortTypes);
   };
 
@@ -35,13 +35,13 @@ const TrackList: React.FC = () => {
     <>
       <Box pl={4} pr={4}>
         <Stack direction="row" justifyContent="flex-end">
-          <FormControl sx={{ m: 1, minWidth: 300 }}>
-            <InputLabel id="demo-simple-select-label">Сортировка</InputLabel>
+          <FormControl variant="standard" sx={{ m: 1, minWidth: 300 }}>
+            <InputLabel id="tracksSort">Сортировка</InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
+              labelId="tracksSort"
+              id="sort"
               value={sort as any}
-              label="Age"
+              label="Sort"
               onChange={handleSortChange}
             >
               <MenuItem value={SortTypes.LEAST_LISTENED}>
