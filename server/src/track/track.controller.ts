@@ -79,7 +79,6 @@ export class TrackController {
 
   @Post('/listen/:id')
   listen(@Param('id') id: ObjectId) {
-    console.log(id);
     return this.trackService.listen(id);
   }
 }
