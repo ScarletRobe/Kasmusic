@@ -6,8 +6,6 @@ import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { useRouter } from 'next/router';
@@ -57,26 +55,25 @@ export default function Navbar() {
       <CssBaseline />
       <AppBar position="fixed">
         <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Music Platform
-          </Typography>
-        </Toolbar>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" noWrap component="div">
+              Music Platform
+            </Typography>
+          </Toolbar>
           <Searchbar />
         </Stack>
       </AppBar>
       <ClickAwayListener
         mouseEvent="onMouseDown"
         touchEvent="onTouchStart"
-        open={open}
         onClickAway={() => open && setOpen(false)}
       >
         <Drawer variant="persistent" anchor="left" open={open}>
