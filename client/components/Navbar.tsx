@@ -13,13 +13,16 @@ import ListItemText from '@mui/material/ListItemText';
 import { useRouter } from 'next/router';
 import AppBar from '@mui/material/AppBar';
 import ListItem from '@mui/material/ListItem';
-import { ClickAwayListener, ListItemButton } from '@mui/material';
+import { ClickAwayListener, ListItemButton, Stack } from '@mui/material';
 
+import MenuIcon from '@mui/icons-material/Menu';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import AudiotrackRoundedIcon from '@mui/icons-material/AudiotrackRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import LibraryMusicRoundedIcon from '@mui/icons-material/LibraryMusicRounded';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import FileDownloadRoundedIcon from '@mui/icons-material/FileDownloadRounded';
+import Searchbar from './Searchbar';
 
 const menuItems = [
   { text: 'Главная', href: '/', icon: <HomeRoundedIcon /> },
@@ -53,6 +56,7 @@ export default function Navbar() {
     <>
       <CssBaseline />
       <AppBar position="fixed">
+        <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -66,6 +70,8 @@ export default function Navbar() {
             Music Platform
           </Typography>
         </Toolbar>
+          <Searchbar />
+        </Stack>
       </AppBar>
       <ClickAwayListener
         mouseEvent="onMouseDown"
@@ -73,14 +79,7 @@ export default function Navbar() {
         open={open}
         onClickAway={() => open && setOpen(false)}
       >
-        <Drawer
-          variant="persistent"
-          anchor="left"
-          open={open}
-          onClose={() => {
-            console.log('close');
-          }}
-        >
+        <Drawer variant="persistent" anchor="left" open={open}>
           <div>
             <IconButton onClick={handleDrawerClose}>
               <ChevronLeftIcon />
