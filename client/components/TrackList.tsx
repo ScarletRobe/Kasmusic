@@ -12,12 +12,14 @@ type TrackListProps = {
   tracks: Track[] | undefined;
   isLoading: boolean;
   isError: boolean;
+  withoutSort?: boolean;
 };
 
 const TrackList: React.FC<TrackListProps> = ({
   tracks,
   isLoading,
   isError,
+  withoutSort = false,
 }) => {
   if (isLoading) return <div>Loading</div>;
   if (isError || !tracks) return <div>Error</div>;
@@ -26,7 +28,7 @@ const TrackList: React.FC<TrackListProps> = ({
     <>
       <Box pl={4} pr={4}>
         <Stack direction="row" justifyContent="flex-end">
-          <Sort />
+          {!withoutSort && <Sort />}
         </Stack>
         <Grid container direction="column">
           <Box pt={2} pb={2}>
