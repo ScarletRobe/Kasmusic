@@ -4,9 +4,18 @@ import { Grid, Card, Box, Button } from '@mui/material';
 import TrackList from '@/components/TrackList';
 import { Track } from '@/types/track';
 import Head from 'next/head';
+import { useTypedSelector } from '@/hooks/useTypedSelector';
+import { useGetAllTracksQuery } from '@/services/tracksService';
 
 const Index: React.FC<{ tracks: Track[] }> = () => {
   const router = useRouter();
+  const currentSort = useTypedSelector((state) => state.app.currentSort);
+
+  const { data, isLoading, isError } = useGetAllTracksQuery({
+    count: '50',
+    offset: '0',
+    sort: currentSort,
+  });
 
   return (
     <>
@@ -23,7 +32,7 @@ const Index: React.FC<{ tracks: Track[] }> = () => {
               </Button>
             </Grid>
           </Box>
-          <TrackList />
+          <TrackList tracks={data} isLoading={isLoading} isError={isError} />
         </Card>
       </Grid>
     </>
