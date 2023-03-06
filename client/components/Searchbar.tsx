@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { FormControl, Input, InputAdornment } from '@mui/material';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
@@ -6,34 +6,45 @@ import { useSearchTrackQuery } from '@/services/tracksService';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useInput } from '@/hooks/useInput';
 import { Track } from '@/types/track';
+import { useRouter } from 'next/router';
 
-type SearchbarProps = {
-  setTracks: React.Dispatch<React.SetStateAction<Track[] | null>>;
-};
-
-const Searchbar = ({ setTracks }: SearchbarProps) => {
+const Searchbar = () => {
+  const router = useRouter();
+  const [skip, setSkip] = useState(true);
   const searchbar = useInput('');
-  const debouncedQuery = useDebounce(searchbar.value, 500);
-  const { data } = useSearchTrackQuery(debouncedQuery);
-  if (data && debouncedQuery !== null) {
-    setTracks(data);
-  }
+  const { data } = useSearchTrackQuery(searchbar.value, { skip });
+  // const debouncedQuery = useDebounce(searchbar.value, 500);
+  // const { data } = useSearchTrackQuery(debouncedQuery);
+  // if (data && debouncedQuery !== null) {
+  //   setTracks(data);
+  // }
+
+  const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const query = e.target.elements[0].value;
+    if (!query) {
+      return;
+    }
+    router.push(`/search/${query}`);
+  };
 
   return (
     <FormControl
       variant="standard"
       sx={{ display: 'flex', justifyContent: 'center' }}
     >
-      <Input
-        {...searchbar}
-        id="input-with-icon-adornment"
-        placeholder="Поиск"
-        startAdornment={
-          <InputAdornment position="start">
-            <SearchRoundedIcon />
-          </InputAdornment>
-        }
-      />
+      <form onSubmit={handleSearchSubmit}>
+        <Input
+          {...searchbar}
+          id="input-with-icon-adornment"
+          placeholder="Поиск"
+          startAdornment={
+            <InputAdornment position="start">
+              <SearchRoundedIcon />
+            </InputAdornment>
+          }
+        />
+      </form>
     </FormControl>
   );
 };
