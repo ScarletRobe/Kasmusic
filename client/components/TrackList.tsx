@@ -1,26 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import TrackItem from './TrackItem/TrackItem';
 
-import {
-  Grid,
-  Box,
-  InputLabel,
-  FormControl,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-} from '@mui/material';
+import { Grid, Box } from '@mui/material';
 
 import { useGetAllTracksQuery } from '@/services/tracksService';
-import { SortTypes } from '@/consts';
 import { Stack } from '@mui/system';
-import { setCurrentSort } from '@/store/appSlice/appSlice';
-import { useDispatch } from 'react-redux';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
+import Sort from './Sort';
 
 const TrackList: React.FC = () => {
-  const dispatch = useDispatch();
   const currentSort = useTypedSelector((state) => state.app.currentSort);
 
   const { data, isLoading, isError } = useGetAllTracksQuery({
@@ -29,10 +18,6 @@ const TrackList: React.FC = () => {
     sort: currentSort,
   });
 
-  const handleSortChange = (e: SelectChangeEvent<HTMLInputElement>) => {
-    dispatch(setCurrentSort(e.target.value as SortTypes));
-  };
-
   if (isLoading) return <div>Loading</div>;
   if (isError || !data) return <div>Error</div>;
 
@@ -40,25 +25,7 @@ const TrackList: React.FC = () => {
     <>
       <Box pl={4} pr={4}>
         <Stack direction="row" justifyContent="flex-end">
-          <FormControl variant="standard" sx={{ m: 1, minWidth: 300 }}>
-            <InputLabel id="tracksSort">Сортировка</InputLabel>
-            <Select
-              labelId="tracksSort"
-              id="sort"
-              value={currentSort as any}
-              label="Sort"
-              onChange={handleSortChange}
-            >
-              <MenuItem value={SortTypes.LEAST_LISTENED}>
-                {SortTypes.LEAST_LISTENED}
-              </MenuItem>
-              <MenuItem value={SortTypes.MOST_LISTENED}>
-                {SortTypes.MOST_LISTENED}
-              </MenuItem>
-              <MenuItem value={SortTypes.NEWEST}>{SortTypes.NEWEST}</MenuItem>
-              <MenuItem value={SortTypes.LATEST}>{SortTypes.LATEST}</MenuItem>
-            </Select>
-          </FormControl>
+          <Sort />
         </Stack>
         <Grid container direction="column">
           <Box pt={2} pb={2}>
