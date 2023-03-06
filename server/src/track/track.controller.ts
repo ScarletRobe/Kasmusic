@@ -53,8 +53,8 @@ export class TrackController {
   }
 
   @Get('/search')
-  search(@Query('query') query: string) {
-    return this.trackService.search(query);
+  search(@Query('query') query: string, @Query('sort') sort: SortTypes) {
+    return this.trackService.search(query, sort);
   }
 
   @Get(':id')

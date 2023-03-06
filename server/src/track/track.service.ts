@@ -55,15 +55,49 @@ export class TrackService {
           .limit(count);
         break;
     }
-    console.log(tracks);
 
     return tracks;
   }
 
-  async search(query: string): Promise<Track[]> {
-    const tracks = await this.trackModel.find({
-      name: { $regex: new RegExp(query, 'i') },
-    });
+  async search(query: string, sort: SortTypes): Promise<Track[]> {
+    let tracks;
+    switch (sort) {
+      case SortTypes.NEWEST:
+        tracks = await this.trackModel
+          .find({
+            name: { $regex: new RegExp(query, 'i') },
+          })
+          .sort({ _id: -1 });
+        // .skip(offset)
+        // .limit(count);
+        break;
+      case SortTypes.LATEST:
+        tracks = await this.trackModel.find({
+          name: { $regex: new RegExp(query, 'i') },
+        });
+        // .skip(offset)
+        // .limit(count);
+        break;
+      case SortTypes.MOST_LISTENED:
+        tracks = await this.trackModel
+          .find({
+            name: { $regex: new RegExp(query, 'i') },
+          })
+          .sort({ listens: -1 });
+        // .skip(offset)
+        // .limit(count);
+        break;
+      case SortTypes.LEAST_LISTENED:
+        tracks = await this.trackModel
+          .find({
+            name: { $regex: new RegExp(query, 'i') },
+          })
+          .sort({ listens: 1 });
+        // .skip(offset)
+        // .limit(count);
+        break;
+    }
+
     return tracks;
   }
 
