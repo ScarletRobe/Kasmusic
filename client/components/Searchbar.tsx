@@ -10,9 +10,9 @@ import { useRouter } from 'next/router';
 
 const Searchbar = () => {
   const router = useRouter();
-  const [skip, setSkip] = useState(true);
-  const searchbar = useInput('');
-  const { data } = useSearchTrackQuery(searchbar.value, { skip });
+  const [query, setQuery] = useState('');
+  // const [skip, setSkip] = useState(true);
+  // const { data } = useSearchTrackQuery(searchbar.value, { skip });
   // const debouncedQuery = useDebounce(searchbar.value, 500);
   // const { data } = useSearchTrackQuery(debouncedQuery);
   // if (data && debouncedQuery !== null) {
@@ -21,10 +21,10 @@ const Searchbar = () => {
 
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const query = e.target.elements[0].value;
     if (!query) {
       return;
     }
+    setQuery('');
     router.push(`/search/${query}`);
   };
 
@@ -35,7 +35,10 @@ const Searchbar = () => {
     >
       <form onSubmit={handleSearchSubmit}>
         <Input
-          {...searchbar}
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+          }}
           id="input-with-icon-adornment"
           placeholder="Поиск"
           startAdornment={

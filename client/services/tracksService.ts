@@ -51,13 +51,18 @@ export const tracksApi = createApi({
         'track',
       ],
     }),
-    searchTrack: builder.query<Track[], string>({
-      query: (searchQuery) => ({
+    searchTrack: builder.query<
+      Track[],
+      { searchQuery: string; sort: SortTypes }
+    >({
+      query: ({ searchQuery, sort }) => ({
         url: `/tracks/search`,
         params: {
           query: searchQuery,
+          sort,
         },
       }),
+      providesTags: [{ type: 'trackList', id: 'searchResult' }],
     }),
     createComment: builder.mutation<Comment, AddCommentsParams>({
       query: ({ comment, trackId }) => ({
@@ -93,6 +98,7 @@ export const tracksApi = createApi({
         url: `/tracks/listen/${id}`,
         method: 'POST',
       }),
+      invalidatesTags: [{ type: 'trackList', id: 'searchResult' }],
       async onQueryStarted({ id, sort }, { dispatch, queryFulfilled }) {
         const patchResult = dispatch(
           tracksApi.util.updateQueryData(
