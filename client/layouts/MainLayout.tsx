@@ -19,6 +19,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         </Container>
         <Player />
       </ThemeProvider>
+      <div id="stars-container">
+        <div id="stars"></div>
+        <div id="stars2"></div>
+        <div id="stars3"></div>
+      </div>
     </>
   );
 };
