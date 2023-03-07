@@ -7,6 +7,7 @@ import { useDebounce } from '@/hooks/useDebounce';
 import { useInput } from '@/hooks/useInput';
 import { Track } from '@/types/track';
 import { useRouter } from 'next/router';
+import { borderColor } from '@mui/system';
 
 const Searchbar = () => {
   const router = useRouter();
@@ -31,10 +32,19 @@ const Searchbar = () => {
   return (
     <FormControl
       variant="standard"
-      sx={{ display: 'flex', justifyContent: 'center' }}
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+      }}
     >
       <form onSubmit={handleSearchSubmit}>
         <Input
+          sx={{
+            color: 'white',
+            '&:before': { borderBottom: '1px solid #b8b8b8' },
+            '&:hover:before': { borderBottom: '2px solid #b8b8b8 !important' },
+          }}
+          color="secondary"
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
@@ -43,7 +53,7 @@ const Searchbar = () => {
           placeholder="Поиск"
           startAdornment={
             <InputAdornment position="start">
-              <SearchRoundedIcon />
+              <SearchRoundedIcon htmlColor="white" />
             </InputAdornment>
           }
         />

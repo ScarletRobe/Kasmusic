@@ -40,8 +40,8 @@ export const theme = createTheme({
       darker: '#ff1744',
     },
     secondary: {
-      main: '#33691e',
-      darker: '#234915',
+      main: '#fff',
+      darker: '#F4F4F4',
     },
     neutral: {
       main: '#64748B',
