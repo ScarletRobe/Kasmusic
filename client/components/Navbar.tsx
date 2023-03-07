@@ -65,7 +65,7 @@ export default function Navbar() {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" noWrap component="div">
-              Music Platform
+              Kasmusic
             </Typography>
           </Toolbar>
           <Searchbar />
