@@ -5,8 +5,13 @@
   align-items: center;
 }
 
+.progressWrapper {
+  width: 100%;
+}
+
 .progress {
   width: 100%;
+  height: 15px;
 }
 
 .btn {

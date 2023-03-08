@@ -82,7 +82,7 @@ const Upload = () => {
       </Head>
       <UploadStepsWrapper activeStep={activeStep}>
         <Paper elevation={3} sx={{ p: 3 }} className={styles.wrapper}>
-          {activeStep === 0 && (
+          {activeStep === 3 && (
             <Grid container direction={'column'} rowGap={2}>
               <TextField {...name} label={'Название'} />
               <TextField {...artist} label={'Исполнитель'} />
@@ -109,13 +109,17 @@ const Upload = () => {
                 {!audio ? (
                   <Button>Загрузить аудио</Button>
                 ) : (
-                  <Button>Выбрать другое</Button>
+                  <Button>Изменить выбор</Button>
                 )}
               </>
             </FileUpload>
           )}
-          {activeStep === 3 && progress !== 100 && (
-            <Stack justifyContent="center" alignItems="center">
+          {activeStep === 0 && progress !== 100 && (
+            <Stack
+              className={styles.progressWrapper}
+              justifyContent="center"
+              alignItems="center"
+            >
               <div>Загружаем</div>
               <LinearProgress
                 className={styles.progress}
