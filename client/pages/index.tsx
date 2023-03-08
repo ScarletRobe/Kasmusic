@@ -22,7 +22,7 @@ const Index = () => {
               x="50%"
               y="50%"
               dy=".35em"
-              text-anchor="middle"
+              textAnchor="middle"
             >
               К списку музыки
             </text>
