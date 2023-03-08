@@ -115,11 +115,18 @@ const Upload = () => {
             </FileUpload>
           )}
           {activeStep === 3 && progress !== 100 && (
-            <LinearProgress variant="determinate" value={progress} />
+            <Stack justifyContent="center" alignItems="center">
+              <div>Загружаем</div>
+              <LinearProgress
+                className={styles.progress}
+                variant="determinate"
+                value={progress}
+              />
+            </Stack>
           )}
           {activeStep === 3 &&
             progress === 100 &&
-            (isError ? (
+            (!isError ? (
               <Stack justifyContent="center" alignItems="center">
                 <DoneRoundedIcon htmlColor="green" fontSize="large" />
                 <div>Ваш трек успешно загружен</div>

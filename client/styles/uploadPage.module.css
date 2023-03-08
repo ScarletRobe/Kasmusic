@@ -5,6 +5,10 @@
   align-items: center;
 }
 
+.progress {
+  width: 100%;
+}
+
 .btn {
   border: 1px solid white;
 }
