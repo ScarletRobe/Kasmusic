@@ -116,11 +116,12 @@ class YaDisk {
     });
     return res.data;
   }
-  async upload(params) {
+  async upload(params, setUploadProgress) {
     const { href: url } = await this.getUploadUrl({
       path: params.path,
       overwrite: params.overwrite,
     });
+    setUploadProgress?.(30);
     return await this.uploadByUploadUrl({
       url,
       file: params.file,
@@ -162,13 +163,17 @@ class YaDisk {
   }
 }
 
-export const uploadFile = async (disk, file, type) => {
+export const uploadFile = async (disk, file, type, setUploadProgress) => {
   const fileExtension = file.name.split('.').pop();
   const fileName = uuid.v4() + '.' + fileExtension;
   const path = `music-platform%2F${type}%2F${fileName}`;
-  await disk.upload({ path, file });
+  setUploadProgress?.(20);
+  await disk.upload({ path, file }, setUploadProgress);
+  setUploadProgress?.(50);
   const publishUrl = (await disk.publish({ path })).href;
+  setUploadProgress?.(60);
   const metaInfo = (await disk.getMetaInfo(publishUrl)).data;
+  setUploadProgress?.(70);
   return { url: metaInfo.public_url, name: fileName };
 };
 

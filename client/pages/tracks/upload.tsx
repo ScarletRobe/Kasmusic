@@ -10,11 +10,14 @@ import { useCreateTrackMutation } from '@/services/tracksService';
 import Head from 'next/head';
 import { uploadFile, YaDisk } from '../../services/yandexDiskApi';
 
-const getUploadStatusElement = (isLoading: boolean, isError: boolean) => {
-  if (isLoading) return <div>Loading...</div>;
-  if (isError) return <div>Error</div>;
-  if (!isLoading && !isError) return <div>Success</div>;
-};
+import {
+  Grid,
+  TextField,
+  Button,
+  Paper,
+  LinearProgress,
+  Stack,
+} from '@mui/material';
 
 let disk: null | YaDisk = null;
 const Upload = () => {
@@ -26,13 +29,22 @@ const Upload = () => {
     }
   });
 
-  const [createPost, { isLoading, isError }] = useCreateTrackMutation();
+  const [createPost, { isLoading, isError, requestId }] =
+    useCreateTrackMutation();
+  const router = useRouter();
+
   const [activeStep, setActiveStep] = useState(0);
   const [picture, setPicture] = useState<File | null>(null);
   const [audio, setAudio] = useState<File | null>(null);
+  const [progress, setProgress] = useState<number>(0);
+
   const name = useInput('');
   const artist = useInput('');
-  const router = useRouter();
+  useEffect(() => {
+    if (requestId && !isLoading) {
+      setProgress(100);
+    }
+  }, [isLoading, requestId]);
 
   const next = async () => {
     setActiveStep((prev) => prev + 1);
@@ -41,14 +53,16 @@ const Upload = () => {
       formData.append('name', name.value);
       formData.append('artist', artist.value);
       const pictureUpload = uploadFile(disk, picture, 'image');
-      const audioUpload = uploadFile(disk, audio, 'audio');
+      const audioUpload = uploadFile(disk, audio, 'audio', setProgress);
       const [pictureInfo, audioInfo] = await Promise.all([
         pictureUpload,
         audioUpload,
       ]);
+      setProgress(80);
       formData.append('picture', JSON.stringify(pictureInfo));
       formData.append('audio', JSON.stringify(audioInfo));
       createPost(formData);
+      setProgress(90);
     }
   };
 
@@ -87,12 +101,42 @@ const Upload = () => {
           {activeStep === 2 && (
             <FileUpload setFile={setAudio} accept={AcceptableFiles.AUDIO}>
               <>
-                {audio && <audio src={URL.createObjectURL(audio)}></audio>}
+                {!audio ? (
                 <Button>Загрузить аудио</Button>
+                ) : (
+                  <Button>Выбрать другое</Button>
+                )}
               </>
             </FileUpload>
           )}
+          {activeStep === 3 && progress !== 100 && (
+            <LinearProgress variant="determinate" value={progress} />
+          )}
+          {activeStep === 3 &&
+            progress === 100 &&
+            (isError ? (
+              <Stack justifyContent="center" alignItems="center">
+                <DoneRoundedIcon htmlColor="green" fontSize="large" />
+                <div>Ваш трек успешно загружен</div>
+                <Button
           {activeStep === 3 && getUploadStatusElement(isLoading, isError)}
+                  onClick={() => router.push('/tracks')}
+                >
+                  Вернуться к списку
+                </Button>
+              </Stack>
+            ) : (
+              <Stack justifyContent="center" alignItems="center">
+                <CloseRoundedIcon htmlColor="red" fontSize="large" />
+                <div>При загрузке произошла ошибка</div>
+                <div>Попробуйте позже</div>
+                <Button
+                  onClick={() => router.push('/tracks')}
+                >
+                  Вернуться к списку
+                </Button>
+              </Stack>
+            ))}
         </Paper>
       </UploadStepsWrapper>
       <Grid container justifyContent="space-between">
