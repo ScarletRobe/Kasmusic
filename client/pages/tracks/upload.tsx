@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Grid, TextField, Button, Paper } from '@mui/material';
-import UploadStepsWrapper from '@/components/uploadStepsWrapper/UploadStepsWrapper';
-import FileUpload from '../../components/FileUpload';
+import Head from 'next/head';
+
 import { AcceptableFiles } from '@/types/track';
-import Image from 'next/image';
 import { useInput } from '@/hooks/useInput';
 import { useCreateTrackMutation } from '@/services/tracksService';
-import Head from 'next/head';
 import { uploadFile, YaDisk } from '../../services/yandexDiskApi';
+
+import UploadStepsWrapper from '@/components/uploadStepsWrapper/UploadStepsWrapper';
+import FileUpload from '../../components/FileUpload';
 
 import {
   Grid,
@@ -18,6 +18,10 @@ import {
   LinearProgress,
   Stack,
 } from '@mui/material';
+import DoneRoundedIcon from '@mui/icons-material/DoneRounded';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+
+import styles from '../../styles/uploadPage.module.css';
 
 let disk: null | YaDisk = null;
 const Upload = () => {
@@ -40,6 +44,7 @@ const Upload = () => {
 
   const name = useInput('');
   const artist = useInput('');
+
   useEffect(() => {
     if (requestId && !isLoading) {
       setProgress(100);
@@ -76,7 +81,7 @@ const Upload = () => {
         <meta name="referrer" content="always"></meta>
       </Head>
       <UploadStepsWrapper activeStep={activeStep}>
-        <Paper elevation={3} sx={{ p: 3 }}>
+        <Paper elevation={3} sx={{ p: 3 }} className={styles.wrapper}>
           {activeStep === 0 && (
             <Grid container direction={'column'} rowGap={2}>
               <TextField {...name} label={'Название'} />
@@ -102,7 +107,7 @@ const Upload = () => {
             <FileUpload setFile={setAudio} accept={AcceptableFiles.AUDIO}>
               <>
                 {!audio ? (
-                <Button>Загрузить аудио</Button>
+                  <Button>Загрузить аудио</Button>
                 ) : (
                   <Button>Выбрать другое</Button>
                 )}
@@ -119,7 +124,7 @@ const Upload = () => {
                 <DoneRoundedIcon htmlColor="green" fontSize="large" />
                 <div>Ваш трек успешно загружен</div>
                 <Button
-          {activeStep === 3 && getUploadStatusElement(isLoading, isError)}
+                  className={styles.link}
                   onClick={() => router.push('/tracks')}
                 >
                   Вернуться к списку
@@ -131,6 +136,7 @@ const Upload = () => {
                 <div>При загрузке произошла ошибка</div>
                 <div>Попробуйте позже</div>
                 <Button
+                  className={styles.link}
                   onClick={() => router.push('/tracks')}
                 >
                   Вернуться к списку
@@ -140,10 +146,20 @@ const Upload = () => {
         </Paper>
       </UploadStepsWrapper>
       <Grid container justifyContent="space-between">
-        <Button disabled={activeStep === 0 || activeStep === 3} onClick={back}>
+        <Button
+          color="secondary"
+          className={styles.btn}
+          disabled={activeStep === 0 || activeStep === 3}
+          onClick={back}
+        >
           Назад
         </Button>
-        <Button disabled={activeStep === 3} onClick={next}>
+        <Button
+          color="secondary"
+          className={styles.btn}
+          disabled={activeStep === 3}
+          onClick={next}
+        >
           {activeStep < 2 ? 'Далее' : 'Загрузить'}
         </Button>
       </Grid>

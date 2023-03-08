@@ -1,0 +1,18 @@
+.wrapper {
+  min-height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn {
+  border: 1px solid white;
+}
+
+.btn:disabled {
+  border-color: #787878;
+}
+
+.link {
+  margin-top: 10px;
+}
