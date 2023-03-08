@@ -14,7 +14,7 @@ const SearchPage: React.FC<{ tracks: Track[] }> = () => {
   const { query } = useRouter();
   const dispatch = useDispatch();
   const sort = useTypedSelector((store) => store.app.currentSort);
-  const { data, isLoading, isError } = useSearchTrackQuery({
+  const { data, isError, isFetching } = useSearchTrackQuery({
     searchQuery: (query.query as string) || '',
     sort,
   });
@@ -23,27 +23,25 @@ const SearchPage: React.FC<{ tracks: Track[] }> = () => {
     dispatch(setCurrentSort(SortTypes.NEWEST));
   }, []);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <>
       <Head>
         <meta name="referrer" content="no-referrer"></meta>
       </Head>
       <Grid container justifyContent="center">
-        <Card className="track-list-wrapper">
-          {data?.length ? (
-            <Box p={3}>
+        <Card className="track-list-wrapper" sx={{ p: 3 }}>
+          {isFetching ? (
+            <h1>Загрузка</h1>
+          ) : data?.length ? (
+            <Box>
               <h1>Результат поиска</h1>
             </Box>
           ) : (
-            <Box p={3}>
+            <Box>
               <h1>Ничего не найдено</h1>
             </Box>
           )}
-          <TrackList tracks={data} isLoading={isLoading} isError={isError} />
+          <TrackList tracks={data} isLoading={isFetching} isError={isError} />
         </Card>
       </Grid>
     </>

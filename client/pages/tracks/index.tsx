@@ -16,7 +16,7 @@ const Index: React.FC<{ tracks: Track[] }> = () => {
 
   const currentSort = useTypedSelector((state) => state.app.currentSort);
 
-  const { data, isLoading, isError } = useGetAllTracksQuery({
+  const { data, isFetching, isError } = useGetAllTracksQuery({
     count: '50',
     offset: '0',
     sort: currentSort,
@@ -41,7 +41,7 @@ const Index: React.FC<{ tracks: Track[] }> = () => {
               </Button>
             </Grid>
           </Box>
-          <TrackList tracks={data} isLoading={isLoading} isError={isError} />
+          <TrackList tracks={data} isLoading={isFetching} isError={isError} />
         </Card>
       </Grid>
     </>
