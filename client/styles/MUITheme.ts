@@ -35,9 +35,12 @@ export const theme = createTheme({
     danger: '#e53e3e',
   },
   palette: {
+    action: {
+      disabled: '#787878',
+    },
     primary: {
       main: '#673ab7',
-      darker: '#ff1744',
+      darker: '#3f1e78',
     },
     secondary: {
       main: '#fff',
