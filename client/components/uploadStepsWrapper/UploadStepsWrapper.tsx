@@ -18,7 +18,18 @@ const UploadStepsWrapper: React.FC<StepWrapperProps> = ({
       <Stepper activeStep={activeStep}>
         {STEPS.map((step, index) => (
           <Step key={index} completed={activeStep > index}>
-            <StepLabel>{step}</StepLabel>
+            <StepLabel
+              sx={{
+                color: 'white',
+                '& .MuiStepLabel-label': { color: '#787878' },
+                '& .MuiStepLabel-label.Mui-active': { color: '#fff' },
+                '& .MuiStepLabel-label.Mui-completed': { color: '#787878' },
+                '& .MuiSvgIcon-fontSizeMedium': { color: '#787878' },
+                '& .MuiSvgIcon-fontSizeMedium.Mui-active': { color: '#673ab7' },
+              }}
+            >
+              {step}
+            </StepLabel>
           </Step>
         ))}
       </Stepper>
