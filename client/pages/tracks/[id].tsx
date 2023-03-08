@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Track } from '../../types/track';
 import { useRouter } from 'next/router';
-import { Button, Grid, TextField } from '@mui/material';
+import { Button, Card, Grid, TextField } from '@mui/material';
 import styles from '../../styles/trackPage.module.css';
 import {
   getRunningQueriesThunk,
@@ -45,53 +45,55 @@ const TrackPage: React.FC = () => {
 
   return (
     <>
-      <Button variant={'outlined'} onClick={() => router.push('/tracks')}>
-        К списку
-      </Button>
-      <Grid container className={styles.trackInfoContainer}>
-        <img
-          className={styles.trackImg}
-          src={GET_MEDIA_BASE_URL + track.picture.url}
-          width={200}
-          height={200}
-          alt="Track cover"
-        />
-        <div className={styles.trackInfo}>
-          <h1>{track.name}</h1>
-          <h1>Исполнитель: {track.artist}</h1>
-          <h1>Прослушиваний: {track.listens}</h1>
-        </div>
-      </Grid>
-      <h2>Добавить комментарий</h2>
-      <Grid container>
-        <TextField
-          {...username}
-          label="Ваше имя"
-          fullWidth
-          inputProps={{ maxLength: 100 }}
-        />
-        <TextField
-          {...text}
-          margin="normal"
-          label="Комментарий"
-          multiline
-          fullWidth
-          rows={4}
-          inputProps={{ maxLength: 250 }}
-        />
-      </Grid>
-      <Button variant="outlined" onClick={addComment}>
-        Отправить
-      </Button>
-      <h2>Комментарии</h2>
-      <div>
-        {track.comments.map((comment) => (
-          <div key={comment._id}>
-            <div>Автор - {comment.username}</div>
-            <div>Комментарий - {comment.text}</div>
+      <Card sx={{ p: 3 }}>
+        <Button variant={'outlined'} onClick={() => router.push('/tracks')}>
+          К списку
+        </Button>
+        <Grid container className={styles.trackInfoContainer}>
+          <img
+            className={styles.trackImg}
+            src={GET_MEDIA_BASE_URL + track.picture.url}
+            width={200}
+            height={200}
+            alt="Track cover"
+          />
+          <div className={styles.trackInfo}>
+            <h1>{track.name}</h1>
+            <h1>Исполнитель: {track.artist}</h1>
+            <h1>Прослушиваний: {track.listens}</h1>
           </div>
-        ))}
-      </div>
+        </Grid>
+        <h2>Добавить комментарий</h2>
+        <Grid container>
+          <TextField
+            {...username}
+            label="Ваше имя"
+            fullWidth
+            inputProps={{ maxLength: 100 }}
+          />
+          <TextField
+            {...text}
+            margin="normal"
+            label="Комментарий"
+            multiline
+            fullWidth
+            rows={4}
+            inputProps={{ maxLength: 250 }}
+          />
+        </Grid>
+        <Button variant="outlined" onClick={addComment}>
+          Отправить
+        </Button>
+        <h2>Комментарии</h2>
+        <div>
+          {track.comments.map((comment) => (
+            <div key={comment._id}>
+              <div>Автор - {comment.username}</div>
+              <div>Комментарий - {comment.text}</div>
+            </div>
+          ))}
+        </div>
+      </Card>
     </>
   );
 };
