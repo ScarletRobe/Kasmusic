@@ -72,7 +72,6 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
       </Grid>
       <RemoveRedEyeRoundedIcon sx={{ mr: '5px' }} />
       <div>{track.listens}</div>
-      {/* {active && <div>02:42 / 03:22</div>} */}
       <IconButton
         onClick={(e) => handleDelete(e)}
         className={styles.trackDeleteBtn}
