@@ -1,5 +1,11 @@
 import React, { useEffect } from 'react';
-import { PlayArrow, Pause, VolumeUp, VolumeDown } from '@mui/icons-material';
+import {
+  PlayArrow,
+  Pause,
+  VolumeUp,
+  VolumeDown,
+  RepeatRounded,
+} from '@mui/icons-material';
 import { IconButton, Grid, Slider, Box, Stack } from '@mui/material';
 import TrackProgress from './TrackProgress';
 import { useDispatch } from 'react-redux';
@@ -10,6 +16,7 @@ import {
   setPlay,
   setVolume,
   setPause,
+  setIsLoop,
 } from '@/store/playerSlice/playerSlice';
 
 import styles from './Player.module.css';
@@ -24,6 +31,7 @@ const Player = () => {
   const pause = useTypedSelector((state) => state.player.pause);
   const activeTrack = useTypedSelector((state) => state.player.activeTrack);
   const volume = useTypedSelector((state) => state.player.volume);
+  const isLoop = useTypedSelector((state) => state.player.isLoop);
 
   useEffect(() => {
     if (!audio) {
@@ -45,10 +53,18 @@ const Player = () => {
     }
   }, [pause]);
 
+  useEffect(() => {
+    if (!audio) {
+      return;
+    }
+    audio.loop = isLoop;
+  }, [isLoop]);
+
   const setAudio = () => {
     if (activeTrack && audio) {
       audio.src = GET_MEDIA_BASE_URL + activeTrack.audio.url;
       audio.volume = volume / 100;
+      audio.loop = isLoop;
       audio.onloadedmetadata = () => {
         if (!audio) {
           return;
@@ -125,6 +141,20 @@ const Player = () => {
         </Grid>
       </Stack>
       <TrackProgress onChange={changeCurrentTime} />
+      <Stack
+        direction="row"
+        justifyContent="spaceBetween"
+        alignItems="center"
+        className={styles.audioControl}
+      >
+        <IconButton
+          onClick={() => {
+            dispatch(setIsLoop(!isLoop));
+          }}
+        >
+          <RepeatRounded htmlColor={isLoop ? 'black' : 'gray'} />
+        </IconButton>
+      </Stack>
       <Box ml="auto" sx={{ width: 200 }}>
         <Stack direction="row" alignItems="center">
           <VolumeDown />

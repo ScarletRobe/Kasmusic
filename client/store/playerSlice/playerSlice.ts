@@ -8,6 +8,7 @@ type PlayerInitialState = {
   duration: number;
   currentTime: number;
   pause: boolean;
+  isLoop: boolean;
 };
 
 const initialState: PlayerInitialState = {
@@ -16,6 +17,7 @@ const initialState: PlayerInitialState = {
   volume: 50,
   pause: true,
   activeTrack: null,
+  isLoop: false,
 };
 
 export const playerSlice = createSlice({
@@ -42,6 +44,9 @@ export const playerSlice = createSlice({
     setCurrentTime: (state, action: PayloadAction<number>) => {
       state.currentTime = action.payload;
     },
+    setIsLoop: (state, action: PayloadAction<boolean>) => {
+      state.isLoop = action.payload;
+    },
   },
 });
 
@@ -52,4 +57,5 @@ export const {
   setCurrentTime,
   setDuration,
   setVolume,
+  setIsLoop,
 } = playerSlice.actions;
