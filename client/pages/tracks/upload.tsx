@@ -71,7 +71,6 @@ const Upload = () => {
         pictureUpload,
         audioUpload,
       ]);
-      console.log(pictureInfo, audioInfo);
       setProgress(80);
       if (pictureInfo) {
         formData.append('picture', JSON.stringify(pictureInfo));

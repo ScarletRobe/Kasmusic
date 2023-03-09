@@ -15,7 +15,7 @@ const TrackProgress: React.FC<TrackProgressProps> = ({ onChange }) => {
   const currentTime = useTypedSelector((state) => state.player.currentTime);
 
   return (
-    <Box ml="auto" mr={2} sx={{ flex: '1' }}>
+    <Box ml="auto" sx={{ flex: '1' }}>
       <Stack direction="row" spacing={2} alignItems="center">
         <Slider
           aria-label="Progression"
