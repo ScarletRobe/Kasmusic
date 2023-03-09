@@ -37,7 +37,7 @@ export class FileService {
     if (!this.disk) {
       this.initDisk();
     }
-    if (!fileName) {
+    if (!fileName || fileName === 'default-image.jpg') {
       return;
     }
     await this.disk.remove({
