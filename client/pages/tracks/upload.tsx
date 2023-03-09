@@ -23,16 +23,13 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 import styles from '../../styles/uploadPage.module.css';
 
+const DEFAULT_PICTUREINFO = {
+  url: 'https://disk.yandex.ru/i/6M-BJiccWbB5Qw',
+  name: 'default-image.jpg',
+};
 let disk: null | YaDisk = null;
-const Upload = () => {
-  useEffect(() => {
-    if (!disk) {
-      disk = new YaDisk(
-        'y0_AgAAAAAsPKQhAADLWwAAAADc0R33ojNQVVkHQeKJd60HnYCKSrV6O68',
-      );
-    }
-  });
 
+const Upload = () => {
   const [createPost, { isLoading, isError, requestId }] =
     useCreateTrackMutation();
   const router = useRouter();
@@ -46,6 +43,14 @@ const Upload = () => {
   const artist = useInput('');
 
   useEffect(() => {
+    if (!disk) {
+      disk = new YaDisk(
+        'y0_AgAAAAAsPKQhAADLWwAAAADc0R33ojNQVVkHQeKJd60HnYCKSrV6O68',
+      );
+    }
+  });
+
+  useEffect(() => {
     if (requestId && !isLoading) {
       setProgress(100);
     }
@@ -57,14 +62,22 @@ const Upload = () => {
       const formData = new FormData();
       formData.append('name', name.value);
       formData.append('artist', artist.value);
-      const pictureUpload = uploadFile(disk, picture, 'image');
+      let pictureUpload;
+      if (picture) {
+        pictureUpload = uploadFile(disk, picture, 'image');
+      }
       const audioUpload = uploadFile(disk, audio, 'audio', setProgress);
       const [pictureInfo, audioInfo] = await Promise.all([
         pictureUpload,
         audioUpload,
       ]);
+      console.log(pictureInfo, audioInfo);
       setProgress(80);
-      formData.append('picture', JSON.stringify(pictureInfo));
+      if (pictureInfo) {
+        formData.append('picture', JSON.stringify(pictureInfo));
+      } else {
+        formData.append('picture', JSON.stringify(DEFAULT_PICTUREINFO));
+      }
       formData.append('audio', JSON.stringify(audioInfo));
       createPost(formData);
       setProgress(90);
@@ -82,7 +95,7 @@ const Upload = () => {
       </Head>
       <UploadStepsWrapper activeStep={activeStep}>
         <Paper elevation={3} sx={{ p: 3 }} className={styles.wrapper}>
-          {activeStep === 3 && (
+          {activeStep === 0 && (
             <Grid container direction={'column'} rowGap={2}>
               <TextField {...name} label={'Название'} />
               <TextField {...artist} label={'Исполнитель'} />
@@ -114,7 +127,7 @@ const Upload = () => {
               </>
             </FileUpload>
           )}
-          {activeStep === 0 && progress !== 100 && (
+          {activeStep === 3 && progress !== 100 && (
             <Stack
               className={styles.progressWrapper}
               justifyContent="center"
