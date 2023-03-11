@@ -100,6 +100,9 @@ const TrackPage: React.FC = () => {
 
   return (
     <>
+      <Head>
+        <meta name="referrer" content="no-referrer"></meta>
+      </Head>
       <Card sx={{ p: 3 }}>
         <Button variant={'outlined'} onClick={() => router.push('/tracks')}>
           К списку
