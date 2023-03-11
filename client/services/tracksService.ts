@@ -2,7 +2,9 @@ import { BASE_SERVER_URL, SortTypes } from './../consts';
 import {
   AddCommentsParams,
   Comment,
+  EditTrackParams,
   GetTracksParams,
+  IncrementListensParams,
   Track,
 } from '../types/track';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
@@ -93,7 +95,19 @@ export const tracksApi = createApi({
       }),
       invalidatesTags: ['trackList'],
     }),
-    incrementListens: builder.mutation<Track, { id: string; sort: SortTypes }>({
+    editTrack: builder.mutation<string, EditTrackParams>({
+      query: ({ id, field, newValue }) => ({
+        url: `/tracks/${id}`,
+        method: 'PATCH',
+        body: { [field]: newValue },
+      }),
+      invalidatesTags: (result, error, arg) => [
+        { type: 'trackList', id: arg.id },
+        'track',
+        'trackList',
+      ],
+    }),
+    incrementListens: builder.mutation<Track, IncrementListensParams>({
       query: ({ id }) => ({
         url: `/tracks/listen/${id}`,
         method: 'POST',
@@ -130,6 +144,7 @@ export const {
   useCreateCommentMutation,
   useSearchTrackQuery,
   useIncrementListensMutation,
+  useEditTrackMutation,
   util: { getRunningQueriesThunk },
 } = tracksApi;
 

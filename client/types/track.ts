@@ -27,6 +27,11 @@ export enum AcceptableFiles {
   IMAGE = 'image/*',
 }
 
+export enum EditableFields {
+  NAME = 'name',
+  ARTIST = 'artist',
+}
+
 export type GetTracksParams = {
   count: string;
   offset: string;
@@ -36,4 +41,15 @@ export type GetTracksParams = {
 export type AddCommentsParams = {
   trackId: string;
   comment: Omit<Comment, '_id'>;
+};
+
+export type EditTrackParams = {
+  id: string;
+  field: EditableFields;
+  newValue: string;
+};
+
+export type IncrementListensParams = {
+  id: string;
+  sort: SortTypes;
 };
