@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
-
 import { wrapper } from '@/store/store';
+
 import { EditableFields, Track } from '../../types/track';
-import { useInput } from '@/hooks/useInput';
 import { GET_MEDIA_BASE_URL } from '@/consts';
+
 import {
   getRunningQueriesThunk,
   getTrackById,
@@ -13,10 +13,14 @@ import {
   useGetTrackByIdQuery,
 } from '@/services/tracksService';
 
+import { useInput } from '@/hooks/useInput';
+import { useTypedSelector } from '@/hooks/useTypedSelector';
+import { useSetActiveTrack } from '@/hooks/useSetActiveTrack';
+
 import Loader from '@/components/Loaders/Loader';
 import EditableText from '@/components/EditableText';
 
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import { PlayArrow, Pause, CloseRounded } from '@mui/icons-material';
 import { Button, Card, Grid, TextField } from '@mui/material';
 import { Stack } from '@mui/system';
 
@@ -31,6 +35,9 @@ const TrackPage: React.FC = () => {
   const router = useRouter();
   const { id } = router.query;
 
+  const activeTrack = useTypedSelector((state) => state.player.activeTrack);
+  const pause = useTypedSelector((state) => state.player.pause);
+
   const { data, isLoading, isError } = useGetTrackByIdQuery(id as string);
   const [createComment] = useCreateCommentMutation();
   const [editTrack] = useEditTrackMutation();
@@ -39,6 +46,14 @@ const TrackPage: React.FC = () => {
 
   const username = useInput('');
   const text = useInput('');
+  const { setTrack, play } = useSetActiveTrack();
+
+  useEffect(() => {
+    if (!track) {
+      return;
+    }
+    setTrack(track);
+  }, [isLoading]);
 
   const editTrackInfo = ({ field, newValue }: EditTrackInfoParams) => {
     if (track) {
@@ -69,7 +84,7 @@ const TrackPage: React.FC = () => {
     return (
       <Card sx={{ p: 3 }}>
         <Stack justifyContent="center" alignItems="center">
-          <CloseRoundedIcon htmlColor="red" fontSize="large" />
+          <CloseRounded htmlColor="red" fontSize="large" />
           <div>При загрузке произошла ошибка</div>
           <div>Попробуйте позже</div>
           <Button
@@ -116,6 +131,15 @@ const TrackPage: React.FC = () => {
             </h1>
           </Stack>
         </Grid>
+        <Button
+          onClick={play}
+          variant="outlined"
+          startIcon={
+            activeTrack?._id === track._id && !pause ? <Pause /> : <PlayArrow />
+          }
+        >
+          {activeTrack?._id === track._id && !pause ? 'Остановить' : 'Слушать'}
+        </Button>
         <h2>Добавить комментарий</h2>
         <Grid container>
           <TextField
