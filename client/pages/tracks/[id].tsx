@@ -13,11 +13,14 @@ import {
   useGetTrackByIdQuery,
 } from '@/services/tracksService';
 
+import Loader from '@/components/Loaders/Loader';
+import EditableText from '@/components/EditableText';
+
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { Button, Card, Grid, TextField } from '@mui/material';
+import { Stack } from '@mui/system';
 
 import styles from '../../styles/trackPage.module.css';
-import EditableText from '@/components/EditableText';
-import { Stack } from '@mui/system';
 
 export type EditTrackInfoParams = {
   field: EditableFields;
@@ -56,10 +59,28 @@ const TrackPage: React.FC = () => {
   };
 
   if (isLoading) {
-    return <div>Loading</div>;
+    return (
+      <div className={styles.loader}>
+        <Loader />
+      </div>
+    );
   }
   if (isError || !track) {
-    return <div>Error</div>;
+    return (
+      <Card sx={{ p: 3 }}>
+        <Stack justifyContent="center" alignItems="center">
+          <CloseRoundedIcon htmlColor="red" fontSize="large" />
+          <div>При загрузке произошла ошибка</div>
+          <div>Попробуйте позже</div>
+          <Button
+            className={styles.link}
+            onClick={() => router.push('/tracks')}
+          >
+            Вернуться к списку
+          </Button>
+        </Stack>
+      </Card>
+    );
   }
 
   return (
