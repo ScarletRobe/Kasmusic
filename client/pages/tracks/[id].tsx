@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 import { wrapper } from '@/store/store';
 
 import { EditableFields, Track } from '../../types/track';
