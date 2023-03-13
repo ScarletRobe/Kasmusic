@@ -10,9 +10,12 @@ import { useDeleteTrackMutation } from '@/services/tracksService';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
 import { useSetActiveTrack } from '@/hooks/useSetActiveTrack';
 
-import { PlayArrow, Pause, Delete } from '@mui/icons-material';
+import CopyToClipboardBtn from '../UI/CopyToClipboard/CopyToClipboardBtn';
+
 import { Card, IconButton, Grid } from '@mui/material';
+import { Stack } from '@mui/system';
 import RemoveRedEyeRoundedIcon from '@mui/icons-material/RemoveRedEyeRounded';
+import { PlayArrow, Pause, Delete, DownloadRounded } from '@mui/icons-material';
 
 import styles from './TrackItem.module.css';
 
@@ -46,20 +49,31 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
       <img
         className={styles.trackCover}
         src={GET_MEDIA_BASE_URL + track.picture.url}
-        width={70}
-        height={70}
+        width="70"
+        height="70"
         alt="Track cover"
       />
       <Grid container direction="column" className={styles.trackContainer}>
         <div>{track.name}</div>
         <div className={styles.trackArtist}>{track.artist}</div>
       </Grid>
-      <RemoveRedEyeRoundedIcon sx={{ mr: '5px' }} />
-      <div>{track.listens}</div>
-      <IconButton
-        onClick={(e) => handleDelete(e)}
-        className={styles.trackDeleteBtn}
+      <Stack direction="row" sx={{ mr: '10px' }}>
+        <RemoveRedEyeRoundedIcon sx={{ mr: '5px' }} />
+        <div>{track.listens}</div>
+      </Stack>
+      <CopyToClipboardBtn
+        textToCopy={`https://music-platform-sage.vercel.app/tracks/${track._id}`}
+      />
+      <a
+        href={GET_MEDIA_BASE_URL + track.audio.url}
+        target="_blank"
+        rel="noreferrer"
       >
+        <IconButton onClick={(e) => e.stopPropagation()}>
+          <DownloadRounded />
+        </IconButton>
+      </a>
+      <IconButton onClick={(e) => handleDelete(e)}>
         <Delete />
       </IconButton>
     </Card>
