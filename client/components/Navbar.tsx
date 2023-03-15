@@ -1,5 +1,7 @@
 import * as React from 'react';
 
+import Searchbar from './Searchbar';
+
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
@@ -17,25 +19,26 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import AudiotrackRoundedIcon from '@mui/icons-material/AudiotrackRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import AddIcon from '@mui/icons-material/Add';
 import LibraryMusicRoundedIcon from '@mui/icons-material/LibraryMusicRounded';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import FileDownloadRoundedIcon from '@mui/icons-material/FileDownloadRounded';
-import Searchbar from './Searchbar';
 
 const menuItems = [
   { text: 'Главная', href: '/', icon: <HomeRoundedIcon /> },
   { text: 'Список треков', href: '/tracks', icon: <AudiotrackRoundedIcon /> },
-  {
-    text: 'Список плейлистов',
-    href: '/playlists',
-    icon: <LibraryMusicRoundedIcon />,
-  },
-  { text: 'Любимые', href: '/favorite', icon: <FavoriteRoundedIcon /> },
-  {
-    text: 'Загруженные вами',
-    href: '/uploaded',
-    icon: <FileDownloadRoundedIcon />,
-  },
+  { text: 'Загрузить трек', href: '/tracks/upload', icon: <AddIcon /> },
+  // {
+  //   text: 'Список плейлистов',
+  //   href: '/playlists',
+  //   icon: <LibraryMusicRoundedIcon />,
+  // },
+  // { text: 'Любимые', href: '/favorite', icon: <FavoriteRoundedIcon /> },
+  // {
+  //   text: 'Загруженные вами',
+  //   href: '/uploaded',
+  //   icon: <FileDownloadRoundedIcon />,
+  // },
 ];
 
 export default function Navbar() {
