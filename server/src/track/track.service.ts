@@ -35,7 +35,6 @@ export class TrackService {
     let tracks;
     const documentsAmount = await this.trackModel.countDocuments();
     const totalPages = Math.ceil(documentsAmount / count);
-    console.log(totalPages);
     switch (sort) {
       case SortTypes.NEWEST:
         tracks = await this.trackModel
@@ -66,46 +65,57 @@ export class TrackService {
     return { totalPages, data: tracks };
   }
 
-  async search(query: string, sort: SortTypes): Promise<Track[]> {
+  async search(
+    count = 25,
+    offset = 0,
+    query: string,
+    sort: SortTypes = SortTypes.NEWEST,
+  ): Promise<{ totalPages: number; data: Track[]; amount: number }> {
     let tracks;
+    const queryRE = new RegExp(query, 'i');
+    const documentsAmount = await this.trackModel.countDocuments({
+      name: { $regex: queryRE },
+    });
+    const totalPages = Math.ceil(documentsAmount / count);
+
     switch (sort) {
       case SortTypes.NEWEST:
         tracks = await this.trackModel
           .find({
-            name: { $regex: new RegExp(query, 'i') },
+            name: { $regex: queryRE },
           })
-          .sort({ _id: -1 });
-        // .skip(offset)
-        // .limit(count);
+          .sort({ _id: -1 })
+          .skip(offset)
+          .limit(count);
         break;
       case SortTypes.LATEST:
-        tracks = await this.trackModel.find({
-          name: { $regex: new RegExp(query, 'i') },
-        });
-        // .skip(offset)
-        // .limit(count);
+        tracks = await this.trackModel
+          .find({
+            name: { $regex: queryRE },
+          })
+          .skip(offset)
+          .limit(count);
         break;
       case SortTypes.MOST_LISTENED:
         tracks = await this.trackModel
           .find({
-            name: { $regex: new RegExp(query, 'i') },
+            name: { $regex: queryRE },
           })
-          .sort({ listens: -1 });
-        // .skip(offset)
-        // .limit(count);
+          .sort({ listens: -1 })
+          .skip(offset)
+          .limit(count);
         break;
       case SortTypes.LEAST_LISTENED:
         tracks = await this.trackModel
           .find({
-            name: { $regex: new RegExp(query, 'i') },
+            name: { $regex: queryRE },
           })
-          .sort({ listens: 1 });
-        // .skip(offset)
-        // .limit(count);
+          .sort({ listens: 1 })
+          .skip(offset)
+          .limit(count);
         break;
     }
-
-    return tracks;
+    return { totalPages, amount: documentsAmount, data: tracks };
   }
 
   async getOne(id: ObjectId): Promise<Track> {
