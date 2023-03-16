@@ -57,12 +57,14 @@ export const tracksApi = createApi({
       ],
     }),
     searchTrack: builder.query<
-      Track[],
-      { searchQuery: string; sort: SortTypes }
+      { totalPages: number; amount: number; data: Track[] },
+      { searchQuery: string; sort: SortTypes; page: number }
     >({
-      query: ({ searchQuery, sort }) => ({
+      query: ({ searchQuery, sort, page }) => ({
         url: `/tracks/search`,
         params: {
+          count: 20,
+          offset: (page - 1) * 20,
           query: searchQuery,
           sort,
         },

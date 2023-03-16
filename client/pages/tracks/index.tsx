@@ -7,7 +7,7 @@ import Head from 'next/head';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
 import { useGetAllTracksQuery } from '@/services/tracksService';
 import { SortTypes } from '@/consts';
-import { setCurrentSort } from '@/store/appSlice/appSlice';
+import { setCurrentPage, setCurrentSort } from '@/store/appSlice/appSlice';
 import { useDispatch } from 'react-redux';
 
 const Index: React.FC<{ tracks: Track[] }> = () => {
@@ -23,7 +23,10 @@ const Index: React.FC<{ tracks: Track[] }> = () => {
   });
 
   useEffect(() => {
-    dispatch(setCurrentSort(SortTypes.NEWEST));
+    return () => {
+      dispatch(setCurrentSort(SortTypes.NEWEST));
+      dispatch(setCurrentPage(1));
+    };
   }, []);
 
   return (
