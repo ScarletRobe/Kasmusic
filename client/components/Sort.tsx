@@ -1,7 +1,7 @@
 import React from 'react';
 import { SortTypes } from '@/consts';
 import { useDispatch } from 'react-redux';
-import { setCurrentSort } from '@/store/appSlice/appSlice';
+import { setCurrentPage, setCurrentSort } from '@/store/appSlice/appSlice';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
 import {
   SelectChangeEvent,
@@ -16,6 +16,7 @@ const Sort = () => {
   const currentSort = useTypedSelector((state) => state.app.currentSort);
   const handleSortChange = (e: SelectChangeEvent<HTMLInputElement>) => {
     dispatch(setCurrentSort(e.target.value as SortTypes));
+    dispatch(setCurrentPage(1));
   };
 
   return (
