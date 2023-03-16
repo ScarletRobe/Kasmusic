@@ -6,39 +6,60 @@ import TrackItem from './TrackItem/TrackItem';
 import Loader from './Loaders/Loader';
 import Sort from './Sort';
 
-import { Grid, Box } from '@mui/material';
+import { Grid, Box, Pagination } from '@mui/material';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { Stack } from '@mui/system';
+import { useTypedSelector } from '@/hooks/useTypedSelector';
+import { useDispatch } from 'react-redux';
+import { setCurrentPage } from '@/store/appSlice/appSlice';
 
 type TrackListProps = {
-  tracks: Track[] | undefined;
+  tracksData: { totalPages: number; data: Track[] } | undefined;
   isLoading: boolean;
   isError: boolean;
   withoutSort?: boolean;
 };
 
 const TrackList: React.FC<TrackListProps> = ({
-  tracks,
+  tracksData,
   isLoading,
   isError,
 }) => {
+  const dispatch = useDispatch();
+
+  const currentPage = useTypedSelector((state) => state.app.currentPage);
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number,
+  ) => {
+    dispatch(setCurrentPage(value));
+  };
+
   return (
     <>
       <Box pl={4} pr={4} pb={2}>
         {isLoading ? (
           <Loader />
-        ) : !isError && tracks ? (
+        ) : !isError && tracksData ? (
           <>
             <Stack direction="row" justifyContent="flex-end">
-              {!!tracks.length && <Sort />}
+              {!!tracksData.data.length && <Sort />}
             </Stack>
             <Grid container direction="column">
               <Box pt={2} pb={2}>
-                {tracks.map((track) => (
+                {tracksData.data.map((track) => (
                   <TrackItem key={track._id} track={track} />
                 ))}
               </Box>
             </Grid>
+            <Stack alignItems="center">
+              <Pagination
+                count={tracksData?.totalPages}
+                page={currentPage}
+                onChange={handlePageChange}
+              />
+            </Stack>
           </>
         ) : (
           <Grid
