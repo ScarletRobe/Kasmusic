@@ -20,19 +20,22 @@ export const tracksApi = createApi({
   },
   tagTypes: ['trackList', 'track'],
   endpoints: (builder) => ({
-    getAllTracks: builder.query<Track[], GetTracksParams>({
-      query: ({ count = '25', offset = '0', sort }) => ({
+    getAllTracks: builder.query<
+      { totalPages: number; data: Track[] },
+      GetTracksParams
+    >({
+      query: ({ page, sort }) => ({
         url: '/tracks',
         params: {
-          count,
-          offset,
+          count: 20,
+          offset: (page - 1) * 20,
           sort,
         },
       }),
       providesTags: (result) =>
         result
           ? [
-              ...result.map((res) => ({
+              ...result.data.map((res) => ({
                 type: 'trackList' as const,
                 id: Number(res._id),
               })),
@@ -113,13 +116,13 @@ export const tracksApi = createApi({
         method: 'POST',
       }),
       invalidatesTags: [{ type: 'trackList', id: 'searchResult' }],
-      async onQueryStarted({ id, sort }, { dispatch, queryFulfilled }) {
+      async onQueryStarted({ id, sort, page }, { dispatch, queryFulfilled }) {
         const patchResult = dispatch(
           tracksApi.util.updateQueryData(
             'getAllTracks',
-            { count: '50', offset: '0', sort },
+            { page, sort },
             (draft) => {
-              const track = draft.find((track) => track._id === id);
+              const track = draft.data.find((track) => track._id === id);
               if (track) {
                 track.listens++;
               }

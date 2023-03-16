@@ -33,8 +33,7 @@ export enum EditableFields {
 }
 
 export type GetTracksParams = {
-  count: string;
-  offset: string;
+  page: number;
   sort: SortTypes;
 };
 
@@ -52,4 +51,5 @@ export type EditTrackParams = {
 export type IncrementListensParams = {
   id: string;
   sort: SortTypes;
+  page: number;
 };
