@@ -72,7 +72,6 @@ export default function Navbar() {
               variant="h6"
               noWrap
               component="div"
-              // onClick={() => console.log('111')}
               onClick={() => router.push('/')}
             >
               Kasmusic
