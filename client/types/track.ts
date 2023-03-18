@@ -37,6 +37,11 @@ export type GetTracksParams = {
   sort: SortTypes;
 };
 
+export type GetTracksResponse = {
+  totalPages: number;
+  data: Track[];
+};
+
 export type AddCommentsParams = {
   trackId: string;
   comment: Omit<Comment, '_id'>;
@@ -50,6 +55,16 @@ export type EditTrackParams = {
 
 export type IncrementListensParams = {
   id: string;
+};
+
+export type SearchTrackParams = {
+  searchQuery: string;
   sort: SortTypes;
   page: number;
+};
+
+export type SearchTrackResponse = {
+  totalPages: number;
+  amount: number;
+  data: Track[];
 };

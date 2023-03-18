@@ -1,10 +1,13 @@
-import { BASE_SERVER_URL, SortTypes } from './../consts';
+import { SearchTrackResponse, GetTracksResponse } from './../types/track';
+import { RootState } from './../store/rootReducer';
+import { BASE_SERVER_URL } from './../consts';
 import {
   AddCommentsParams,
   Comment,
   EditTrackParams,
   GetTracksParams,
   IncrementListensParams,
+  SearchTrackParams,
   Track,
 } from '../types/track';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
@@ -20,10 +23,7 @@ export const tracksApi = createApi({
   },
   tagTypes: ['trackList', 'track'],
   endpoints: (builder) => ({
-    getAllTracks: builder.query<
-      { totalPages: number; data: Track[] },
-      GetTracksParams
-    >({
+    getAllTracks: builder.query<GetTracksResponse, GetTracksParams>({
       query: ({ page, sort }) => ({
         url: '/tracks',
         params: {
@@ -56,10 +56,7 @@ export const tracksApi = createApi({
         'track',
       ],
     }),
-    searchTrack: builder.query<
-      { totalPages: number; amount: number; data: Track[] },
-      { searchQuery: string; sort: SortTypes; page: number }
-    >({
+    searchTrack: builder.query<SearchTrackResponse, SearchTrackParams>({
       query: ({ searchQuery, sort, page }) => ({
         url: `/tracks/search`,
         params: {
@@ -130,7 +127,7 @@ export const tracksApi = createApi({
               }
             },
           ),
-        );
+          );
         try {
           await queryFulfilled;
         } catch {
