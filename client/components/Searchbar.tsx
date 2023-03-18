@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 
-import { FormControl, Input, InputAdornment } from '@mui/material';
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import { useSearchTrackQuery } from '@/services/tracksService';
+import { setSearchQuery } from '@/store/appSlice/appSlice';
+
 import { useDebounce } from '@/hooks/useDebounce';
 import { useInput } from '@/hooks/useInput';
 import { Track } from '@/types/track';
-import { useRouter } from 'next/router';
+
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import { borderColor } from '@mui/system';
+import { FormControl, Input, InputAdornment } from '@mui/material';
 
 const Searchbar = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const [query, setQuery] = useState('');
   // const [skip, setSkip] = useState(true);
   // const { data } = useSearchTrackQuery(searchbar.value, { skip });
@@ -25,6 +30,7 @@ const Searchbar = () => {
     if (!query) {
       return;
     }
+    dispatch(setSearchQuery(query));
     setQuery('');
     router.push(`/search/${query}`);
   };

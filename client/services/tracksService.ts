@@ -114,24 +114,45 @@ export const tracksApi = createApi({
         url: `/tracks/listen/${id}`,
         method: 'POST',
       }),
-      invalidatesTags: [{ type: 'trackList', id: 'searchResult' }],
-      async onQueryStarted({ id, sort, page }, { dispatch, queryFulfilled }) {
-        const patchResult = dispatch(
-          tracksApi.util.updateQueryData(
-            'getAllTracks',
-            { page, sort },
-            (draft) => {
-              const track = draft.data.find((track) => track._id === id);
+      async onQueryStarted({ id }, { dispatch, queryFulfilled, getState }) {
+        const dispatchIncListens = (
+          endpointName: 'getAllTracks' | 'searchTrack',
+          params: any,
+        ) => {
+          dispatch(
+            tracksApi.util.updateQueryData(endpointName, params, (draft) => {
+              const track = draft.data.find((track: Track) => track._id === id);
               if (track) {
                 track.listens++;
               }
-            },
-          ),
+            }),
           );
-        try {
-          await queryFulfilled;
-        } catch {
-          patchResult.undo();
+        };
+        const state = getState() as RootState;
+        const searchPageParams = {
+          page: state.app.currentPage,
+          sort: state.app.currentSort,
+          searchQuery: state.app.searchQuery,
+        };
+        const tracksPageParams = {
+          sort: state.app.currentSort,
+          page: state.app.currentPage,
+        };
+        for (const {
+          endpointName,
+          originalArgs,
+        } of tracksApi.util.selectInvalidatedBy(getState(), [
+          { type: 'trackList' },
+        ])) {
+          if (endpointName === 'getAllTracks') {
+            dispatchIncListens(endpointName, tracksPageParams);
+          }
+          if (
+            endpointName === 'searchTrack' &&
+            originalArgs.searchQuery === state.app.searchQuery
+          ) {
+            dispatchIncListens(endpointName, searchPageParams);
+          }
         }
       },
     }),
