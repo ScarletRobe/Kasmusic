@@ -67,7 +67,14 @@ export default function Navbar() {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6" noWrap component="div">
+            <Typography
+              sx={{ userSelect: 'none', cursor: 'pointer' }}
+              variant="h6"
+              noWrap
+              component="div"
+              // onClick={() => console.log('111')}
+              onClick={() => router.push('/')}
+            >
               Kasmusic
             </Typography>
           </Toolbar>
