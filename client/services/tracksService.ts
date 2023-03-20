@@ -116,17 +116,37 @@ export const tracksApi = createApi({
       }),
       async onQueryStarted({ id }, { dispatch, queryFulfilled, getState }) {
         const dispatchIncListens = (
-          endpointName: 'getAllTracks' | 'searchTrack',
+          endpointName: 'getAllTracks' | 'searchTrack' | 'getTrackById',
           params: any,
         ) => {
-          dispatch(
-            tracksApi.util.updateQueryData(endpointName, params, (draft) => {
-              const track = draft.data.find((track: Track) => track._id === id);
-              if (track) {
-                track.listens++;
-              }
-            }),
-          );
+          switch (endpointName) {
+            case 'getAllTracks':
+            case 'searchTrack':
+              dispatch(
+                tracksApi.util.updateQueryData(
+                  endpointName,
+                  params,
+                  (draft) => {
+                    const track = draft.data.find(
+                      (track: Track) => track._id === id,
+                    );
+                    if (track) {
+                      track.listens++;
+                    }
+                  },
+                ),
+              );
+              break;
+            case 'getTrackById':
+              dispatch(
+                tracksApi.util.updateQueryData(endpointName, id, (draft) => {
+                  draft.listens++;
+                }),
+              );
+              break;
+            default:
+              break;
+          }
         };
         const state = getState() as RootState;
         const searchPageParams = {
@@ -138,6 +158,11 @@ export const tracksApi = createApi({
           sort: state.app.currentSort,
           page: state.app.currentPage,
         };
+        const all = tracksApi.util.selectInvalidatedBy(getState(), [
+          { type: 'trackList' },
+          { type: 'track' },
+        ]);
+        console.log(all);
         for (const {
           endpointName,
           originalArgs,
@@ -152,6 +177,12 @@ export const tracksApi = createApi({
             originalArgs.searchQuery === state.app.searchQuery
           ) {
             dispatchIncListens(endpointName, searchPageParams);
+          }
+          if (
+            endpointName === 'getTrackById' &&
+            originalArgs === state.player.activeTrack?._id
+          ) {
+            dispatchIncListens(endpointName, {});
           }
         }
       },
