@@ -14,9 +14,7 @@ import { ConfigModule } from '@nestjs/config';
     ServeStaticModule.forRoot({
       rootPath: path.resolve(__dirname, '..', 'static'),
     }),
-    MongooseModule.forRoot(
-      'mongodb+srv://admin:admin@cluster0.jktggcn.mongodb.net/?retryWrites=true&w=majority',
-    ),
+    MongooseModule.forRoot(process.env.DBToken),
   ],
 })
 export class AppModule {}
