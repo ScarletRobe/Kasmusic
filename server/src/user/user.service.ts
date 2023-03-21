@@ -18,4 +18,14 @@ export class UserService {
     @InjectModel(Role.name) private roleModel: Model<RoleDocument>,
     @InjectModel(User.name) private userModel: Model<UserDocument>,
   ) {}
+
+  async createRole(dto: CreateRoleDto) {
+    if (!dto.rolename) {
+      throw new Error('Incorrect DTO');
+    }
+    if (await this.roleModel.findOne({ rolename: dto.rolename })) {
+      throw new Error('Already exists');
+    }
+    await this.roleModel.create({ rolename: dto.rolename });
+  }
 }

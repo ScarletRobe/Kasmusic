@@ -6,4 +6,16 @@ import { CreateUserDto } from './dto/create-user.dto';
 @Controller('/user')
 export class UserController {
   constructor(private userService: UserService) {}
+
+  @Post('/role')
+  async createRole(@Body() dto: CreateRoleDto) {
+    try {
+      await this.userService.createRole(dto);
+      return 'Created';
+    } catch (error) {
+      if (error instanceof Error) {
+        return error.message;
+      }
+    }
+  }
 }
