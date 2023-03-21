@@ -20,6 +20,7 @@ import { useSetActiveTrack } from '@/hooks/useSetActiveTrack';
 
 import Loader from '@/components/Loaders/Loader';
 import EditableText from '@/components/EditableText';
+import Comment from '@/components/comment/Comment';
 
 import { PlayArrow, Pause, CloseRounded } from '@mui/icons-material';
 import { Button, Card, Grid, TextField } from '@mui/material';
@@ -168,10 +169,7 @@ const TrackPage: React.FC = () => {
         <h2>Комментарии</h2>
         <div>
           {track.comments.map((comment) => (
-            <div key={comment._id}>
-              <div>Автор - {comment.username}</div>
-              <div>Комментарий - {comment.text}</div>
-            </div>
+            <Comment key={comment._id} comment={comment} />
           ))}
         </div>
       </Card>

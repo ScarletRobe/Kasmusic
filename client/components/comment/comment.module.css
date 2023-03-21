@@ -1,0 +1,10 @@
+.commentCard {
+  margin-top: 1em;
+  padding: 5px 15px;
+}
+
+.commentAuthor {
+  font-weight: bold;
+  color: black;
+  text-transform: capitalize;
+}
