@@ -1,7 +1,11 @@
-import { CreateRoleDto } from './dto/create-role.dto';
 import { Body, Controller, Post } from '@nestjs/common';
+import { Get, Req } from '@nestjs/common/decorators';
+
 import { UserService } from './user.service';
+
+import { Request } from 'express';
 import { CreateUserDto } from './dto/create-user.dto';
+import { CreateRoleDto } from './dto/create-role.dto';
 
 @Controller('/user')
 export class UserController {
@@ -25,6 +29,17 @@ export class UserController {
       if (error instanceof Error) {
         return error.message;
       }
+    }
+  }
+
+  @Get('/activate/:token')
+  async activate(@Req() req: Request) {
+    try {
+      return await this.userService.activate(
+        process.env.BASE_URL + req.originalUrl,
+      );
+    } catch (error) {
+      return error.message;
     }
   }
 }
