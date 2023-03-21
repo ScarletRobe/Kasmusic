@@ -7,7 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import * as uuid from 'uuid';
 
-import { MailService } from 'src/mail/mail.service';
+import { MailService } from '../mail/mail.service';
 
 import { User } from './schemas/user.schema';
 import { Role } from './schemas/role.schema';
