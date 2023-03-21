@@ -19,6 +19,27 @@ export class UserService {
     @InjectModel(User.name) private userModel: Model<UserDocument>,
   ) {}
 
+  async register(dto: CreateUserDto) {
+    const isUserExists = Boolean(
+      await this.userModel.findOne({
+        $or: [{ username: dto.username }, { email: dto.email }],
+      }),
+    );
+    if (isUserExists) {
+      throw new Error('User with this username or email already exists');
+    }
+    const hashedPass = bcrypt.hashSync(dto.password, 3);
+
+    const user = await this.userModel.create({
+      email: dto.email,
+      username: dto.username,
+      password: hashedPass,
+      avatarLink: `https://api.multiavatar.com/${dto.username}.png?apikey=KUh2nrICkSFs5O`,
+    });
+
+    return user;
+  }
+
   async createRole(dto: CreateRoleDto) {
     if (!dto.rolename) {
       throw new Error('Incorrect DTO');
