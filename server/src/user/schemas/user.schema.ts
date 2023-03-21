@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import { Date, Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 import { Roles } from './../enums';
@@ -24,6 +24,9 @@ export class User {
 
   @Prop()
   avatarLink: string;
+
+  @Prop({ default: new Date() })
+  createdAt: Date;
 
   @Prop({ type: [{ type: String, ref: 'Role' }], default: [Roles.USER] })
   roles;
