@@ -12,16 +12,9 @@ export enum FileType {
 export class FileService {
   @Inject(ConfigService)
   public config: ConfigService;
-  private disk;
-
-  initDisk() {
-    this.disk = new YaDisk(process.env.YANDEX_AUTH_TOKEN);
-  }
+  private disk = new YaDisk(process.env.YANDEX_AUTH_TOKEN);
 
   async createFile(type: FileType, file) {
-    if (!this.disk) {
-      this.initDisk();
-    }
     const fileExtension = file.originalname.split('.').pop();
     const fileName = uuid.v4() + '.' + fileExtension;
     const path = `music-platform%2F${type}%2F${fileName}`;
@@ -34,9 +27,6 @@ export class FileService {
   }
 
   async removeFile(type: FileType, fileName: string) {
-    if (!this.disk) {
-      this.initDisk();
-    }
     if (!fileName || fileName === 'default-image.jpg') {
       return;
     }
