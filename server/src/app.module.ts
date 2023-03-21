@@ -1,3 +1,4 @@
+import { UserModule } from './user/user.module';
 import { TrackModule } from './track/track.module';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -11,6 +12,7 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
     }),
     TrackModule,
+    UserModule,
     ServeStaticModule.forRoot({
       rootPath: path.resolve(__dirname, '..', 'static'),
     }),
