@@ -49,6 +49,22 @@ export class AuthController {
     }
   }
 
+  @Get('/refresh')
+  async refreshTokens(@Res() res: Response, @Req() req: Request) {
+    try {
+      const userId = req.user['sub'];
+      const { refreshToken } = req.cookies;
+      const tokens = await this.authService.refreshTokens(userId, refreshToken);
+      res.cookie('refreshToken', tokens.refreshToken, {
+        maxAge: 60 * 60 * 24 * 30 * 1000,
+        httpOnly: true,
+      });
+      return res.json({ accessToken: tokens.accessToken });
+    } catch (error) {
+      return res.json({ message: error.message });
+    }
+  }
+
   @Get('/activate/:token')
   async activate(@Req() req: Request) {
     try {
