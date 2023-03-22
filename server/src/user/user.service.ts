@@ -37,6 +37,11 @@ export class UserService {
     await this.roleModel.create({ rolename: dto.rolename });
   }
 
+  async updateUser(user: User & Document, params) {
+    return await user.updateOne(params, {
+      returnDocument: 'after',
+    });
+  }
   async findOne(params: object) {
     const user = await this.userModel.findOne(params);
     return user;

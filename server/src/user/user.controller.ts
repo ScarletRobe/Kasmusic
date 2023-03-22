@@ -9,6 +9,11 @@ import { CreateRoleDto } from './dto/create-role.dto';
 export class UserController {
   constructor(private userService: UserService) {}
 
+  @Post('/update/:id')
+  async update(@Body() params, @Param() { id }) {
+    return await this.userService.findByIdandUpdate(id, params);
+  }
+
   @Post('/role')
   async createRole(@Body() dto: CreateRoleDto) {
     try {
