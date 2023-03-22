@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import * as bcrypt from 'bcrypt';
+import { Document } from 'mongoose';
+import { User } from 'src/user/schemas/user.schema';
 import * as uuid from 'uuid';
 
 import { MailService } from '../mail/mail.service';
@@ -12,6 +14,7 @@ import { RegisterUserDto } from './dto/register-user.dto';
 
 @Injectable()
 export class AuthService {
+  private saltRounds = 3;
   constructor(
     private mailService: MailService,
     private jwtService: JwtService,
@@ -27,7 +30,8 @@ export class AuthService {
     if (isUserExists) {
       throw new Error('User with this username or email already exists');
     }
-    const hashedPassword = bcrypt.hashSync(dto.password, 3);
+
+    const hashedPassword = bcrypt.hashSync(dto.password, this.saltRounds);
     const activationToken = uuid.v4();
     const activationLink = `${process.env.BASE_URL}/user/activate/${activationToken}`;
 
@@ -36,9 +40,18 @@ export class AuthService {
       activationLink,
       hashedPassword,
     });
+
+    const tokens = await this.getTokens({
+      sub: user._id,
+      username: user.username,
+      roles: user.roles,
+    });
+    await this.updateRefreshToken({ user, token: tokens.refreshToken });
+
     await this.mailService.sendActivationMail(dto.email, activationLink);
 
-    return user;
+    return tokens;
+  }
   }
 
   async activate(activationLink) {
