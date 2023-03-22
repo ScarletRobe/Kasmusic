@@ -16,17 +16,21 @@ export class MailService {
     });
   }
   async sendActivationMail(email, activationLink) {
-    this.transporter.sendMail({
-      from: `${process.env.MAIL_USER}@yandex.ru`,
-      to: email,
-      subject: 'Активация аккаунта на Kasmusic',
-      text: '',
-      html: `
+    try {
+      this.transporter.sendMail({
+        from: `${process.env.MAIL_USER}@yandex.ru`,
+        to: email,
+        subject: 'Активация аккаунта на Kasmusic',
+        text: '',
+        html: `
         <div>
           <h1>Перейдите по ссылке для завершения регистрации</h1>
           <a href="${activationLink}">${activationLink}</a>
         </div>
       `,
-    });
+      });
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
 }

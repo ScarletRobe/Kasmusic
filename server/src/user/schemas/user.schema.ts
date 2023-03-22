@@ -16,7 +16,7 @@ export class User {
   @Prop()
   activationLink: string;
 
-  @Prop({ unique: true, required: true })
+  @Prop({ unique: true, required: true, maxlength: 30 })
   username: string;
 
   @Prop({ required: true })
@@ -25,8 +25,11 @@ export class User {
   @Prop()
   avatarLink: string;
 
-  @Prop({ default: new Date() })
+  @Prop({ type: Date, default: new Date() })
   createdAt: Date;
+
+  @Prop({ type: Date, default: new Date() })
+  lastSeen: Date;
 
   @Prop({ type: [{ type: String, ref: 'Role' }], default: [Roles.USER] })
   roles;
