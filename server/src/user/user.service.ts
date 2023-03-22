@@ -37,8 +37,8 @@ export class UserService {
     await this.roleModel.create({ rolename: dto.rolename });
   }
 
-  async updateUser(user: User & Document, params) {
-    return await user.updateOne(params, {
+  async updateUser(user: User & Document, dto: UpdateUserDto) {
+    return await user.updateOne(dto, {
       returnDocument: 'after',
     });
   }
