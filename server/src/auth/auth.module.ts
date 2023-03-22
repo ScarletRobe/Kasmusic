@@ -1,3 +1,5 @@
+import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
+import { AccessTokenStrategy } from './strategies/access-token.strategy';
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
@@ -10,15 +12,13 @@ import { AuthService } from './auth.service';
 import { MailService } from '../mail/mail.service';
 
 @Module({
-  imports: [
-    PassportModule,
-    UserModule,
-    JwtModule.register({
-      secret: process.env.JWT_ACCESS_SECRET,
-      signOptions: { expiresIn: '24h' },
-    }),
-  ],
+  imports: [PassportModule, UserModule, JwtModule.register({})],
   controllers: [AuthController],
-  providers: [AuthService, MailService],
+  providers: [
+    AuthService,
+    MailService,
+    AccessTokenStrategy,
+    RefreshTokenStrategy,
+  ],
 })
 export class AuthModule {}

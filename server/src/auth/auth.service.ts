@@ -50,4 +50,44 @@ export class AuthService {
     user.activationLink = undefined;
     user.save();
   }
+
+  async updateRefreshToken({
+    userId,
+    user,
+    token,
+  }: {
+    userId?: string;
+    user?: User & Document;
+    token: string;
+  }) {
+    const hashedRefreshToken = bcrypt.hashSync(token, this.saltRounds);
+    if (userId) {
+      await this.userService.findByIdandUpdate(userId, {
+        refreshToken: hashedRefreshToken,
+      });
+    }
+    if (user) {
+      await this.userService.updateUser(user, {
+        refreshToken: hashedRefreshToken,
+      });
+    }
+  }
+
+  async getTokens(payload: { sub: string; username: string; roles: string[] }) {
+    const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(payload, {
+        secret: process.env.JWT_ACCESS_SECRET,
+        expiresIn: '12h',
+      }),
+      this.jwtService.signAsync(payload, {
+        secret: process.env.JWT_REFRESH_SECRET,
+        expiresIn: '30d',
+      }),
+    ]);
+
+    return {
+      accessToken,
+      refreshToken,
+    };
+  }
 }
