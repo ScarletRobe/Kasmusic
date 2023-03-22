@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { Get, Req } from '@nestjs/common/decorators';
 
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
@@ -11,26 +11,42 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('/register')
-  async register(@Body() dto: RegisterUserDto) {
+  async register(@Res() res: Response, @Body() dto: RegisterUserDto) {
     try {
-      return await this.authService.register(dto);
+      const tokens = await this.authService.register(dto);
+      res.cookie('refreshToken', tokens.refreshToken, {
+        maxAge: 60 * 60 * 24 * 30 * 1000,
+        httpOnly: true,
+      });
+      return res.json({ accessToken: tokens.accessToken });
     } catch (error) {
-      return error.message;
+      return res.json({ message: error.message });
     }
   }
 
   @Post('/login')
-  async login(@Body() dto: LoginDto) {
+  async login(@Res() res: Response, @Body() dto: LoginDto) {
     try {
-      return await this.authService.login(dto);
+      const tokens = await this.authService.login(dto);
+      res.cookie('refreshToken', tokens.refreshToken, {
+        maxAge: 60 * 60 * 24 * 30 * 1000,
+        httpOnly: true,
+      });
+      return res.json({ accessToken: tokens.accessToken });
     } catch (error) {
-      return error.message;
+      return res.json({ message: error.message });
     }
   }
 
-  @Get('logout')
-  logout(@Req() req: Request) {
+  @Get('/logout')
+  logout(@Res() res: Response, @Req() req: Request) {
+    try {
     this.authService.logout(req.user['sub']);
+      res.clearCookie('refreshToken');
+      return res.json('Logged out');
+    } catch (error) {
+      return res.json({ message: error.message });
+    }
   }
 
   @Get('/activate/:token')

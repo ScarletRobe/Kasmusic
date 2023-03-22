@@ -77,7 +77,9 @@ export class AuthService {
   }
 
   async logout(userId: string) {
-    return this.userService.findByIdAndUpdate(userId, { refreshToken: null });
+    return await this.userService.findByIdAndUpdate(userId, {
+      refreshToken: null,
+    });
   }
 
   async activate(activationLink) {
