@@ -43,6 +43,13 @@ export class UserService {
       returnDocument: 'after',
     });
   }
+
+  async findByIdandUpdate(id: string, dto: UpdateUserDto) {
+    return await this.userModel.findByIdAndUpdate(id, dto, {
+      returnDocument: 'after',
+    });
+  }
+
   async findOne(params: object) {
     return await this.userModel.findOne(params);
   }
