@@ -32,7 +32,10 @@ export class User {
   lastSeen: Date;
 
   @Prop({ type: [{ type: String, ref: 'Role' }], default: [Roles.USER] })
-  roles;
+  roles: string[];
+
+  @Prop({ default: null })
+  refreshToken: string | null;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
