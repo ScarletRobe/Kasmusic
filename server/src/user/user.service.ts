@@ -44,7 +44,7 @@ export class UserService {
     });
   }
 
-  async findByIdandUpdate(id: string, dto: UpdateUserDto) {
+  async findByIdAndUpdate(id: string, dto: UpdateUserDto) {
     return await this.userModel.findByIdAndUpdate(id, dto, {
       returnDocument: 'after',
     });

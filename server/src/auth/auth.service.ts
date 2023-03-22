@@ -75,7 +75,7 @@ export class AuthService {
   }) {
     const hashedRefreshToken = bcrypt.hashSync(token, this.saltRounds);
     if (userId) {
-      await this.userService.findByIdandUpdate(userId, {
+      await this.userService.findByIdAndUpdate(userId, {
         refreshToken: hashedRefreshToken,
       });
     }

@@ -11,7 +11,7 @@ export class UserController {
 
   @Post('/update/:id')
   async update(@Body() params, @Param() { id }) {
-    return await this.userService.findByIdandUpdate(id, params);
+    return await this.userService.findByIdAndUpdate(id, params);
   }
 
   @Post('/role')
