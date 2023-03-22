@@ -34,7 +34,6 @@ export class AuthService {
     const hashedPassword = bcrypt.hashSync(dto.password, this.saltRounds);
     const activationToken = uuid.v4();
     const activationLink = `${process.env.BASE_URL}/user/activate/${activationToken}`;
-
     const user = await this.userService.createUser({
       ...dto,
       activationLink,
@@ -52,6 +51,33 @@ export class AuthService {
 
     return tokens;
   }
+
+  async login({ username, password }: LoginDto) {
+    const user = await this.userService.findOne({ username });
+    if (!user) {
+      throw new Error('User with this name does not exist');
+    }
+    const isPasswordCorrect = bcrypt.compareSync(password, user.password);
+    if (!isPasswordCorrect) {
+      throw new Error('Incorrect password');
+    }
+
+    const tokens = await this.getTokens({
+      sub: user._id,
+      username: user.username,
+      roles: user.roles,
+    });
+    await this.updateRefreshToken({
+      userId: user._id,
+      token: tokens.refreshToken,
+    });
+    this.userService.updateUser(user, { lastSeen: new Date() });
+
+    return tokens;
+  }
+
+  async logout(userId: string) {
+    return this.userService.findByIdAndUpdate(userId, { refreshToken: null });
   }
 
   async activate(activationLink) {

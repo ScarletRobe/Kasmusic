@@ -19,6 +19,20 @@ export class AuthController {
     }
   }
 
+  @Post('/login')
+  async login(@Body() dto: LoginDto) {
+    try {
+      return await this.authService.login(dto);
+    } catch (error) {
+      return error.message;
+    }
+  }
+
+  @Get('logout')
+  logout(@Req() req: Request) {
+    this.authService.logout(req.user['sub']);
+  }
+
   @Get('/activate/:token')
   async activate(@Req() req: Request) {
     try {
