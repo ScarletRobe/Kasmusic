@@ -2,11 +2,14 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { Get, Req, Res, UseGuards } from '@nestjs/common/decorators';
 
 import { Request, Response } from 'express';
+
+import { AuthService } from './auth.service';
+
+import { AccessTokenGuard } from '../common/guards/accessToken.guard';
+import { RefreshTokenGuard } from '../common/guards/refreshToken.guard';
+
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginDto } from './dto/login.dto';
-import { AuthService } from './auth.service';
-import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
-import { RefreshTokenGuard } from 'src/common/guards/refreshToken.guard';
 
 @Controller('/auth')
 export class AuthController {

@@ -3,11 +3,12 @@ import { JwtService } from '@nestjs/jwt';
 
 import * as bcrypt from 'bcrypt';
 import { Document } from 'mongoose';
-import { User } from 'src/user/schemas/user.schema';
 import * as uuid from 'uuid';
 
 import { MailService } from '../mail/mail.service';
 import { UserService } from './../user/user.service';
+
+import { User } from '../user/schemas/user.schema';
 
 import { LoginDto } from './dto/login.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
