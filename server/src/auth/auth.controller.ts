@@ -1,10 +1,12 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { Get, Req } from '@nestjs/common/decorators';
+import { Get, Req, Res, UseGuards } from '@nestjs/common/decorators';
 
 import { Request, Response } from 'express';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { AuthService } from './auth.service';
+import { AccessTokenGuard } from 'src/common/guards/accessToken.guard';
+import { RefreshTokenGuard } from 'src/common/guards/refreshToken.guard';
 
 @Controller('/auth')
 export class AuthController {
@@ -38,10 +40,11 @@ export class AuthController {
     }
   }
 
+  @UseGuards(AccessTokenGuard)
   @Get('/logout')
   logout(@Res() res: Response, @Req() req: Request) {
     try {
-    this.authService.logout(req.user['sub']);
+      this.authService.logout(req.user['sub']);
       res.clearCookie('refreshToken');
       return res.json('Logged out');
     } catch (error) {
@@ -49,6 +52,7 @@ export class AuthController {
     }
   }
 
+  @UseGuards(RefreshTokenGuard)
   @Get('/refresh')
   async refreshTokens(@Res() res: Response, @Req() req: Request) {
     try {
