@@ -29,7 +29,7 @@ export class UserController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     try {
-      return this.userService.findOne({ id });
+      return this.userService.findOne({ _id: id });
     } catch (error) {
       return error.message;
     }
