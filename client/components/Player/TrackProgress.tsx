@@ -1,9 +1,11 @@
 import React from 'react';
-import styles from './Player.module.css';
+
+import { useTypedSelector } from '@/hooks/useTypedSelector';
+import { getFormattedTime } from '@/helpers/getFormattedTime';
 
 import { Box, Stack, Slider } from '@mui/material';
-import { useTypedSelector } from '@/hooks/useTypedSelector';
-import { getFormattedTime } from '@/utils';
+
+import styles from './Player.module.css';
 
 interface TrackProgressProps {
   onChange: (_: any, value: number | number[]) => void;
