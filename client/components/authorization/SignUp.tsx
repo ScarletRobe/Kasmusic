@@ -15,7 +15,6 @@ const SignUp: React.FC = () => {
   const [loading, setLoading] = React.useState(false);
   const [password, setPassword] = React.useState(INITIAL);
 
-
   return (
     <Box p={2}>
       <EmailField {...{ email, setEmail, loading }} />
