@@ -1,23 +1,20 @@
 import * as React from 'react';
 
-import EmailField from './textFields/EmailField';
 import PasswordField from './textFields/PasswordField';
 import UsernameField from './textFields/UsernameField';
 
 import { Box, FormControl, Button } from '@mui/material';
+// import checkValid from '../../util/checkvalid';
 
 const INITIAL = { text: '', error: '' };
 
-const SignUp: React.FC = () => {
+const SignIn = () => {
   const [username, setUsername] = React.useState(INITIAL);
-  const [email, setEmail] = React.useState(INITIAL);
-  const [loading, setLoading] = React.useState(false);
   const [password, setPassword] = React.useState(INITIAL);
-
+  const [loading, setLoading] = React.useState(false);
 
   return (
     <Box p={2}>
-      <EmailField {...{ email, setEmail, loading }} />
       <UsernameField {...{ username, setUsername, loading }} />
       <PasswordField {...{ password, setPassword, loading }} />
 
@@ -31,10 +28,10 @@ const SignUp: React.FC = () => {
           fullWidth
           // onClick={handleSubmit}
         >
-          Зарегистрировать
+          Войти
         </Button>
       </FormControl>
     </Box>
   );
 };
-export default SignUp;
+export default SignIn;
