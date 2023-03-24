@@ -158,11 +158,6 @@ export const tracksApi = createApi({
           sort: state.app.currentSort,
           page: state.app.currentPage,
         };
-        const all = tracksApi.util.selectInvalidatedBy(getState(), [
-          { type: 'trackList' },
-          { type: 'track' },
-        ]);
-        console.log(all);
         for (const {
           endpointName,
           originalArgs,
