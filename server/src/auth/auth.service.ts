@@ -56,7 +56,15 @@ export class AuthService {
 
     await this.mailService.sendActivationMail(dto.email, activationLink);
 
-    return tokens;
+    return {
+      tokens,
+      user: {
+        avatarLink: user.avatarLink,
+        id: user._id,
+        username: user.username,
+        isActivated: user.isActivated,
+      },
+    };
   }
 
   async login({ username, password }: LoginDto) {
@@ -80,7 +88,15 @@ export class AuthService {
     });
     this.userService.updateUser(user, { lastSeen: new Date() });
 
-    return tokens;
+    return {
+      tokens,
+      user: {
+        avatarLink: user.avatarLink,
+        id: user._id,
+        username: user.username,
+        isActivated: user.isActivated,
+      },
+    };
   }
 
   async logout(userId: string) {
@@ -109,13 +125,23 @@ export class AuthService {
     );
     if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
 
+    this.userService.updateUser(user, { lastSeen: new Date() });
+
     const tokens = await this.getTokens({
       sub: user.id,
       username: user.username,
       roles: user.roles,
     });
     await this.updateRefreshToken({ user, token: tokens.refreshToken });
-    return tokens;
+    return {
+      tokens,
+      user: {
+        avatarLink: user.avatarLink,
+        id: user._id,
+        username: user.username,
+        isActivated: user.isActivated,
+      },
+    };
   }
 
   async updateRefreshToken({
