@@ -14,6 +14,7 @@ const baseQuery = fetchBaseQuery({
   baseUrl: `${BASE_SERVER_URL}auth`,
   credentials: 'include',
   prepareHeaders: (headers, { getState }) => {
+    headers.set('Access-Control-Allow-Credentials', '*');
     const token = (getState() as RootState).auth.token;
     if (token) {
       headers.set('Authorization', `Bearer ${token}`);
