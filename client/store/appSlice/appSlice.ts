@@ -30,4 +30,5 @@ export const appSlice = createSlice({
   },
 });
 
-export const { setCurrentSort, setCurrentPage, setSearchQuery } = appSlice.actions;
+export const { setCurrentSort, setCurrentPage, setSearchQuery } =
+  appSlice.actions;
