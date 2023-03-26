@@ -39,6 +39,20 @@ const SignIn = () => {
     ) {
       return;
     }
+    try {
+      setLoading(true);
+      const result = await signIn({
+        username: username.text,
+        password: password.text,
+      }).unwrap();
+      setPassword(INITIAL);
+      setUsername(INITIAL);
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

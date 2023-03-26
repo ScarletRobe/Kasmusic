@@ -52,10 +52,23 @@ const SignUp: React.FC = () => {
     ) {
       return;
     }
-  const [username, setUsername] = React.useState(INITIAL);
-  const [email, setEmail] = React.useState(INITIAL);
-  const [loading, setLoading] = React.useState(false);
-  const [password, setPassword] = React.useState(INITIAL);
+    try {
+      setLoading(true);
+      const result = await signUp({
+        username: username.text,
+        email: email.text,
+        password: password.text,
+      });
+      setEmail(INITIAL);
+      setPassword(INITIAL);
+      setUsername(INITIAL);
+      console.log(result);
+    } catch (error) {
+      setIsError(true);
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
