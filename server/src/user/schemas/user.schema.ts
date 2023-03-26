@@ -16,7 +16,13 @@ export class User {
   @Prop()
   activationLink: string;
 
-  @Prop({ unique: true, required: true, maxlength: 30, minlength: 3 })
+  @Prop({
+    unique: true,
+    required: true,
+    maxlength: 30,
+    minlength: 3,
+    lowercase: true,
+  })
   username: string;
 
   @Prop({ required: true })

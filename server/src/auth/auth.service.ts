@@ -29,7 +29,10 @@ export class AuthService {
   async register(dto: RegisterUserDto) {
     const isUserExists = Boolean(
       await this.userService.findOne({
-        $or: [{ username: dto.username }, { email: dto.email }],
+        $or: [
+          { username: new RegExp('^' + dto.username + '$', 'i') },
+          { email: dto.email.toLowerCase() },
+        ],
       }),
     );
     if (isUserExists) {
