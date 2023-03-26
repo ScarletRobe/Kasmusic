@@ -7,7 +7,7 @@ export type UserDocument = User & Document;
 
 @Schema()
 export class User {
-  @Prop({ unique: true, required: true })
+  @Prop({ unique: true, required: true, maxlength: 30 })
   email: string;
 
   @Prop({ default: false })
@@ -16,7 +16,7 @@ export class User {
   @Prop()
   activationLink: string;
 
-  @Prop({ unique: true, required: true, maxlength: 30 })
+  @Prop({ unique: true, required: true, maxlength: 30, minlength: 3 })
   username: string;
 
   @Prop({ required: true })
