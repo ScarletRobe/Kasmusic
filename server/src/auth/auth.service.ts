@@ -43,7 +43,7 @@ export class AuthService {
 
     const hashedPassword = bcrypt.hashSync(dto.password, this.saltRounds);
     const activationToken = uuid.v4();
-    const activationLink = `${process.env.BASE_URL}/user/activate/${activationToken}`;
+    const activationLink = `${process.env.BASE_URL}/auth/activate/${activationToken}`;
     const user = await this.userService.createUser({
       ...dto,
       activationLink,
