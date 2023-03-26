@@ -22,11 +22,15 @@ const baseQuery = fetchBaseQuery({
 });
 
 const baseQueryWithReauth: BaseQueryFn<
-  string | FetchArgs,
+  string | FetchArgs | any,
   unknown,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
+  if (args.url === '/logout') {
+    return result;
+  }
+
   if (result?.error?.status === 401) {
     const refreshResult = await baseQuery('/refresh', api, extraOptions);
     if (refreshResult?.data) {
@@ -70,7 +74,7 @@ export const authApi = createApi({
         body: { ...credentials },
       }),
     }),
-    logout: builder.query({
+    logout: builder.mutation({
       query: () => ({
         url: '/logout',
         method: 'GET',
@@ -87,4 +91,5 @@ export const authApi = createApi({
 
 export const { refresh, logout } = authApi.endpoints;
 
-export const { useSignInMutation, useSignUpMutation, useLogoutQuery } = authApi;
+export const { useSignInMutation, useSignUpMutation, useLogoutMutation } =
+  authApi;
