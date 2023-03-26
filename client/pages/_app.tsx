@@ -1,13 +1,26 @@
-import MainLayout from '@/layouts/MainLayout';
 import { AppProps } from 'next/app';
-import Head from 'next/head';
 import { Provider } from 'react-redux';
+
+import { refresh } from '@/services/authService';
+import { setCredentials, signOut } from '@/store/authSlice/authSlice';
 import { wrapper } from '../store/store';
+
+import MainLayout from '@/layouts/MainLayout';
 
 import '../styles/global.css';
 
 function MyApp({ Component, ...rest }: AppProps) {
   const { store, props } = wrapper.useWrappedStore(rest);
+  if (typeof window !== 'undefined') {
+    store
+      .dispatch(refresh.initiate(''))
+      .then(({ data }) =>
+        store.dispatch(
+          setCredentials({ user: data.user, token: data.accessToken }),
+        ),
+      )
+      .catch(() => store.dispatch(signOut()));
+  }
   const { pageProps } = props;
   return (
     <>
