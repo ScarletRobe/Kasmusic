@@ -18,28 +18,28 @@ export class AuthController {
   @Post('/register')
   async register(@Res() res: Response, @Body() dto: RegisterUserDto) {
     try {
-      const tokens = await this.authService.register(dto);
+      const { user, tokens } = await this.authService.register(dto);
       res.cookie('refreshToken', tokens.refreshToken, {
         maxAge: 60 * 60 * 24 * 30 * 1000,
         httpOnly: true,
       });
-      return res.json({ accessToken: tokens.accessToken });
+      return res.status(200).json({ user, accessToken: tokens.accessToken });
     } catch (error) {
-      return res.json({ message: error.message });
+      return res.status(error.status).json({ message: error.message });
     }
   }
 
   @Post('/login')
   async login(@Res() res: Response, @Body() dto: LoginDto) {
     try {
-      const tokens = await this.authService.login(dto);
+      const { tokens, user } = await this.authService.login(dto);
       res.cookie('refreshToken', tokens.refreshToken, {
         maxAge: 60 * 60 * 24 * 30 * 1000,
         httpOnly: true,
       });
-      return res.json({ accessToken: tokens.accessToken });
+      return res.status(200).json({ user, accessToken: tokens.accessToken });
     } catch (error) {
-      return res.json({ message: error.message });
+      return res.status(error.status).json({ message: error.message });
     }
   }
 
@@ -49,9 +49,9 @@ export class AuthController {
     try {
       this.authService.logout(req.user['sub']);
       res.clearCookie('refreshToken');
-      return res.json('Logged out');
+      return res.status(200);
     } catch (error) {
-      return res.json({ message: error.message });
+      return res.status(error.status).json({ message: error.message });
     }
   }
 
@@ -61,14 +61,17 @@ export class AuthController {
     try {
       const userId = req.user['sub'];
       const { refreshToken } = req.cookies;
-      const tokens = await this.authService.refreshTokens(userId, refreshToken);
+      const { tokens, user } = await this.authService.refreshTokens(
+        userId,
+        refreshToken,
+      );
       res.cookie('refreshToken', tokens.refreshToken, {
         maxAge: 60 * 60 * 24 * 30 * 1000,
         httpOnly: true,
       });
-      return res.json({ accessToken: tokens.accessToken });
+      return res.status(200).json({ accessToken: tokens.accessToken, user });
     } catch (error) {
-      return res.json({ message: error.message });
+      return res.status(error.status).json({ message: error.message });
     }
   }
 
