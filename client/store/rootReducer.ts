@@ -1,12 +1,16 @@
 import { appSlice } from './appSlice/appSlice';
 import { combineReducers } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
-import { playerSlice } from './playerSlice/playerSlice';
+
 import { tracksApi } from '../services/tracksService';
+import { playerSlice } from './playerSlice/playerSlice';
+import { authSlice } from './authSlice/authSlice';
+import { appSlice } from './appSlice/appSlice';
 
 const rootReducer = combineReducers({
   player: playerSlice.reducer,
   app: appSlice.reducer,
+  auth: authSlice.reducer,
   [tracksApi.reducerPath]: tracksApi.reducer,
 });
 
