@@ -4,7 +4,8 @@ import PasswordField from './textFields/PasswordField';
 import UsernameField from './textFields/UsernameField';
 
 import { Box, FormControl, Button } from '@mui/material';
-// import checkValid from '../../util/checkvalid';
+import { validate } from '@/helpers/validate';
+import { useSignInMutation } from '@/services/authService';
 
 const INITIAL = { text: '', error: '' };
 
@@ -12,6 +13,33 @@ const SignIn = () => {
   const [username, setUsername] = React.useState(INITIAL);
   const [password, setPassword] = React.useState(INITIAL);
   const [loading, setLoading] = React.useState(false);
+
+  const [signIn] = useSignInMutation();
+
+  const handleSubmit = async () => {
+    if (
+      [
+        validate(
+          username.text,
+          { notEmpty: true, maxLength: 30, minLength: 3 },
+          {
+            setErrorMessage: (message: string) =>
+              setUsername((state) => ({ ...state, error: message })),
+          },
+        ),
+        validate(
+          password.text,
+          { notEmpty: true, maxLength: 30, minLength: 3 },
+          {
+            setErrorMessage: (message: string) =>
+              setPassword((state) => ({ ...state, error: message })),
+          },
+        ),
+      ].some((v) => !v)
+    ) {
+      return;
+    }
+  };
 
   return (
     <Box p={2}>
@@ -26,7 +54,7 @@ const SignIn = () => {
           variant="contained"
           color="primary"
           fullWidth
-          // onClick={handleSubmit}
+          onClick={handleSubmit}
         >
           Войти
         </Button>
