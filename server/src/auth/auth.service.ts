@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import * as bcrypt from 'bcrypt';
@@ -29,7 +33,9 @@ export class AuthService {
       }),
     );
     if (isUserExists) {
-      throw new Error('User with this username or email already exists');
+      throw new BadRequestException(
+        'User with this username or email already exists',
+      );
     }
 
     const hashedPassword = bcrypt.hashSync(dto.password, this.saltRounds);
@@ -56,11 +62,11 @@ export class AuthService {
   async login({ username, password }: LoginDto) {
     const user = await this.userService.findOne({ username });
     if (!user) {
-      throw new Error('User with this name does not exist');
+      throw new BadRequestException('User with this name does not exist');
     }
     const isPasswordCorrect = bcrypt.compareSync(password, user.password);
     if (!isPasswordCorrect) {
-      throw new Error('Incorrect password');
+      throw new BadRequestException('Incorrect password');
     }
 
     const tokens = await this.getTokens({
@@ -86,7 +92,7 @@ export class AuthService {
   async activate(activationLink) {
     const user = await this.userService.findOne({ activationLink });
     if (!user) {
-      throw new Error('Некорректная ссылка для активации');
+      throw new BadRequestException('Некорректная ссылка для активации');
     }
     user.isActivated = true;
     user.activationLink = undefined;
