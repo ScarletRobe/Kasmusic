@@ -45,11 +45,11 @@ export class AuthController {
 
   @UseGuards(AccessTokenGuard)
   @Get('/logout')
-  logout(@Res() res: Response, @Req() req: Request) {
+  async logout(@Res() res: Response, @Req() req: Request) {
     try {
-      this.authService.logout(req.user['sub']);
+      await this.authService.logout(req.user['sub']);
       res.clearCookie('refreshToken');
-      return res.status(200);
+      return res.status(200).json({});
     } catch (error) {
       return res.status(error.status).json({ message: error.message });
     }
