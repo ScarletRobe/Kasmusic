@@ -1,8 +1,9 @@
-import { appSlice } from './appSlice/appSlice';
 import { combineReducers } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
 
 import { tracksApi } from '../services/tracksService';
+import { authApi } from '@/services/authService';
+
 import { playerSlice } from './playerSlice/playerSlice';
 import { authSlice } from './authSlice/authSlice';
 import { appSlice } from './appSlice/appSlice';
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   app: appSlice.reducer,
   auth: authSlice.reducer,
   [tracksApi.reducerPath]: tracksApi.reducer,
+  [authApi.reducerPath]: authApi.reducer,
 });
 
 export const reducer = (state: any, action: any) => {
