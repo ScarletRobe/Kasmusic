@@ -8,19 +8,23 @@ import { wrapper } from '../store/store';
 import MainLayout from '@/layouts/MainLayout';
 
 import '../styles/global.css';
+import { useEffect } from 'react';
 
 function MyApp({ Component, ...rest }: AppProps) {
   const { store, props } = wrapper.useWrappedStore(rest);
-  if (typeof window !== 'undefined') {
-    store
-      .dispatch(refresh.initiate(''))
-      .then(({ data }) =>
-        store.dispatch(
-          setCredentials({ user: data.user, token: data.accessToken }),
-        ),
-      )
-      .catch(() => store.dispatch(signOut()));
-  }
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      store
+        .dispatch(refresh.initiate(''))
+        .then(({ data }) =>
+          store.dispatch(
+            setCredentials({ user: data.user, token: data.accessToken }),
+          ),
+        )
+        .catch(() => store.dispatch(signOut()));
+    }
+  }, []);
+
   const { pageProps } = props;
   return (
     <>
