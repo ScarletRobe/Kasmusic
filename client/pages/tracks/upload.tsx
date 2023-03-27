@@ -22,6 +22,8 @@ import DoneRoundedIcon from '@mui/icons-material/DoneRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 import styles from '../../styles/uploadPage.module.css';
+import { validate } from '@/helpers/validate';
+import WithAuth from '@/components/HOCs/withAuth';
 
 const DEFAULT_PICTUREINFO = {
   url: 'https://disk.yandex.ru/i/6M-BJiccWbB5Qw',
@@ -57,6 +59,27 @@ const Upload = () => {
   }, [isLoading, requestId]);
 
   const next = async () => {
+    if (activeStep === 0) {
+      if (
+        [
+          validate(name.value, { notEmpty: true, minLength: 3, maxLength: 30 }),
+          validate(artist.value, {
+            notEmpty: true,
+            minLength: 3,
+            maxLength: 30,
+          }),
+        ].some((v) => !v)
+      ) {
+        return;
+      }
+    }
+
+    if (activeStep === 2) {
+      if (!audio) {
+        return;
+      }
+    }
+
     setActiveStep((prev) => prev + 1);
     if (activeStep === 2) {
       const formData = new FormData();
@@ -190,4 +213,4 @@ const Upload = () => {
   );
 };
 
-export default Upload;
+export default WithAuth(Upload);

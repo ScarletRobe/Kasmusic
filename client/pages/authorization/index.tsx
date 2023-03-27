@@ -3,6 +3,7 @@ import React from 'react';
 import AuthTabs from '@/components/authorization/AuthTabs';
 
 import { Box, Grid } from '@mui/material';
+import WithNoAuth from '@/components/HOCs/WithNoAuth';
 
 const index = () => {
   return (
@@ -19,4 +20,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default WithNoAuth(index);
