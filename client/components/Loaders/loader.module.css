@@ -5,6 +5,10 @@
   justify-content: center;
 }
 
+.loaderSmall {
+  height: 25px;
+}
+
 .stroke {
   display: block;
   position: relative;
@@ -14,6 +18,11 @@
   border-radius: 50px;
   margin: 0 5px;
   animation: load 1.2s linear infinite;
+}
+
+.loaderSmall .stroke {
+  width: 3px;
+  margin: 0 3px;
 }
 
 .stroke:nth-child(1) {
