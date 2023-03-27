@@ -23,7 +23,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 import styles from '../../styles/uploadPage.module.css';
 import { validate } from '@/helpers/validate';
-import WithAuth from '@/components/HOCs/withAuth';
+import WithAuth from '@/components/HOCs/WithAuth';
 
 const DEFAULT_PICTUREINFO = {
   url: 'https://disk.yandex.ru/i/6M-BJiccWbB5Qw',
