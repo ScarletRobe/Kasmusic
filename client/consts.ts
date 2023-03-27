@@ -9,3 +9,9 @@ export enum SortTypes {
   NEWEST = 'Последние добавленные',
   LATEST = 'Первые добавленные',
 }
+
+export enum AuthorizationStatus {
+  Auth = 'AUTH',
+  NoAuth = 'NO_AUTH',
+  Unknown = 'UNKNOWN',
+}

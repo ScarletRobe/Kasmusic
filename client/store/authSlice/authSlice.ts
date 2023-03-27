@@ -2,8 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 import { PayloadAction } from '@reduxjs/toolkit/dist/createAction';
 
 import { User } from '@/types/auth';
+import { AuthorizationStatus } from '@/consts';
 
 type AuthInitialState = {
+  authorizationStatus: AuthorizationStatus;
   user: User | null;
   token: string | null;
 };
@@ -11,11 +13,13 @@ type AuthInitialState = {
 let initialState: AuthInitialState;
 if (typeof window !== 'undefined') {
   initialState = {
+    authorizationStatus: AuthorizationStatus.Unknown,
     user: null,
     token: localStorage.getItem('kasmusicAccessToken'),
   };
 } else {
   initialState = {
+    authorizationStatus: AuthorizationStatus.Unknown,
     user: null,
     token: null,
   };
@@ -31,16 +35,23 @@ export const authSlice = createSlice({
     ) => {
       state.user = action.payload.user;
       state.token = action.payload.token;
+      state.authorizationStatus = AuthorizationStatus.Auth;
       localStorage.setItem('kasmusicAccessToken', action.payload.token);
-      localStorage.setItem('kasmusicUserId', action.payload.user.id);
     },
     signOut: (state) => {
       state.user = null;
       state.token = null;
-      localStorage.removeItem('kasmusicUserId');
+      state.authorizationStatus = AuthorizationStatus.NoAuth;
       localStorage.removeItem('kasmusicAccessToken');
+    },
+    setAuthorizationStatus: (
+      state,
+      action: PayloadAction<AuthorizationStatus>,
+    ) => {
+      state.authorizationStatus = action.payload;
     },
   },
 });
 
-export const { setCredentials, signOut } = authSlice.actions;
+export const { setCredentials, signOut, setAuthorizationStatus } =
+  authSlice.actions;
