@@ -23,6 +23,7 @@ import AddIcon from '@mui/icons-material/Add';
 import LibraryMusicRoundedIcon from '@mui/icons-material/LibraryMusicRounded';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import FileDownloadRoundedIcon from '@mui/icons-material/FileDownloadRounded';
+import UserMiniProfile from './UserMiniProfile';
 
 const menuItems = [
   { text: 'Главная', href: '/', icon: <HomeRoundedIcon /> },
@@ -57,7 +58,10 @@ export default function Navbar() {
     <>
       <CssBaseline />
       <AppBar position="fixed">
-        <Stack direction="row" sx={{ justifyContent: 'space-between' }}>
+        <Stack
+          direction="row"
+          sx={{ justifyContent: 'space-between', pr: '10px' }}
+        >
           <Toolbar>
             <IconButton
               color="inherit"
@@ -77,7 +81,8 @@ export default function Navbar() {
               Kasmusic
             </Typography>
           </Toolbar>
-          <Searchbar />
+          <UserMiniProfile />
+          {/* <Searchbar /> */}
         </Stack>
       </AppBar>
       <ClickAwayListener
