@@ -52,7 +52,10 @@ export class AuthController {
   async logout(@Res() res: Response, @Req() req: Request) {
     try {
       await this.authService.logout(req.user['sub']);
-      res.clearCookie('refreshToken');
+      res.clearCookie('refreshToken', {
+        secure: true,
+        sameSite: 'none',
+      });
       return res.status(200).json({});
     } catch (error) {
       return res.status(error.status).json({ message: error.message });
