@@ -1,5 +1,5 @@
 import { RootState } from './../store/store';
-import { BASE_SERVER_URL } from './../consts';
+import { AuthorizationStatus, BASE_SERVER_URL } from './../consts';
 import {
   BaseQueryFn,
   createApi,
@@ -7,7 +7,11 @@ import {
   fetchBaseQuery,
   FetchBaseQueryError,
 } from '@reduxjs/toolkit/query/react';
-import { setCredentials, signOut } from '@/store/authSlice/authSlice';
+import {
+  setAuthorizationStatus,
+  setCredentials,
+  signOut,
+} from '@/store/authSlice/authSlice';
 import { SignResponse, SignInParams, SignUpParams } from '@/types/auth';
 
 const baseQuery = fetchBaseQuery({
@@ -28,6 +32,7 @@ const baseQueryWithReauth: BaseQueryFn<
 > = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
   if (args.url === '/logout') {
+    api.dispatch(signOut());
     return result;
   }
 
@@ -66,6 +71,9 @@ export const authApi = createApi({
         method: 'POST',
         body: { ...credentials },
       }),
+      async onQueryStarted(_, { dispatch }) {
+        dispatch(setAuthorizationStatus(AuthorizationStatus.Unknown));
+      },
     }),
     signUp: builder.mutation<SignResponse, SignUpParams>({
       query: (credentials: SignUpParams) => ({
@@ -74,11 +82,14 @@ export const authApi = createApi({
         body: { ...credentials },
       }),
     }),
-    logout: builder.mutation({
+    logout: builder.mutation<void, void>({
       query: () => ({
         url: '/logout',
         method: 'GET',
       }),
+      async onQueryStarted(_, { dispatch }) {
+        dispatch(setAuthorizationStatus(AuthorizationStatus.Unknown));
+      },
     }),
     refresh: builder.query({
       query: () => ({
