@@ -1,6 +1,9 @@
-import { AuthorizationStatus } from '@/consts';
-import { useTypedSelector } from '@/hooks/useTypedSelector';
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+
+import { useTypedSelector } from '@/hooks/useTypedSelector';
+
+import { AuthorizationStatus } from '@/consts';
 
 export const WithNoAuth = (Component: React.FC) => {
   const AuthenticatedComponent = () => {
@@ -8,10 +11,13 @@ export const WithNoAuth = (Component: React.FC) => {
     const authorizationStatus = useTypedSelector(
       (state) => state.auth.authorizationStatus,
     );
-    if (authorizationStatus === AuthorizationStatus.Auth) {
-      router.push('/');
-      return;
-    }
+
+    useEffect(() => {
+      if (authorizationStatus === AuthorizationStatus.Auth) {
+        router.push('/');
+        return;
+      }
+    }, [authorizationStatus, router]);
 
     return <Component />;
   };
