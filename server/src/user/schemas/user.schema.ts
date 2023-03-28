@@ -21,7 +21,6 @@ export class User {
     required: true,
     maxlength: 30,
     minlength: 3,
-    lowercase: true,
   })
   username: string;
 
