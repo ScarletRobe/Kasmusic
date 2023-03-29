@@ -15,3 +15,9 @@ export enum AuthorizationStatus {
   NoAuth = 'NO_AUTH',
   Unknown = 'UNKNOWN',
 }
+
+export enum Roles {
+  USER = 'Пользователь',
+  ADMIN = 'Администратор',
+  OWNER = 'Владелец',
+}

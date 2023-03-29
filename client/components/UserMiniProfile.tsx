@@ -4,6 +4,10 @@ import { useRouter } from 'next/router';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
 import { useLogoutMutation } from '@/services/authService';
 
+import Loader from './Loaders/Loader';
+
+import { AuthorizationStatus, Roles } from '@/consts';
+
 import {
   Avatar,
   Box,
@@ -15,8 +19,6 @@ import {
 } from '@mui/material';
 import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
-import { AuthorizationStatus } from '@/consts';
-import Loader from './Loaders/Loader';
 
 const UserMiniProfile = () => {
   const router = useRouter();
@@ -58,19 +60,20 @@ const UserMiniProfile = () => {
         </Card>
       );
     case AuthorizationStatus.Auth:
+      if (!user) return;
       return (
         <Card
           sx={{ boxShadow: 'none', backgroundColor: '#673ab7', my: 'auto' }}
         >
           <Box py={1} px={2}>
             <Stack direction="row" alignItems="center" gap={1}>
-              <Avatar alt={user?.username} src={user?.avatarLink} />
+              <Avatar alt={user.username} src={user.avatarLink} />
               <Stack>
                 <Typography variant="body1" color="secondary">
-                  {user?.username}
+                  {user.username}
                 </Typography>
                 <Typography variant="body1" color="secondary">
-                  Пользователь
+                  {Roles[user.roles[user.roles.length - 1]]}
                 </Typography>
               </Stack>
               <IconButton onClick={() => logout()}>

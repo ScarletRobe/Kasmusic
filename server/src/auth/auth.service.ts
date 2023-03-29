@@ -66,6 +66,7 @@ export class AuthService {
         id: user._id,
         username: user.username,
         isActivated: user.isActivated,
+        roles: user.roles,
       },
     };
   }
@@ -104,6 +105,7 @@ export class AuthService {
         id: user._id,
         username: user.username,
         isActivated: user.isActivated,
+        roles: user.roles,
       },
     };
   }
@@ -149,6 +151,7 @@ export class AuthService {
         id: user._id,
         username: user.username,
         isActivated: user.isActivated,
+        roles: user.roles,
       },
     };
   }

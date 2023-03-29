@@ -1,8 +1,11 @@
+import { Roles } from '@/consts';
+
 export type User = {
   id: string;
   username: string;
   avatarLink: string;
   isActivated: boolean;
+  roles: (keyof typeof Roles)[];
 };
 
 export type SignInParams = Omit<SignUpParams, 'email'>;
