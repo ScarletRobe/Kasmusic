@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 
+import DefaultSnackbar from '../Snackbars/DefaultSnackbar';
+
 import { ShareRounded } from '@mui/icons-material';
-import { IconButton, Snackbar } from '@mui/material';
+import { IconButton } from '@mui/material';
 
 type CopyToClipboardBtnProps = {
   textToCopy: string;
@@ -12,20 +14,7 @@ const CopyToClipboardBtn = ({ textToCopy }: CopyToClipboardBtnProps) => {
 
   return (
     <>
-      <Snackbar
-        sx={{
-          '& .MuiPaper-root': { display: 'flex', justifyContent: 'center' },
-        }}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        open={open}
-        autoHideDuration={1000}
-        onClick={(e) => {
-          e.stopPropagation();
-          setOpen(false);
-        }}
-        onClose={() => setOpen(false)}
-        message="Скопировано в буфер обмена"
-      />
+      <DefaultSnackbar {...{ open, setOpen }} />
       <IconButton
         onClick={(e) => {
           e.stopPropagation();
