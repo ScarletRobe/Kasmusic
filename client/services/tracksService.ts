@@ -15,7 +15,16 @@ import { HYDRATE } from 'next-redux-wrapper';
 
 export const tracksApi = createApi({
   reducerPath: 'tracks',
-  baseQuery: fetchBaseQuery({ baseUrl: BASE_SERVER_URL }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: BASE_SERVER_URL,
+    credentials: 'include',
+    prepareHeaders: (headers, { getState }) => {
+      const token = (getState() as RootState).auth.token;
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+    },
+  }),
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {
       return action.payload[reducerPath];
