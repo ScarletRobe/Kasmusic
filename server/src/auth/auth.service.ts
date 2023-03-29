@@ -90,6 +90,12 @@ export class AuthService {
       token: tokens.refreshToken,
     });
     this.userService.updateUser(user, { lastSeen: new Date() });
+    if (!user.isActivated) {
+      await this.mailService.sendActivationMail(
+        user.email,
+        user.activationLink,
+      );
+    }
 
     return {
       tokens,
