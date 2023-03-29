@@ -1,6 +1,4 @@
-import { ObjectId } from 'mongoose';
-import { CreateTrackDto } from './dto/create-track.dto';
-import { TrackService } from './track.service';
+import { Req } from '@nestjs/common/decorators';
 import {
   Body,
   Controller,
@@ -12,11 +10,23 @@ import {
   Post,
   Query,
   Res,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { FileFieldsInterceptor } from '@nestjs/platform-express/multer';
+import { Response } from 'express';
+import { ObjectId } from 'mongoose';
+
+import { RequiredRoles } from '../common/decorators/requiredRoles.decorator';
+import { AccessTokenGuard } from '../common/guards/accessToken.guard';
+import { RolesGuard } from '../common/guards/roles.guard';
+
+import { TrackService } from './track.service';
+
+import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { AddCommentDto } from './dto/add-comment.dto';
-import { FileFieldsInterceptor } from '@nestjs/platform-express/multer';
+import { Roles } from '../user/enums';
 import { SortTypes } from '../consts';
 
 @Controller('/tracks')
@@ -28,19 +38,26 @@ export class TrackController {
   }
 
   @Post()
+  @RequiredRoles(Roles.USER)
+  @UseGuards(AccessTokenGuard, RolesGuard)
   @UseInterceptors(
     FileFieldsInterceptor([
       { name: 'picture', maxCount: 1 },
       { name: 'audio', maxCount: 1 },
     ]),
   )
-  async create(@Res() res, @Body() dto: CreateTrackDto) {
-    const track = await this.trackService.create(dto);
-    return res
+  async create(@Req() req, @Res() res, @Body() dto: CreateTrackDto) {
+    try {
+      const track = await this.trackService.create(dto, req.user['sub']);
+      res
       .set({
         'access-control-allow-origin': '*',
       })
+        .status(201)
       .json(track);
+    } catch (error) {
+      res.status(error.status).json({ message: error.message });
+    }
   }
 
   @Get()

@@ -17,12 +17,13 @@ export class TrackService {
     private fileService: FileService,
   ) {}
 
-  async create(dto: CreateTrackDto): Promise<Track> {
+  async create(dto: CreateTrackDto, authorId: string): Promise<Track> {
     const track = await this.trackModel.create({
       ...dto,
       picture: JSON.parse(dto.picture),
       audio: JSON.parse(dto.audio),
       listens: 0,
+      author: authorId,
     });
     return track;
   }
@@ -119,7 +120,10 @@ export class TrackService {
   }
 
   async getOne(id: ObjectId): Promise<Track> {
-    const track = await this.trackModel.findById(id).populate('comments');
+    const track = await this.trackModel
+      .findById(id)
+      .populate('comments')
+      .populate('author', { username: 1, avatarLink: 1 });
     return track;
   }
 
