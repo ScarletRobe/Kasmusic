@@ -60,7 +60,7 @@ const UserMiniProfile = () => {
         </Card>
       );
     case AuthorizationStatus.Auth:
-      if (!user) return;
+      if (!user) return <></>;
       return (
         <Card
           sx={{ boxShadow: 'none', backgroundColor: '#673ab7', my: 'auto' }}
