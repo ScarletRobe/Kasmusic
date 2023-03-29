@@ -1,10 +1,14 @@
-import { FileService, FileType } from './../file/file.service';
-import { CreateTrackDto } from './dto/create-track.dto';
-import { Injectable } from '@nestjs/common';
+import { Injectable, ForbiddenException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model, ObjectId } from 'mongoose';
+
+import { UserService } from '../user/user.service';
+import { FileService, FileType } from './../file/file.service';
+
 import { Comment, CommentDocument } from './schemas/comment.schema';
 import { Track, TrackDocument } from './schemas/track.schema';
+
+import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { AddCommentDto } from './dto/add-comment.dto';
 import { SortTypes } from '../consts';
@@ -15,9 +19,13 @@ export class TrackService {
     @InjectModel(Track.name) private trackModel: Model<TrackDocument>,
     @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
     private fileService: FileService,
+    private userService: UserService,
   ) {}
 
-  async create(dto: CreateTrackDto, authorId: string): Promise<Track> {
+  async create(
+    dto: CreateTrackDto,
+    authorId: mongoose.Types.ObjectId,
+  ): Promise<Track> {
     const track = await this.trackModel.create({
       ...dto,
       picture: JSON.parse(dto.picture),
@@ -25,6 +33,7 @@ export class TrackService {
       listens: 0,
       author: authorId,
     });
+    this.userService.addUploadedTrack(authorId, track._id);
     return track;
   }
 
@@ -141,11 +150,12 @@ export class TrackService {
       FileType.IMAGE,
       track.picture.name,
     );
+    this.userService.removeUploadedTrack(track.author, track._id);
     await Promise.all([audioRemove, pictureRemove, trackRemove]);
     return track._id;
   }
 
-  async update(id: ObjectId, dto: UpdateTrackDto): Promise<Track> {
+  async update(id: string, dto: UpdateTrackDto): Promise<Track> {
     const track = await this.trackModel.findByIdAndUpdate(
       id,
       { ...dto },

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Document, Model } from 'mongoose';
+import mongoose, { Document, Model } from 'mongoose';
 
 import { User } from './schemas/user.schema';
 import { Role } from './schemas/role.schema';
@@ -52,5 +52,25 @@ export class UserService {
 
   async findOne(params: object) {
     return await this.userModel.findOne(params);
+  }
+
+  async addUploadedTrack(
+    id: mongoose.Types.ObjectId,
+    trackId: mongoose.Types.ObjectId,
+  ) {
+    const user = await this.userModel.findById(id);
+    user.uploadedTracks.push(trackId);
+    await user.save();
+  }
+
+  async removeUploadedTrack(
+    id: mongoose.Types.ObjectId,
+    trackId: mongoose.Types.ObjectId,
+  ) {
+    const user = await this.userModel.findById(id);
+    user.uploadedTracks = user.uploadedTracks.filter(
+      (trId) => trId.toString() !== trackId.toString(),
+    );
+    await user.save();
   }
 }

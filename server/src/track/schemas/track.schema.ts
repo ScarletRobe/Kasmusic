@@ -30,7 +30,7 @@ export class Track {
   comments: Comment[];
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-  author: string;
+  author: mongoose.Types.ObjectId;
 
   @Prop({ type: Date, default: new Date() })
   createdAt: Date;
