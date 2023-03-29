@@ -21,3 +21,8 @@
 .trackHeader {
   margin: 0;
 }
+
+.additionalInfoAuthor {
+  display: flex;
+  align-items: center;
+}

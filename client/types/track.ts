@@ -11,6 +11,12 @@ type Media = {
   name: string;
 };
 
+type Author = {
+  _id: string;
+  username: string;
+  avatarLink: string;
+};
+
 export type Track = {
   _id: string;
   name: string;
@@ -20,6 +26,8 @@ export type Track = {
   picture: Media;
   audio: Media;
   comments: Comment[];
+  author: Author;
+  createdAt: Date;
 };
 
 export enum AcceptableFiles {

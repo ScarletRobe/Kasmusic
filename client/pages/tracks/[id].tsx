@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { wrapper } from '@/store/store';
+import dayjs from 'dayjs';
 
 import { EditableFields, Track } from '../../types/track';
 import { GET_MEDIA_BASE_URL } from '@/consts';
@@ -23,7 +24,15 @@ import EditableText from '@/components/EditableText';
 import Comment from '@/components/comment/Comment';
 
 import { PlayArrow, Pause, CloseRounded } from '@mui/icons-material';
-import { Button, Card, Grid, TextField } from '@mui/material';
+import {
+  Avatar,
+  Box,
+  Button,
+  Card,
+  Grid,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { Stack } from '@mui/system';
 
 import styles from '../../styles/trackPage.module.css';
@@ -136,42 +145,93 @@ const TrackPage: React.FC = () => {
             </h1>
           </Stack>
         </Grid>
-        <Button
-          onClick={play}
-          variant="outlined"
-          startIcon={
-            activeTrack?._id === track._id && !pause ? <Pause /> : <PlayArrow />
-          }
-        >
-          {activeTrack?._id === track._id && !pause ? 'Остановить' : 'Слушать'}
-        </Button>
-        <h2>Добавить комментарий</h2>
-        <Grid container>
-          <TextField
-            {...username}
-            label="Ваше имя"
-            fullWidth
-            inputProps={{ maxLength: 100 }}
-          />
-          <TextField
-            {...text}
-            margin="normal"
-            label="Комментарий"
-            multiline
-            fullWidth
-            rows={4}
-            inputProps={{ maxLength: 250 }}
-          />
-        </Grid>
-        <Button variant="outlined" onClick={addComment}>
-          Отправить
-        </Button>
-        <h2>Комментарии</h2>
-        <div>
-          {track.comments.map((comment) => (
-            <Comment key={comment._id} comment={comment} />
-          ))}
-        </div>
+        <Box my={2}>
+          <Button
+            onClick={play}
+            variant="outlined"
+            startIcon={
+              activeTrack?._id === track._id && !pause ? (
+                <Pause />
+              ) : (
+                <PlayArrow />
+              )
+            }
+          >
+            {activeTrack?._id === track._id && !pause
+              ? 'Остановить'
+              : 'Слушать'}
+          </Button>
+        </Box>
+        <Stack gap={2}>
+          <Stack>
+            <Card sx={{ py: '5px', px: '10px' }}>
+              <Typography variant="h5" sx={{ mb: '10px' }}>
+                Дополнительная информация
+              </Typography>
+              <Box pl={2}>
+                {track.author && (
+                  <Stack direction="row" gap={1}>
+                    <Typography
+                      variant="h6"
+                      className={styles.additionalInfoAuthor}
+                    >
+                      Загрузил:
+                    </Typography>
+                    <Typography
+                      variant="h6"
+                      className={styles.additionalInfoAuthor}
+                    >
+                      {track.author.username}
+                    </Typography>
+                    <Avatar src={track.author.avatarLink} alt="Аватар"></Avatar>
+                  </Stack>
+                )}
+                <Typography variant="h6">{`Дата загрузки ${dayjs(
+                  track.createdAt,
+                ).format('DD.MM.YYYY')}`}</Typography>
+              </Box>
+            </Card>
+          </Stack>
+          <Card sx={{ py: '5px', px: '10px' }}>
+            <Typography variant="h5" sx={{ mb: '10px' }}>
+              Добавить комментарий
+            </Typography>
+            <Box pl={2}>
+              <Grid container>
+                <TextField
+                  {...username}
+                  label="Ваше имя"
+                  fullWidth
+                  inputProps={{ maxLength: 100 }}
+                />
+                <TextField
+                  {...text}
+                  margin="normal"
+                  label="Комментарий"
+                  multiline
+                  fullWidth
+                  rows={4}
+                  inputProps={{ maxLength: 250 }}
+                />
+                <Button variant="outlined" onClick={addComment}>
+                  Отправить
+                </Button>
+              </Grid>
+            </Box>
+          </Card>
+          {Boolean(track.comments.length) && (
+            <Card sx={{ py: '5px', px: '10px' }}>
+              <Typography variant="h5" sx={{ mb: '10px' }}>
+                Комментарии
+              </Typography>
+              <Box pl={2}>
+                {track.comments.map((comment) => (
+                  <Comment key={comment._id} comment={comment} />
+                ))}
+              </Box>
+            </Card>
+          )}
+        </Stack>
       </Card>
     </>
   );
