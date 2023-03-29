@@ -17,6 +17,8 @@ import {
   Paper,
   LinearProgress,
   Stack,
+  FormControl,
+  FormHelperText,
 } from '@mui/material';
 import DoneRoundedIcon from '@mui/icons-material/DoneRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
@@ -30,6 +32,7 @@ const DEFAULT_PICTUREINFO = {
   name: 'default-image.jpg',
 };
 let disk: null | YaDisk = null;
+const INITIAL = { text: '', error: '' };
 
 const Upload = () => {
   const [createPost, { isLoading, isError, requestId }] =
@@ -41,8 +44,8 @@ const Upload = () => {
   const [audio, setAudio] = useState<File | null>(null);
   const [progress, setProgress] = useState<number>(0);
 
-  const name = useInput('');
-  const artist = useInput('');
+  const [name, setName] = useState(INITIAL);
+  const [artist, setArtist] = useState(INITIAL);
 
   useEffect(() => {
     if (!disk) {
@@ -62,12 +65,26 @@ const Upload = () => {
     if (activeStep === 0) {
       if (
         [
-          validate(name.value, { notEmpty: true, minLength: 3, maxLength: 30 }),
-          validate(artist.value, {
-            notEmpty: true,
-            minLength: 3,
-            maxLength: 30,
-          }),
+          validate(
+            name.text,
+            { notEmpty: true, minLength: 3, maxLength: 30 },
+            {
+              setErrorMessage: (message: string) =>
+                setName((state) => ({ ...state, error: message })),
+            },
+          ),
+          validate(
+            artist.text,
+            {
+              notEmpty: true,
+              minLength: 3,
+              maxLength: 30,
+            },
+            {
+              setErrorMessage: (message: string) =>
+                setArtist((state) => ({ ...state, error: message })),
+            },
+          ),
         ].some((v) => !v)
       ) {
         return;
@@ -83,8 +100,8 @@ const Upload = () => {
     setActiveStep((prev) => prev + 1);
     if (activeStep === 2) {
       const formData = new FormData();
-      formData.append('name', name.value);
-      formData.append('artist', artist.value);
+      formData.append('name', name.text);
+      formData.append('artist', artist.text);
       let pictureUpload;
       if (picture) {
         pictureUpload = uploadFile(disk, picture, 'image');
@@ -119,8 +136,30 @@ const Upload = () => {
         <Paper elevation={3} sx={{ p: 3 }} className={styles.wrapper}>
           {activeStep === 0 && (
             <Grid container direction={'column'} rowGap={2}>
-              <TextField {...name} label={'Название'} />
-              <TextField {...artist} label={'Исполнитель'} />
+              <FormControl margin="none" fullWidth error={Boolean(name.error)}>
+                <TextField
+                  error={Boolean(name.error)}
+                  value={name.text}
+                  onChange={(e) => setName({ text: e.target.value, error: '' })}
+                  label={'Название'}
+                />
+                <FormHelperText>{name.error || ''}</FormHelperText>
+              </FormControl>
+              <FormControl
+                margin="none"
+                fullWidth
+                error={Boolean(artist.error)}
+              >
+                <TextField
+                  error={Boolean(artist.error)}
+                  value={artist.text}
+                  onChange={(e) =>
+                    setArtist({ text: e.target.value, error: '' })
+                  }
+                  label={'Исполнитель'}
+                />
+                <FormHelperText>{artist.error || ''}</FormHelperText>
+              </FormControl>
             </Grid>
           )}
 
