@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 
 import { validate } from '@/helpers/validate';
 import { useSignUpMutation } from '@/services/authService';
 
+import AlertSnackbar from '../UI/Snackbars/AlertSnackbar';
 import EmailField from './textFields/EmailField';
 import PasswordField from './textFields/PasswordField';
 import UsernameField from './textFields/UsernameField';
@@ -13,15 +15,16 @@ const INITIAL = { text: '', error: '' };
 
 const SignUp: React.FC = () => {
   const [signUp] = useSignUpMutation();
+  const router = useRouter();
 
   const [username, setUsername] = useState(INITIAL);
   const [email, setEmail] = useState(INITIAL);
   const [password, setPassword] = useState(INITIAL);
-  const [isError, setIsError] = useState(false);
+  const [error, setError] = useState({ isError: false, message: '' });
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    setIsError(false);
+    setError({ isError: false, message: '' });
     if (
       [
         validate(
@@ -54,43 +57,53 @@ const SignUp: React.FC = () => {
     }
     try {
       setLoading(true);
-      const result = await signUp({
+      await signUp({
         username: username.text,
         email: email.text,
         password: password.text,
-      });
+      }).unwrap();
       setEmail(INITIAL);
       setPassword(INITIAL);
       setUsername(INITIAL);
-      console.log(result);
+      router.push('/authorization/activation');
     } catch (error) {
-      setIsError(true);
-      console.log(error);
+      setError({
+        isError: true,
+        message: (error as any).data.message || '',
+      });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Box p={2}>
-      <EmailField {...{ email, setEmail, loading }} />
-      <UsernameField {...{ username, setUsername, loading }} />
-      <PasswordField {...{ password, setPassword, loading }} />
+    <>
+      <AlertSnackbar
+        open={error.isError}
+        setClose={() => setError({ isError: false, message: '' })}
+        message={error.message}
+        severity="error"
+      />
+      <Box p={2}>
+        <EmailField {...{ email, setEmail, loading }} />
+        <UsernameField {...{ username, setUsername, loading }} />
+        <PasswordField {...{ password, setPassword, loading }} />
 
-      <FormControl margin="normal" fullWidth>
-        <Button
-          style={{ textTransform: 'none' }}
-          size="large"
-          disabled={loading}
-          variant="contained"
-          color="primary"
-          fullWidth
-          onClick={handleSubmit}
-        >
-          Зарегистрировать
-        </Button>
-      </FormControl>
-    </Box>
+        <FormControl margin="normal" fullWidth>
+          <Button
+            style={{ textTransform: 'none' }}
+            size="large"
+            disabled={loading}
+            variant="contained"
+            color="primary"
+            fullWidth
+            onClick={handleSubmit}
+          >
+            Зарегистрировать
+          </Button>
+        </FormControl>
+      </Box>
+    </>
   );
 };
 export default SignUp;

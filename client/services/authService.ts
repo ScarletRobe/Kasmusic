@@ -39,24 +39,32 @@ const baseQueryWithReauth: BaseQueryFn<
   if (result?.error?.status === 401) {
     const refreshResult = await baseQuery('/refresh', api, extraOptions);
     if (refreshResult?.data) {
-      api.dispatch(
-        setCredentials({
-          token: (refreshResult.data as SignResponse).accessToken,
-          user: (result?.data as SignResponse)?.user,
-        }),
-      );
+      if ((result.data as SignResponse).user.isActivated) {
+        api.dispatch(
+          setCredentials({
+            token: (refreshResult.data as SignResponse).accessToken,
+            user: (result?.data as SignResponse)?.user,
+          }),
+        );
+      }
       result = await baseQuery(args, api, extraOptions);
     } else {
       api.dispatch(signOut());
     }
   }
   if (result.data) {
-    api.dispatch(
-      setCredentials({
-        token: (result?.data as SignResponse)?.accessToken,
-        user: (result?.data as SignResponse)?.user,
-      }),
-    );
+    if (!(result.data as SignResponse).user.isActivated) {
+      api.dispatch(signOut());
+    } else {
+      api.dispatch(
+        setCredentials({
+          token: (result?.data as SignResponse)?.accessToken,
+          user: (result?.data as SignResponse)?.user,
+        }),
+      );
+    }
+  } else {
+    api.dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
   }
   return result;
 };
@@ -81,6 +89,9 @@ export const authApi = createApi({
         method: 'POST',
         body: { ...credentials },
       }),
+      async onQueryStarted(_, { dispatch }) {
+        dispatch(setAuthorizationStatus(AuthorizationStatus.Unknown));
+      },
     }),
     logout: builder.mutation<void, void>({
       query: () => ({

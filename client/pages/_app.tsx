@@ -16,11 +16,13 @@ function MyApp({ Component, ...rest }: AppProps) {
     if (typeof window !== 'undefined') {
       store
         .dispatch(refresh.initiate(''))
-        .then(({ data }) =>
-          store.dispatch(
-            setCredentials({ user: data.user, token: data.accessToken }),
-          ),
-        )
+        .then(({ data }) => {
+          if (data.user.isActivated) {
+            store.dispatch(
+              setCredentials({ user: data.user, token: data.accessToken }),
+            );
+          }
+        })
         .catch(() => store.dispatch(signOut()));
     }
   }, []);

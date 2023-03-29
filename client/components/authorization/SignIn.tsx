@@ -1,20 +1,25 @@
-import * as React from 'react';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 
+import AlertSnackbar from '../UI/Snackbars/AlertSnackbar';
 import PasswordField from './textFields/PasswordField';
 import UsernameField from './textFields/UsernameField';
 
-import { Box, FormControl, Button } from '@mui/material';
 import { validate } from '@/helpers/validate';
 import { useSignInMutation } from '@/services/authService';
+
+import { Box, FormControl, Button } from '@mui/material';
 
 const INITIAL = { text: '', error: '' };
 
 const SignIn = () => {
-  const [username, setUsername] = React.useState(INITIAL);
-  const [password, setPassword] = React.useState(INITIAL);
-  const [loading, setLoading] = React.useState(false);
-
   const [signIn] = useSignInMutation();
+  const router = useRouter();
+
+  const [username, setUsername] = useState(INITIAL);
+  const [password, setPassword] = useState(INITIAL);
+  const [error, setError] = useState({ isError: false, message: '' });
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
     if (
@@ -47,33 +52,46 @@ const SignIn = () => {
       }).unwrap();
       setPassword(INITIAL);
       setUsername(INITIAL);
-      console.log(result);
+      if (!result.user.isActivated) {
+        router.push('/authorization/activation');
+      }
     } catch (error) {
-      console.log(error);
+      setError({
+        isError: true,
+        message: (error as any).data.message || '',
+      });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Box p={2}>
-      <UsernameField {...{ username, setUsername, loading }} />
-      <PasswordField {...{ password, setPassword, loading }} />
+    <>
+      <AlertSnackbar
+        open={error.isError}
+        setClose={() => setError({ isError: false, message: '' })}
+        message={error.message}
+        severity="error"
+      />
+      <Box p={2}>
+        <UsernameField {...{ username, setUsername, loading }} />
+        <PasswordField {...{ password, setPassword, loading }} />
 
-      <FormControl margin="normal" fullWidth>
-        <Button
-          style={{ textTransform: 'none' }}
-          size="large"
-          disabled={loading}
-          variant="contained"
-          color="primary"
-          fullWidth
-          onClick={handleSubmit}
-        >
-          Войти
-        </Button>
-      </FormControl>
-    </Box>
+        <FormControl margin="normal" fullWidth>
+          <Button
+            style={{ textTransform: 'none' }}
+            size="large"
+            disabled={loading}
+            variant="contained"
+            color="primary"
+            fullWidth
+            onClick={handleSubmit}
+          >
+            Войти
+          </Button>
+        </FormControl>
+      </Box>
+    </>
   );
 };
 export default SignIn;
