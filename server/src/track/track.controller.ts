@@ -32,6 +32,11 @@ import { SortTypes } from '../consts';
 @Controller('/tracks')
 export class TrackController {
   constructor(private trackService: TrackService) {}
+  @Post('/delcom')
+  delcom(@Body() body) {
+    this.trackService.delcom(body);
+  }
+
   @Options(':id')
   getOptions() {
     return;
@@ -49,12 +54,7 @@ export class TrackController {
   async create(@Req() req, @Res() res, @Body() dto: CreateTrackDto) {
     try {
       const track = await this.trackService.create(dto, req.user['sub']);
-      res
-      .set({
-        'access-control-allow-origin': '*',
-      })
-        .status(201)
-      .json(track);
+      res.status(201).json(track);
     } catch (error) {
       res.status(error.status).json({ message: error.message });
     }
@@ -85,16 +85,39 @@ export class TrackController {
   }
 
   @Delete(':id')
-  delete(@Param('id') id: ObjectId) {
-    return this.trackService.delete(id);
+  @RequiredRoles(Roles.USER)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  async delete(@Param('id') id: ObjectId, @Req() req, @Res() res: Response) {
+    try {
+      res.status(200).json(await this.trackService.delete(id));
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
   }
 
   @Patch(':id')
-  update(@Param('id') id: ObjectId, @Body() dto: UpdateTrackDto) {
-    return this.trackService.update(id, dto);
+  @RequiredRoles(Roles.USER)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  async update(
+    @Param('id') id: string,
+    @Body() dto: UpdateTrackDto,
+    @Req() req,
+    @Res() res: Response,
+  ) {
+    try {
+      const isAdmin = req.user.roles.includes(Roles.ADMIN);
+      if (!isAdmin) {
+        await this.trackService.checkIsTrackAuthor(req.user.sub, id);
+      }
+      res.status(200).json(await this.trackService.update(id, dto));
+    } catch (error) {
+      res.status(error.status).json({ message: error.message });
+    }
   }
 
   @Post('/comment')
+  @RequiredRoles(Roles.USER)
+  @UseGuards(AccessTokenGuard, RolesGuard)
   addComment(@Body() dto: AddCommentDto) {
     return this.trackService.addComment(dto);
   }
