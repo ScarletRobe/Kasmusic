@@ -1,4 +1,3 @@
-import { AppController } from './app.controller';
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
@@ -17,6 +16,5 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
     MongooseModule.forRoot(process.env.DBToken),
   ],
-  providers: [AppController],
 })
 export class AppModule {}
