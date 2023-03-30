@@ -50,7 +50,13 @@ export class TrackController {
   async create(@Req() req, @Res() res, @Body() dto: CreateTrackDto) {
     try {
       const track = await this.trackService.create(dto, req.user['sub']);
-      res.status(201).json(track);
+      res
+        .set({
+          'access-control-allow-origin':
+            'https://music-platform-sage.vercel.app/',
+        })
+        .status(201)
+        .json(track);
     } catch (error) {
       res.status(error.status).json({ message: error.message });
     }
