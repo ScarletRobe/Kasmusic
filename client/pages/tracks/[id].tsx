@@ -15,24 +15,16 @@ import {
   useGetTrackByIdQuery,
 } from '@/services/tracksService';
 
-import { useInput } from '@/hooks/useInput';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
 import { useSetActiveTrack } from '@/hooks/useSetActiveTrack';
 
 import Loader from '@/components/Loaders/Loader';
 import EditableText from '@/components/EditableText';
 import Comment from '@/components/comment/Comment';
+import CreateComment from '@/components/comment/CreateComment';
 
 import { PlayArrow, Pause, CloseRounded } from '@mui/icons-material';
-import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  Grid,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Avatar, Box, Button, Card, Grid, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 
 import styles from '../../styles/trackPage.module.css';
@@ -50,14 +42,11 @@ const TrackPage: React.FC = () => {
   const pause = useTypedSelector((state) => state.player.pause);
 
   const { data, isLoading, isError } = useGetTrackByIdQuery(id as string);
-  const [createComment] = useCreateCommentMutation();
   const [editTrack] = useEditTrackMutation();
 
-  const track = data;
-
-  const username = useInput('');
-  const text = useInput('');
   const { setTrack, play } = useSetActiveTrack();
+
+  const track = data;
 
   useEffect(() => {
     if (!track) {
@@ -69,18 +58,6 @@ const TrackPage: React.FC = () => {
   const editTrackInfo = ({ field, newValue }: EditTrackInfoParams) => {
     if (track) {
       editTrack({ id: track._id, field, newValue });
-    }
-  };
-
-  const addComment = () => {
-    if (track) {
-      createComment({
-        comment: {
-          text: text.value,
-          username: username.value,
-        },
-        trackId: track._id,
-      });
     }
   };
 
@@ -197,26 +174,7 @@ const TrackPage: React.FC = () => {
               Добавить комментарий
             </Typography>
             <Box pl={2}>
-              <Grid container>
-                <TextField
-                  {...username}
-                  label="Ваше имя"
-                  fullWidth
-                  inputProps={{ maxLength: 100 }}
-                />
-                <TextField
-                  {...text}
-                  margin="normal"
-                  label="Комментарий"
-                  multiline
-                  fullWidth
-                  rows={4}
-                  inputProps={{ maxLength: 250 }}
-                />
-                <Button variant="outlined" onClick={addComment}>
-                  Отправить
-                </Button>
-              </Grid>
+              <CreateComment trackId={track._id} />
             </Box>
           </Card>
           {Boolean(track.comments.length) && (
