@@ -2,7 +2,12 @@ import { SortTypes } from '@/consts';
 
 export type Comment = {
   _id: string;
-  username: string;
+  user: Author;
+  text: string;
+};
+
+type CommentToSend = {
+  user: string;
   text: string;
 };
 
@@ -52,7 +57,7 @@ export type GetTracksResponse = {
 
 export type AddCommentsParams = {
   trackId: string;
-  comment: Omit<Comment, '_id'>;
+  comment: CommentToSend;
 };
 
 export type EditTrackParams = {
