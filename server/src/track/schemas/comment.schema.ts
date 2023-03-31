@@ -7,10 +7,10 @@ export type CommentDocument = Comment & Document;
 
 @Schema()
 export class Comment {
-  @Prop()
-  username: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  user: mongoose.Types.ObjectId;
 
-  @Prop()
+  @Prop({ maxlength: 500 })
   text: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Track' })

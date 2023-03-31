@@ -50,13 +50,7 @@ export class TrackController {
   async create(@Req() req, @Res() res, @Body() dto: CreateTrackDto) {
     try {
       const track = await this.trackService.create(dto, req.user['sub']);
-      res
-        .set({
-          'access-control-allow-origin':
-            'https://music-platform-sage.vercel.app/',
-        })
-        .status(201)
-        .json(track);
+      res.status(201).json(track);
     } catch (error) {
       res.status(error.status).json({ message: error.message });
     }
@@ -97,6 +91,8 @@ export class TrackController {
   }
 
   @Post('/comment')
+  @RequiredRoles(Roles.USER)
+  @UseGuards(AccessTokenGuard, RolesGuard)
   addComment(@Body() dto: AddCommentDto) {
     return this.trackService.addComment(dto);
   }

@@ -131,7 +131,10 @@ export class TrackService {
   async getOne(id: ObjectId): Promise<Track> {
     const track = await this.trackModel
       .findById(id)
-      .populate('comments')
+      .populate({
+        path: 'comments',
+        populate: { path: 'user', select: { username: 1, avatarLink: 1 } },
+      })
       .populate('author', { username: 1, avatarLink: 1 });
     return track;
   }
