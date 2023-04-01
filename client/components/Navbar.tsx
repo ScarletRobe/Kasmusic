@@ -1,6 +1,8 @@
 import * as React from 'react';
 
-import Searchbar from './Searchbar';
+import UserMiniProfile from './UserMiniProfile';
+
+import { PageRoutes } from '@/consts';
 
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -23,12 +25,17 @@ import AddIcon from '@mui/icons-material/Add';
 import LibraryMusicRoundedIcon from '@mui/icons-material/LibraryMusicRounded';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 import FileDownloadRoundedIcon from '@mui/icons-material/FileDownloadRounded';
-import UserMiniProfile from './UserMiniProfile';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 
 const menuItems = [
-  { text: 'Главная', href: '/', icon: <HomeRoundedIcon /> },
-  { text: 'Список треков', href: '/tracks', icon: <AudiotrackRoundedIcon /> },
-  { text: 'Загрузить трек', href: '/tracks/upload', icon: <AddIcon /> },
+  { text: 'Главная', href: PageRoutes.Home, icon: <HomeRoundedIcon /> },
+  {
+    text: 'Список треков',
+    href: PageRoutes.Tracks,
+    icon: <AudiotrackRoundedIcon />,
+  },
+  { text: 'Загрузить', href: PageRoutes.Upload, icon: <AddIcon /> },
+  { text: 'Поиск', href: PageRoutes.Search, icon: <SearchRoundedIcon /> },
   // {
   //   text: 'Список плейлистов',
   //   href: '/playlists',
@@ -82,7 +89,6 @@ export default function Navbar() {
             </Typography>
           </Toolbar>
           <UserMiniProfile />
-          {/* <Searchbar /> */}
         </Stack>
       </AppBar>
       <ClickAwayListener
