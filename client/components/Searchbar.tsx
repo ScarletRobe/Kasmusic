@@ -1,29 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 
-import { useSearchTrackQuery } from '@/services/tracksService';
 import { setSearchQuery } from '@/store/appSlice/appSlice';
 
 import { useDebounce } from '@/hooks/useDebounce';
-import { useInput } from '@/hooks/useInput';
-import { Track } from '@/types/track';
+import { useTypedSelector } from '@/hooks/useTypedSelector';
 
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import { borderColor } from '@mui/system';
 import { FormControl, Input, InputAdornment } from '@mui/material';
+import { PageRoutes } from '@/consts';
 
 const Searchbar = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [query, setQuery] = useState('');
-  // const [skip, setSkip] = useState(true);
-  // const { data } = useSearchTrackQuery(searchbar.value, { skip });
-  // const debouncedQuery = useDebounce(searchbar.value, 500);
-  // const { data } = useSearchTrackQuery(debouncedQuery);
-  // if (data && debouncedQuery !== null) {
-  //   setTracks(data);
-  // }
+  const query = useTypedSelector((state) => state.app.searchQuery);
+  const debouncedQuery = useDebounce(query, 600);
+
+  useEffect(() => {
+    if (!debouncedQuery) {
+      return;
+    }
+    router.push(`${PageRoutes.Search}/${debouncedQuery}`);
+  }, [debouncedQuery]);
 
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,8 +30,7 @@ const Searchbar = () => {
       return;
     }
     dispatch(setSearchQuery(query));
-    setQuery('');
-    router.push(`/search/${query}`);
+    router.push(`${PageRoutes.Search}/${query}`);
   };
 
   return (
@@ -45,21 +43,16 @@ const Searchbar = () => {
     >
       <form onSubmit={handleSearchSubmit}>
         <Input
-          sx={{
-            color: 'white',
-            '&:before': { borderBottom: '1px solid #b8b8b8' },
-            '&:hover:before': { borderBottom: '2px solid #b8b8b8 !important' },
-          }}
-          color="secondary"
+          fullWidth
           value={query}
           onChange={(e) => {
-            setQuery(e.target.value);
+            dispatch(setSearchQuery(e.target.value));
           }}
           id="input-with-icon-adornment"
           placeholder="Поиск"
           startAdornment={
             <InputAdornment position="start">
-              <SearchRoundedIcon htmlColor="white" />
+              <SearchRoundedIcon />
             </InputAdornment>
           }
         />
