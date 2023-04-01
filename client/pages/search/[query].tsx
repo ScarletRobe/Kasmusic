@@ -10,6 +10,7 @@ import { Track } from '@/types/track';
 import { SortTypes } from '@/consts';
 
 import TrackList from '@/components/TrackList';
+import Searchbar from '@/components/Searchbar';
 
 import { Grid, Card, Box } from '@mui/material';
 
@@ -40,6 +41,7 @@ const SearchPage: React.FC<{ tracks: Track[] }> = () => {
       </Head>
       <Grid container justifyContent="center">
         <Card className="track-list-wrapper" sx={{ p: 3 }}>
+          <Searchbar />
           {isFetching ? (
             <h1>Загрузка</h1>
           ) : data?.data.length ? (
