@@ -83,7 +83,7 @@ export default function Navbar() {
               variant="h6"
               noWrap
               component="div"
-              onClick={() => router.push('/')}
+              onClick={() => router.push(PageRoutes.Home)}
             >
               Kasmusic
             </Typography>

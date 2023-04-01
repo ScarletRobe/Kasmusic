@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 
 import { useTypedSelector } from '@/hooks/useTypedSelector';
 
-import { AuthorizationStatus } from '@/consts';
+import { AuthorizationStatus, PageRoutes } from '@/consts';
 
 export const WithAuth = (Component: React.FC) => {
   const AuthenticatedComponent = () => {
@@ -14,16 +14,16 @@ export const WithAuth = (Component: React.FC) => {
 
     useEffect(() => {
       if (authorizationStatus === AuthorizationStatus.Unknown) {
-        router.push('/');
+        router.push(PageRoutes.Home);
         return;
       }
       if (authorizationStatus === AuthorizationStatus.NoAuth) {
-        router.push('/authorization');
+        router.push(PageRoutes.Authorization);
         return;
       }
     }, [authorizationStatus, router]);
 
-    return <Component />; // Render whatever you want while the authentication occurs
+    return <Component />;
   };
 
   return AuthenticatedComponent;

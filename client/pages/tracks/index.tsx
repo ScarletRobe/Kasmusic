@@ -1,14 +1,19 @@
 import React, { useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { Grid, Card, Box, Button } from '@mui/material';
-import TrackList from '@/components/TrackList';
-import { Track } from '@/types/track';
-import Head from 'next/head';
-import { useTypedSelector } from '@/hooks/useTypedSelector';
-import { useGetAllTracksQuery } from '@/services/tracksService';
-import { SortTypes } from '@/consts';
-import { setCurrentPage, setCurrentSort } from '@/store/appSlice/appSlice';
 import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
+import Head from 'next/head';
+
+import { setCurrentPage, setCurrentSort } from '@/store/appSlice/appSlice';
+import { useGetAllTracksQuery } from '@/services/tracksService';
+
+import { useTypedSelector } from '@/hooks/useTypedSelector';
+
+import TrackList from '@/components/TrackList';
+
+import { Track } from '@/types/track';
+import { PageRoutes, SortTypes } from '@/consts';
+
+import { Grid, Card, Box, Button } from '@mui/material';
 
 const Index: React.FC<{ tracks: Track[] }> = () => {
   const router = useRouter();
@@ -39,7 +44,7 @@ const Index: React.FC<{ tracks: Track[] }> = () => {
           <Box p={3}>
             <Grid container justifyContent="space-between">
               <h1>Список треков</h1>
-              <Button onClick={() => router.push('/tracks/upload')}>
+              <Button onClick={() => router.push(PageRoutes.Upload)}>
                 Загрузить
               </Button>
             </Grid>

@@ -6,7 +6,7 @@ import { useLogoutMutation } from '@/services/authService';
 
 import Loader from './Loaders/Loader';
 
-import { AuthorizationStatus, Roles } from '@/consts';
+import { AuthorizationStatus, PageRoutes, Roles } from '@/consts';
 
 import {
   Avatar,
@@ -51,7 +51,7 @@ const UserMiniProfile = () => {
                 sx={{ color: 'white' }}
                 variant="outlined"
                 endIcon={<LoginRoundedIcon />}
-                onClick={() => router.push('/authorization')}
+                onClick={() => router.push(PageRoutes.Authorization)}
               >
                 Войти
               </Button>

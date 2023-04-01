@@ -5,7 +5,7 @@ import { wrapper } from '@/store/store';
 import dayjs from 'dayjs';
 
 import { EditableFields, Track } from '../../types/track';
-import { GET_MEDIA_BASE_URL } from '@/consts';
+import { GET_MEDIA_BASE_URL, PageRoutes } from '@/consts';
 
 import {
   getRunningQueriesThunk,
@@ -77,7 +77,7 @@ const TrackPage: React.FC = () => {
           <div>Попробуйте позже</div>
           <Button
             className={styles.link}
-            onClick={() => router.push('/tracks')}
+            onClick={() => router.push(PageRoutes.Tracks)}
           >
             Вернуться к списку
           </Button>
@@ -92,7 +92,10 @@ const TrackPage: React.FC = () => {
         <meta name="referrer" content="no-referrer"></meta>
       </Head>
       <Card sx={{ p: 3 }}>
-        <Button variant={'outlined'} onClick={() => router.push('/tracks')}>
+        <Button
+          variant={'outlined'}
+          onClick={() => router.push(PageRoutes.Tracks)}
+        >
           К списку
         </Button>
         <Grid container gap={3} className={styles.trackInfoContainer}>

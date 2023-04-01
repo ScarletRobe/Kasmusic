@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 
 import { useTypedSelector } from '@/hooks/useTypedSelector';
 
-import { AuthorizationStatus } from '@/consts';
+import { AuthorizationStatus, PageRoutes } from '@/consts';
 
 export const WithNoAuth = (Component: React.FC) => {
   const AuthenticatedComponent = () => {
@@ -14,7 +14,7 @@ export const WithNoAuth = (Component: React.FC) => {
 
     useEffect(() => {
       if (authorizationStatus === AuthorizationStatus.Auth) {
-        router.push('/');
+        router.push(PageRoutes.Home);
         return;
       }
     }, [authorizationStatus, router]);

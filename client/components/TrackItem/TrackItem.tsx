@@ -1,8 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { useDispatch } from 'react-redux';
 
-import { GET_MEDIA_BASE_URL } from '@/consts';
+import { GET_MEDIA_BASE_URL, PageRoutes } from '@/consts';
 import { Track } from '../../types/track';
 
 import { useDeleteTrackMutation } from '@/services/tracksService';
@@ -41,7 +40,7 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
   return (
     <Card
       className={styles.track}
-      onClick={() => router.push('/tracks/' + track._id)}
+      onClick={() => router.push(`${PageRoutes.Tracks}/${track._id}`)}
     >
       <IconButton onClick={play}>
         {activeTrack?._id === track._id && !pause ? <Pause /> : <PlayArrow />}

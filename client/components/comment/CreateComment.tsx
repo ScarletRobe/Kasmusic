@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useTypedSelector } from '@/hooks/useTypedSelector';
 import { useCreateCommentMutation } from '@/services/tracksService';
 
-import { AuthorizationStatus } from '@/consts';
+import { AuthorizationStatus, PageRoutes } from '@/consts';
 
 import { Grid, TextField, Button, Stack } from '@mui/material';
 
@@ -42,7 +42,7 @@ const CreateComment = ({ trackId }: CreateCommentProps) => {
   if (authorizationStatus !== AuthorizationStatus.Auth) {
     return (
       <Stack direction="row" justifyContent="center">
-        <Link href="/authorization">
+        <Link href={PageRoutes.Authorization}>
           Авторизируйтесь для того чтобы оставлять комментарии
         </Link>
       </Stack>

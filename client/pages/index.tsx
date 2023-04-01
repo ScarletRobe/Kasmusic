@@ -1,6 +1,9 @@
-import { Stack } from '@mui/material';
-import { useRouter } from 'next/router';
 import React from 'react';
+import { useRouter } from 'next/router';
+
+import { PageRoutes } from '@/consts';
+
+import { Stack } from '@mui/material';
 
 const Index = () => {
   const router = useRouter();
@@ -14,7 +17,7 @@ const Index = () => {
         <div className="animated-text">KASMUSIC</div>
         <button
           className="main-page-btn"
-          onClick={() => router.push('/tracks')}
+          onClick={() => router.push(PageRoutes.Tracks)}
         >
           <svg className="main-page-btn-svg" viewBox="0 0 1320 300">
             <text
