@@ -21,3 +21,11 @@ export enum Roles {
   ADMIN = 'Администратор',
   OWNER = 'Владелец',
 }
+
+export enum PageRoutes {
+  Authorization = '/authorization',
+  Tracks = '/tracks',
+  Upload = '/tracks/upload',
+  Home = '/',
+  Search = '/search',
+}
