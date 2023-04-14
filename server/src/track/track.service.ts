@@ -180,4 +180,41 @@ export class TrackService {
     track.listens += 1;
     track.save();
   }
+
+  async like(
+    trackId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId,
+  ) {
+    const track = await this.trackModel.findById(trackId);
+    await this.userService.addLikedTrack(userId, trackId);
+    track.likes += 1;
+    track.save();
+  }
+
+  async unlike(
+    trackId: mongoose.Types.ObjectId,
+    userId: mongoose.Types.ObjectId,
+  ) {
+    const track = await this.trackModel.findById(trackId);
+    await this.userService.removeLikedTrack(userId, trackId);
+    track.likes -= 1;
+    track.save();
+  }
+
+  delcom(ids) {
+    ids.forEach(async (id) => {
+      await this.commentModel.findByIdAndDelete(id);
+    });
+  }
+
+  async checkIsTrackAuthor(userId: string, entityId: string) {
+    const entity = await this.trackModel.findById(entityId);
+    if (entity.author.toString() !== userId) {
+      throw new ForbiddenException(
+        'You should be either an administrator or author to access this function',
+      );
+    }
+
+    return entity;
+  }
 }

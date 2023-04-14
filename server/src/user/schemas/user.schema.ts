@@ -48,6 +48,12 @@ export class User {
     default: [],
   })
   uploadedTracks: mongoose.Types.ObjectId[];
+
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Track' }],
+    default: [],
+  })
+  likedTracks: mongoose.Types.ObjectId[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -14,8 +14,8 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express/multer';
-import { Response } from 'express';
-import { ObjectId } from 'mongoose';
+import { Request, Response } from 'express';
+import mongoose, { ObjectId } from 'mongoose';
 
 import { RequiredRoles } from '../common/decorators/requiredRoles.decorator';
 import { AccessTokenGuard } from '../common/guards/accessToken.guard';
@@ -32,6 +32,10 @@ import { SortTypes } from '../consts';
 @Controller('/tracks')
 export class TrackController {
   constructor(private trackService: TrackService) {}
+  @Post('/delcom')
+  delcom(@Body() body) {
+    this.trackService.delcom(body);
+  }
 
   @Options(':id')
   getOptions() {
@@ -81,13 +85,34 @@ export class TrackController {
   }
 
   @Delete(':id')
-  delete(@Param('id') id: ObjectId) {
-    return this.trackService.delete(id);
+  @RequiredRoles(Roles.USER)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  async delete(@Param('id') id: ObjectId, @Req() req, @Res() res: Response) {
+    try {
+      res.status(200).json(await this.trackService.delete(id));
+    } catch (error) {
+      res.status(400).json({ message: error.message });
+    }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateTrackDto) {
-    return this.trackService.update(id, dto);
+  @RequiredRoles(Roles.USER)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  async update(
+    @Param('id') id: string,
+    @Body() dto: UpdateTrackDto,
+    @Req() req,
+    @Res() res: Response,
+  ) {
+    try {
+      const isAdmin = req.user.roles.includes(Roles.ADMIN);
+      if (!isAdmin) {
+        await this.trackService.checkIsTrackAuthor(req.user.sub, id);
+      }
+      res.status(200).json(await this.trackService.update(id, dto));
+    } catch (error) {
+      res.status(error.status).json({ message: error.message });
+    }
   }
 
   @Post('/comment')
@@ -100,5 +125,37 @@ export class TrackController {
   @Post('/listen/:id')
   listen(@Param('id') id: ObjectId) {
     return this.trackService.listen(id);
+  }
+
+  @Post('/like/:id')
+  @RequiredRoles(Roles.USER)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  async like(
+    @Req() req,
+    @Res() res: Response,
+    @Param('id') id: mongoose.Types.ObjectId,
+  ) {
+    try {
+      await this.trackService.like(id, req.user['sub']);
+      res.status(200).json();
+    } catch (error) {
+      res.status(400).json(error.message);
+    }
+  }
+
+  @Post('/unlike/:id')
+  @RequiredRoles(Roles.USER)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  async unlike(
+    @Req() req,
+    @Res() res: Response,
+    @Param('id') id: mongoose.Types.ObjectId,
+  ) {
+    try {
+      await this.trackService.unlike(id, req.user['sub']);
+      res.status(200).json();
+    } catch (error) {
+      res.status(400).json(error.message);
+    }
   }
 }

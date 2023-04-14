@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Document, Model } from 'mongoose';
 
@@ -69,6 +69,33 @@ export class UserService {
   ) {
     const user = await this.userModel.findById(id);
     user.uploadedTracks = user.uploadedTracks.filter(
+      (trId) => trId.toString() !== trackId.toString(),
+    );
+    await user.save();
+  }
+
+  async addLikedTrack(
+    id: mongoose.Types.ObjectId,
+    trackId: mongoose.Types.ObjectId,
+  ) {
+    const user = await this.userModel.findById(id);
+    if (user.likedTracks.includes(trackId)) {
+      throw new BadRequestException('Already liked');
+    }
+    user.likedTracks.push(trackId);
+    await user.save();
+  }
+
+  async removeLikedTrack(
+    id: mongoose.Types.ObjectId,
+    trackId: mongoose.Types.ObjectId,
+  ) {
+    const user = await this.userModel.findById(id);
+    if (!user.likedTracks.includes(trackId)) {
+      throw new BadRequestException('Not liked');
+    }
+
+    user.likedTracks = user.likedTracks.filter(
       (trId) => trId.toString() !== trackId.toString(),
     );
     await user.save();

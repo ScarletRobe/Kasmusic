@@ -34,6 +34,9 @@ export class Track {
 
   @Prop({ type: Date, default: new Date() })
   createdAt: Date;
+
+  @Prop({ type: Number, default: 0 })
+  likes: number;
 }
 
 export const TrackSchema = SchemaFactory.createForClass(Track);
