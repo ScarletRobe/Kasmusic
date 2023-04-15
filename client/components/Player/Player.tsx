@@ -120,7 +120,7 @@ const Player = () => {
   return (
     <div className={styles.player}>
       <IconButton onClick={play}>
-        {pause ? <PlayArrow /> : <Pause />}
+        {pause ? <PlayArrow color="primary" /> : <Pause color="primary" />}
       </IconButton>
       <Stack direction="row" className={styles.trackInfo} spacing="2">
         <img

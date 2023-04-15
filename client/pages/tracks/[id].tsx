@@ -28,6 +28,7 @@ import { Avatar, Box, Button, Card, Grid, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 
 import styles from '../../styles/trackPage.module.css';
+import LikeBtn from '@/components/UI/LikeBtn/LikeBtn';
 
 export type EditTrackInfoParams = {
   field: EditableFields;
@@ -125,7 +126,7 @@ const TrackPage: React.FC = () => {
             </h1>
           </Stack>
         </Grid>
-        <Box my={2}>
+        <Stack direction="row" gap={1} my={2}>
           <Button
             onClick={play}
             variant="outlined"
@@ -141,7 +142,12 @@ const TrackPage: React.FC = () => {
               ? 'Остановить'
               : 'Слушать'}
           </Button>
-        </Box>
+          <LikeBtn
+            trackId={track._id}
+            variant="button"
+            likesCount={track.likes}
+          />
+        </Stack>
         <Stack gap={2}>
           <Stack>
             <Card sx={{ py: '5px', px: '10px' }}>

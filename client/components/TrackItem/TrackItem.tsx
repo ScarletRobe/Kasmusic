@@ -13,10 +13,16 @@ import CopyToClipboardBtn from '../UI/CopyToClipboard/CopyToClipboardBtn';
 
 import { Card, IconButton, Grid } from '@mui/material';
 import { Stack } from '@mui/system';
-import RemoveRedEyeRoundedIcon from '@mui/icons-material/RemoveRedEyeRounded';
-import { PlayArrow, Pause, Delete, DownloadRounded } from '@mui/icons-material';
+import {
+  PlayArrow,
+  Pause,
+  Delete,
+  DownloadRounded,
+  RemoveRedEyeRounded,
+} from '@mui/icons-material';
 
 import styles from './TrackItem.module.css';
+import LikeBtn from '../UI/LikeBtn/LikeBtn';
 
 interface TrackItemProps {
   track: Track;
@@ -31,7 +37,6 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
   const pause = useTypedSelector((state) => state.player.pause);
 
   const { play } = useSetActiveTrack(track);
-
   const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     deleteTrack(track._id);
@@ -43,7 +48,11 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
       onClick={() => router.push(`${PageRoutes.Tracks}/${track._id}`)}
     >
       <IconButton onClick={play}>
-        {activeTrack?._id === track._id && !pause ? <Pause /> : <PlayArrow />}
+        {activeTrack?._id === track._id && !pause ? (
+          <Pause color="primary" />
+        ) : (
+          <PlayArrow color="primary" />
+        )}
       </IconButton>
       <img
         className={styles.trackCover}
@@ -57,9 +66,10 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
         <div className={styles.trackArtist}>{track.artist}</div>
       </Grid>
       <Stack direction="row" sx={{ mr: '10px' }}>
-        <RemoveRedEyeRoundedIcon sx={{ mr: '5px' }} />
+        <RemoveRedEyeRounded sx={{ mr: '5px' }} />
         <div>{track.listens}</div>
       </Stack>
+      <LikeBtn trackId={track._id} variant="iconButton" />
       <CopyToClipboardBtn
         textToCopy={`https://music-platform-sage.vercel.app/tracks/${track._id}`}
       />
