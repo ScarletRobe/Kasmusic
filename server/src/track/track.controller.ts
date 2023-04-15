@@ -33,8 +33,10 @@ import { SortTypes } from '../consts';
 export class TrackController {
   constructor(private trackService: TrackService) {}
   @Post('/delcom')
-  delcom(@Body() body) {
-    this.trackService.delcom(body);
+  @RequiredRoles(Roles.ADMIN)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  deleteComments(@Body() body) {
+    this.trackService.deleteComments(body);
   }
 
   @Options(':id')

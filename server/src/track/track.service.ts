@@ -201,7 +201,7 @@ export class TrackService {
     track.save();
   }
 
-  delcom(ids) {
+  deleteComments(ids) {
     ids.forEach(async (id) => {
       await this.commentModel.findByIdAndDelete(id);
     });
