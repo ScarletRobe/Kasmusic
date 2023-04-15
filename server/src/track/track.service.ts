@@ -207,9 +207,9 @@ export class TrackService {
     });
   }
 
-  async checkIsTrackAuthor(userId: string, entityId: string) {
+  async checkIsTrackAuthor(userId: ObjectId, entityId: ObjectId) {
     const entity = await this.trackModel.findById(entityId);
-    if (entity.author.toString() !== userId) {
+    if (entity.author.toString() !== userId.toString()) {
       throw new ForbiddenException(
         'You should be either an administrator or author to access this function',
       );

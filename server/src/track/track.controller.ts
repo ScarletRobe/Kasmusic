@@ -89,6 +89,10 @@ export class TrackController {
   @UseGuards(AccessTokenGuard, RolesGuard)
   async delete(@Param('id') id: ObjectId, @Req() req, @Res() res: Response) {
     try {
+      const isAdmin = req.user.roles.includes(Roles.ADMIN);
+      if (!isAdmin) {
+        await this.trackService.checkIsTrackAuthor(req.user.sub, id);
+      }
       res.status(200).json(await this.trackService.delete(id));
     } catch (error) {
       res.status(400).json({ message: error.message });
@@ -99,7 +103,7 @@ export class TrackController {
   @RequiredRoles(Roles.USER)
   @UseGuards(AccessTokenGuard, RolesGuard)
   async update(
-    @Param('id') id: string,
+    @Param('id') id: ObjectId,
     @Body() dto: UpdateTrackDto,
     @Req() req,
     @Res() res: Response,
@@ -109,7 +113,7 @@ export class TrackController {
       if (!isAdmin) {
         await this.trackService.checkIsTrackAuthor(req.user.sub, id);
       }
-      res.status(200).json(await this.trackService.update(id, dto));
+      res.status(200).json(await this.trackService.update(String(id), dto));
     } catch (error) {
       res.status(error.status).json({ message: error.message });
     }
