@@ -14,28 +14,33 @@ type LikeBtnProps = {
 const LikeBtn = ({ trackId, variant, likesCount }: LikeBtnProps) => {
   const [isLiked, clickHandler] = useHandleLikeBtn(trackId);
 
-  const getIcon = () =>
-    isLiked ? (
-      <>
-        <FavoriteRoundedIcon color="primary" />
-        <span style={{ marginLeft: '5px' }}>{likesCount}</span>
-      </>
-    ) : (
-      <>
-        <FavoriteBorderRoundedIcon />
-        <span style={{ marginLeft: '5px' }}>{likesCount}</span>
-      </>
-    );
-
   switch (variant) {
     case 'button':
       return (
         <Button variant="outlined" onClick={clickHandler}>
-          {getIcon()}
+          {isLiked ? (
+            <>
+              <FavoriteRoundedIcon color="primary" />
+              <span style={{ marginLeft: '5px' }}>{likesCount}</span>
+            </>
+          ) : (
+            <>
+              <FavoriteBorderRoundedIcon />
+              <span style={{ marginLeft: '5px' }}>{likesCount}</span>
+            </>
+          )}
         </Button>
       );
     case 'iconButton':
-      return <IconButton onClick={clickHandler}>{getIcon()}</IconButton>;
+      return (
+        <IconButton onClick={clickHandler}>
+          {isLiked ? (
+            <FavoriteRoundedIcon color="primary" />
+          ) : (
+            <FavoriteBorderRoundedIcon />
+          )}
+        </IconButton>
+      );
     default:
       return null;
   }
