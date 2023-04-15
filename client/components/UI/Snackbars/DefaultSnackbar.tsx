@@ -4,9 +4,10 @@ import React from 'react';
 type DefaultSnackbarProps = {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  message: string;
 };
 
-const DefaultSnackbar = ({ open, setOpen }: DefaultSnackbarProps) => {
+const DefaultSnackbar = ({ open, setOpen, message }: DefaultSnackbarProps) => {
   return (
     <Snackbar
       sx={{
@@ -20,7 +21,7 @@ const DefaultSnackbar = ({ open, setOpen }: DefaultSnackbarProps) => {
         setOpen(false);
       }}
       onClose={() => setOpen(false)}
-      message="Скопировано в буфер обмена"
+      message={message}
     />
   );
 };

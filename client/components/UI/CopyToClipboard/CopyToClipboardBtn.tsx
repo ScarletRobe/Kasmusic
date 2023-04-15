@@ -14,7 +14,9 @@ const CopyToClipboardBtn = ({ textToCopy }: CopyToClipboardBtnProps) => {
 
   return (
     <>
-      <DefaultSnackbar {...{ open, setOpen }} />
+      <DefaultSnackbar
+        {...{ open, setOpen, message: 'Скопировано в буфер обмена' }}
+      />
       <IconButton
         onClick={(e) => {
           e.stopPropagation();
