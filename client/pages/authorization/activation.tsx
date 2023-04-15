@@ -1,6 +1,8 @@
+import React from 'react';
+
+import WithNoAuth from '@/components/HOCs/WithNoAuth';
 import { Card, Typography } from '@mui/material';
 import { Box } from '@mui/system';
-import React from 'react';
 
 const activation = () => {
   return (
@@ -29,4 +31,4 @@ const activation = () => {
   );
 };
 
-export default activation;
+export default WithNoAuth(activation);
