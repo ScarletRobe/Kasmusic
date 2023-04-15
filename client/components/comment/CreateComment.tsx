@@ -6,7 +6,15 @@ import { useCreateCommentMutation } from '@/services/tracksService';
 
 import { AuthorizationStatus, PageRoutes } from '@/consts';
 
-import { Grid, TextField, Button, Stack } from '@mui/material';
+import {
+  Grid,
+  TextField,
+  Button,
+  Stack,
+  FormControl,
+  FormHelperText,
+} from '@mui/material';
+import { validate } from '@/helpers/validate';
 
 type CreateCommentProps = {
   trackId: string;
@@ -21,10 +29,20 @@ const CreateComment = ({ trackId }: CreateCommentProps) => {
   const user = useTypedSelector((state) => state.auth.user);
 
   const [text, setText] = useState('');
+  const [error, setError] = useState('');
 
   const addComment = () => {
     if (user) {
       try {
+        if (
+          !validate(
+            text,
+            { notEmpty: true, maxLength: 500 },
+            { setErrorMessage: (message: string) => setError(message) },
+          )
+        ) {
+          return;
+        }
         createComment({
           comment: {
             text: text,
@@ -51,16 +69,21 @@ const CreateComment = ({ trackId }: CreateCommentProps) => {
 
   return (
     <Grid container>
-      <TextField
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        margin="normal"
-        label="Комментарий"
-        multiline
-        fullWidth
-        rows={4}
-        inputProps={{ maxLength: 500 }}
-      />
+      <FormControl fullWidth error={Boolean(error)}>
+        <TextField
+          value={text}
+          onChange={(e) => {
+            setText(e.target.value);
+            setError('');
+          }}
+          label="Комментарий"
+          multiline
+          fullWidth
+          rows={4}
+          inputProps={{ maxLength: 500 }}
+        />
+        <FormHelperText>{error || ' '}</FormHelperText>
+      </FormControl>
       <Button variant="outlined" onClick={addComment}>
         Отправить
       </Button>
