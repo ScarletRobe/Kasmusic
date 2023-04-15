@@ -16,13 +16,13 @@ import { Stack } from '@mui/system';
 import {
   PlayArrow,
   Pause,
-  Delete,
   DownloadRounded,
   RemoveRedEyeRounded,
 } from '@mui/icons-material';
 
 import styles from './TrackItem.module.css';
 import LikeBtn from '../UI/LikeBtn/LikeBtn';
+import DeleteBtn from '../UI/DeleteBtn/DeleteBtn';
 
 interface TrackItemProps {
   track: Track;
@@ -30,17 +30,12 @@ interface TrackItemProps {
 
 const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
   const router = useRouter();
-  const [deleteTrack] = useDeleteTrackMutation();
 
   // Player destructuring causes rerender when any state property is changed even unused ones
   const activeTrack = useTypedSelector((state) => state.player.activeTrack);
   const pause = useTypedSelector((state) => state.player.pause);
 
   const { play } = useSetActiveTrack(track);
-  const handleDelete = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    deleteTrack(track._id);
-  };
 
   return (
     <Card
@@ -82,9 +77,7 @@ const TrackItem: React.FC<TrackItemProps> = ({ track }) => {
           <DownloadRounded />
         </IconButton>
       </a>
-      <IconButton onClick={(e) => handleDelete(e)}>
-        <Delete />
-      </IconButton>
+      <DeleteBtn trackId={track._id} />
     </Card>
   );
 };

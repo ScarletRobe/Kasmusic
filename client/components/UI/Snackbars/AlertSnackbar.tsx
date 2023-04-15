@@ -22,7 +22,10 @@ const AlertSnackbar = ({
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       open={open}
       autoHideDuration={6000}
-      onClose={() => setClose()}
+      onClose={(e) => {
+        e?.stopPropagation();
+        setClose();
+      }}
     >
       <Alert onClose={setClose} severity={severity} sx={{ width: '100%' }}>
         {message}
