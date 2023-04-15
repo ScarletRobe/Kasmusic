@@ -123,7 +123,7 @@ export const tracksApi = createApi({
         url: `/tracks/listen/${id}`,
         method: 'POST',
       }),
-      async onQueryStarted({ id }, { dispatch, queryFulfilled, getState }) {
+      async onQueryStarted({ id }, { dispatch, getState }) {
         const dispatchIncListens = (
           endpointName: 'getAllTracks' | 'searchTrack' | 'getTrackById',
           params: any,
@@ -191,6 +191,32 @@ export const tracksApi = createApi({
         }
       },
     }),
+    addLike: builder.mutation<any, string>({
+      query: (id) => ({
+        url: `/tracks/like/${id}`,
+        method: 'POST',
+      }),
+      async onQueryStarted(id, { dispatch }) {
+        dispatch(
+          tracksApi.util.updateQueryData('getTrackById', id, (draft) => {
+            draft.likes++;
+          }),
+        );
+      },
+    }),
+    removeLike: builder.mutation<any, string>({
+      query: (id) => ({
+        url: `/tracks/unlike/${id}`,
+        method: 'POST',
+      }),
+      async onQueryStarted(id, { dispatch }) {
+        dispatch(
+          tracksApi.util.updateQueryData('getTrackById', id, (draft) => {
+            draft.likes--;
+          }),
+        );
+      },
+    }),
   }),
 });
 
@@ -203,6 +229,8 @@ export const {
   useSearchTrackQuery,
   useIncrementListensMutation,
   useEditTrackMutation,
+  useAddLikeMutation,
+  useRemoveLikeMutation,
   util: { getRunningQueriesThunk },
 } = tracksApi;
 

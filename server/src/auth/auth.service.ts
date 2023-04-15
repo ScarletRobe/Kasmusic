@@ -106,6 +106,7 @@ export class AuthService {
         username: user.username,
         isActivated: user.isActivated,
         roles: user.roles,
+        likedTracks: user.likedTracks,
       },
     };
   }
@@ -152,6 +153,7 @@ export class AuthService {
         username: user.username,
         isActivated: user.isActivated,
         roles: user.roles,
+        likedTracks: user.likedTracks,
       },
     };
   }

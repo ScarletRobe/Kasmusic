@@ -50,8 +50,23 @@ export const authSlice = createSlice({
     ) => {
       state.authorizationStatus = action.payload;
     },
+    addLikeToState: (state, action: PayloadAction<string>) => {
+      state.user?.likedTracks.push(action.payload);
+    },
+    removeLikeFromState: (state, action: PayloadAction<string>) => {
+      if (state.user) {
+        state.user.likedTracks = state.user.likedTracks.filter(
+          (el) => el !== action.payload,
+        );
+      }
+    },
   },
 });
 
-export const { setCredentials, signOut, setAuthorizationStatus } =
-  authSlice.actions;
+export const {
+  setCredentials,
+  signOut,
+  setAuthorizationStatus,
+  addLikeToState,
+  removeLikeFromState,
+} = authSlice.actions;

@@ -6,6 +6,7 @@ export type User = {
   avatarLink: string;
   isActivated: boolean;
   roles: (keyof typeof Roles)[];
+  likedTracks: string[];
 };
 
 export type SignInParams = Omit<SignUpParams, 'email'>;

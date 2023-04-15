@@ -33,6 +33,7 @@ export type Track = {
   comments: Comment[];
   author: Author;
   createdAt: Date;
+  likes: number;
 };
 
 export enum AcceptableFiles {
