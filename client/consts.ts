@@ -26,6 +26,7 @@ export enum PageRoutes {
   Authorization = '/authorization',
   Tracks = '/tracks',
   Upload = '/tracks/upload',
+  Favorites = '/tracks/favorites',
   Home = '/',
   Search = '/search',
 }
