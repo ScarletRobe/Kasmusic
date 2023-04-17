@@ -56,6 +56,16 @@ export const tracksApi = createApi({
               { type: 'trackList' },
             ],
     }),
+    getFavoritesTracks: builder.query<GetTracksResponse, { page: number }>({
+      query: ({ page }) => ({
+        url: '/tracks/favorites',
+        params: {
+          count: 20,
+          offset: (page - 1) * 20,
+        },
+      }),
+      providesTags: ['trackList'],
+    }),
     getTrackById: builder.query<Track, string>({
       query: (id) => ({
         url: `/tracks/${id}`,
@@ -125,12 +135,17 @@ export const tracksApi = createApi({
       }),
       async onQueryStarted({ id }, { dispatch, getState }) {
         const dispatchIncListens = (
-          endpointName: 'getAllTracks' | 'searchTrack' | 'getTrackById',
+          endpointName:
+            | 'getAllTracks'
+            | 'searchTrack'
+            | 'getTrackById'
+            | 'getFavoritesTracks',
           params: any,
         ) => {
           switch (endpointName) {
             case 'getAllTracks':
             case 'searchTrack':
+            case 'getFavoritesTracks':
               dispatch(
                 tracksApi.util.updateQueryData(
                   endpointName,
@@ -175,6 +190,9 @@ export const tracksApi = createApi({
         ])) {
           if (endpointName === 'getAllTracks') {
             dispatchIncListens(endpointName, tracksPageParams);
+          }
+          if (endpointName === 'getFavoritesTracks') {
+            dispatchIncListens(endpointName, { page: tracksPageParams.page });
           }
           if (
             endpointName === 'searchTrack' &&
@@ -231,6 +249,7 @@ export const {
   useEditTrackMutation,
   useAddLikeMutation,
   useRemoveLikeMutation,
+  useGetFavoritesTracksQuery,
   util: { getRunningQueriesThunk },
 } = tracksApi;
 

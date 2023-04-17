@@ -34,6 +34,11 @@ const menuItems = [
     href: PageRoutes.Tracks,
     icon: <AudiotrackRoundedIcon />,
   },
+  {
+    text: 'Любимые',
+    href: PageRoutes.Favorites,
+    icon: <FavoriteRoundedIcon />,
+  },
   { text: 'Загрузить', href: PageRoutes.Upload, icon: <AddIcon /> },
   { text: 'Поиск', href: PageRoutes.Search, icon: <SearchRoundedIcon /> },
   // {
@@ -41,7 +46,6 @@ const menuItems = [
   //   href: '/playlists',
   //   icon: <LibraryMusicRoundedIcon />,
   // },
-  // { text: 'Любимые', href: '/favorite', icon: <FavoriteRoundedIcon /> },
   // {
   //   text: 'Загруженные вами',
   //   href: '/uploaded',
