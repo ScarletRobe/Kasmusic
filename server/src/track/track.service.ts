@@ -75,6 +75,19 @@ export class TrackService {
     return { totalPages, data: tracks };
   }
 
+  async getFavorites(count = 25, offset = 0, userId: ObjectId) {
+    const user = await this.userService.findOne({ _id: userId });
+    const documentsAmount = user.likedTracks.length;
+    const totalPages = Math.ceil(documentsAmount / count);
+
+    const tracks = await this.userService.getFavoriteTracks(
+      count,
+      offset,
+      userId,
+    );
+    return { totalPages, data: tracks };
+  }
+
   async search(
     count = 25,
     offset = 0,

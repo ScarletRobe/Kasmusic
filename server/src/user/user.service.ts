@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Document, Model } from 'mongoose';
+import mongoose, { Document, Model, ObjectId } from 'mongoose';
 
 import { User } from './schemas/user.schema';
 import { Role } from './schemas/role.schema';
@@ -99,5 +99,13 @@ export class UserService {
       (trId) => trId.toString() !== trackId.toString(),
     );
     await user.save();
+  }
+
+  async getFavoriteTracks(count: number, offset: number, userId: ObjectId) {
+    const user = await this.userModel.findById(userId).populate({
+      path: 'likedTracks',
+      options: { perDocumentLimit: count, skip: offset, sort: { _id: -1 } },
+    });
+    return user.likedTracks;
   }
 }

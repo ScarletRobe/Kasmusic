@@ -71,6 +71,17 @@ export class TrackController {
     return this.trackService.getAll(count, offset, sort);
   }
 
+  @Get('/favorites')
+  @RequiredRoles(Roles.USER)
+  @UseGuards(AccessTokenGuard, RolesGuard)
+  async getFavorites(
+    @Req() req,
+    @Query('count') count: number,
+    @Query('offset') offset: number,
+  ) {
+    return await this.trackService.getFavorites(count, offset, req.user.sub);
+  }
+
   @Get('/search')
   search(
     @Query('count') count: number,
