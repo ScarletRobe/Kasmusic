@@ -85,13 +85,12 @@ export class AuthController {
   }
 
   @Get('/activate/:token')
-  async activate(@Req() req: Request) {
+  async activate(@Res() res: Response, @Req() req: Request) {
     try {
-      return await this.authService.activate(
-        process.env.BASE_URL + req.originalUrl,
-      );
+      await this.authService.activate(process.env.BASE_URL + req.originalUrl);
+      res.redirect('https://music-platform-sage.vercel.app/');
     } catch (error) {
-      return error.message;
+      res.status(404).json({ message: error.message });
     }
   }
 }

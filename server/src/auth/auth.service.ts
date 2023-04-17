@@ -124,7 +124,7 @@ export class AuthService {
     }
     user.isActivated = true;
     user.activationLink = undefined;
-    user.save();
+    await user.save();
   }
 
   async refreshTokens(userId: string, refreshToken: string) {
