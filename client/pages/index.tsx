@@ -4,11 +4,16 @@ import { useRouter } from 'next/router';
 import { PageRoutes } from '@/consts';
 
 import { Stack } from '@mui/material';
+import Head from 'next/head';
 
 const Index = () => {
   const router = useRouter();
   return (
     <>
+      <Head>
+        <title>Kasmusic</title>
+        <meta name="description" content="Music platform" />
+      </Head>
       <Stack
         className="main-page-content"
         justifyContent="center"
