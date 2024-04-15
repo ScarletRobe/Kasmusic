@@ -13,6 +13,8 @@ const Index = () => {
       <Head>
         <title>Kasmusic</title>
         <meta name="description" content="Music platform" />
+        <meta property="og:title" content="Kasmusic"></meta>
+        <meta property="og:description" content="Music platform"></meta>
       </Head>
       <Stack
         className="main-page-content"
